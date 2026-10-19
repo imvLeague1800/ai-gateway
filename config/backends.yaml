@@ -1,0 +1,28 @@
+# Client aliases stay stable when the underlying model changes.
+# All members of a pool must serve the SAME model, tokenizer, and chat template.
+models:
+  qwen3.8-27b:
+    backend_pool: code-default
+    upstream_model: qwen3.8-27b
+    # Gateway policy, not a claim about this model's maximum supported context.
+    max_context_tokens: 32768
+    max_output_tokens: 4096
+    default_output_tokens: 1024
+    long_request_threshold_tokens: 8192
+
+backend_pools:
+  code-default:
+    backends:
+      - id: spark-15-vllm
+        host_id: 10.169.25.15
+        # Service root: the gateway appends /tokenize and /v1/chat/completions.
+        url: http://10.169.25.15:8000
+        # Read-only API checks succeeded without a key. Set SPARK_15_API_KEY
+        # here if authentication is enabled on the serving endpoints.
+        api_key_env: null
+        enabled: true
+        weight: 1.0
+        max_context_tokens: 32768
+        max_concurrent_requests: 4
+        max_long_requests: 1
+        health_path: /health

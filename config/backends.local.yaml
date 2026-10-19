@@ -1,0 +1,22 @@
+# Optional project-managed vLLM container; select with BACKENDS_CONFIG_FILE.
+models:
+  qwen3.8-27b:
+    backend_pool: local-vllm
+    upstream_model: qwen3.8-27b
+    max_context_tokens: 32768
+    max_output_tokens: 4096
+    default_output_tokens: 1024
+    long_request_threshold_tokens: 8192
+
+backend_pools:
+  local-vllm:
+    backends:
+      - id: local-vllm
+        url: http://vllm:8000
+        api_key_env: VLLM_API_KEY
+        enabled: true
+        weight: 1.0
+        max_context_tokens: 32768
+        max_concurrent_requests: 4
+        max_long_requests: 1
+        health_path: /health

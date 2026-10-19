@@ -1,0 +1,68 @@
+# Starting thresholds. Tune these alongside capacity and timeout policy.
+# Notification delivery requires a separately configured Alertmanager.
+groups:
+  - name: model-gateway
+    rules:
+      - alert: GatewayTargetUnavailable
+        expr: |
+          (up{job=~"scheduler|litellm"} == 0)
+          or absent(up{job="scheduler"})
+          or absent(up{job="litellm"})
+          or ((up{job="vllm"} == 0)
+              and on (backend) (model_gateway_backend_enabled == 1))
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Gateway monitoring target unavailable: {{ $labels.job }}"
+          description: "Check service health, DNS, networking, and metrics authentication. See docs/operations.md."
+
+      - alert: GatewayBackendUnhealthy
+        expr: |
+          (model_gateway_backend_healthy == 0)
+          and on (job, instance, backend) (model_gateway_backend_enabled == 1)
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Enabled backend is unhealthy: {{ $labels.backend }}"
+          description: "Check backend status and its last_error, service URL, credentials, and model process. See docs/operations.md."
+
+      - alert: GatewayQueueWaitHigh
+        expr: |
+          (histogram_quantile(0.95,
+            sum by (model, le) (rate(model_gateway_queue_wait_seconds_bucket[10m]))) > 120)
+          and on (model)
+          (sum by (model) (increase(model_gateway_queue_wait_seconds_count[10m])) >= 10)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Admitted requests wait too long: {{ $labels.model }}"
+          description: "The observed 95th-percentile queue wait exceeds 120 seconds. Check load and backend capacity before raising limits. See docs/operations.md."
+
+      - alert: GatewayQueueRejectionsHigh
+        expr: |
+          (sum by (model) (rate(model_gateway_requests_total{status=~"queue_full|queue_timeout"}[10m]))
+            / sum by (model) (rate(model_gateway_requests_total[10m])) > 0.10)
+          and on (model)
+          (sum by (model) (increase(model_gateway_requests_total[10m])) >= 10)
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Queue rejection rate is high: {{ $labels.model }}"
+          description: "Over 10 percent of recorded requests are rejected by queue limits or deadlines. Inspect per-key quotas, long requests, and healthy capacity. See docs/operations.md."
+
+      - alert: GatewayRequestErrorsHigh
+        expr: |
+          (sum by (model) (rate(model_gateway_requests_total{status=~"backend_connection_error|backend_error|stream_error|tokenization_unavailable|backend_context_mismatch"}[10m]))
+            / sum by (model) (rate(model_gateway_requests_total[10m])) > 0.05)
+          and on (model)
+          (sum by (model) (increase(model_gateway_requests_total[10m])) >= 10)
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Gateway request error rate is high: {{ $labels.model }}"
+          description: "Over 5 percent of recorded requests fail in tokenization or backend handling. Check status labels and metadata logs. See docs/operations.md."

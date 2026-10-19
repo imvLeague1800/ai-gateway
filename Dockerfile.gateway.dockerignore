@@ -1,0 +1,9 @@
+# An allowlist prevents credentials, databases, and old test artifacts entering
+# the build context. Only the intended configuration and two logos are sent.
+**
+!Dockerfile.gateway
+!config/
+!config/litellm.yaml
+!branding/
+!branding/logo-light.png
+!branding/logo-dark.png

@@ -1,0 +1,159 @@
+rule_files:
+  - prometheus-alerts.yaml
+evaluation_interval: 1m
+tests:
+  - name: target outage requires two minutes and disabled backend is ignored
+    interval: 1m
+    input_series:
+      - series: 'up{job="scheduler",instance="scheduler:8080"}'
+        values: '0x5'
+      - series: 'up{job="litellm",instance="litellm:4000"}'
+        values: '1x5'
+      - series: 'up{job="vllm",instance="spark16:8000",backend="spark-16-vllm"}'
+        values: '0x5'
+      - series: 'model_gateway_backend_enabled{job="scheduler",instance="scheduler:8080",backend="spark-16-vllm"}'
+        values: '0x5'
+      - series: 'up{job="vllm",instance="spark15:8000",backend="spark-15-vllm"}'
+        values: '0x5'
+      - series: 'model_gateway_backend_enabled{job="scheduler",instance="scheduler:8080",backend="spark-15-vllm"}'
+        values: '1x5'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: GatewayTargetUnavailable
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: GatewayTargetUnavailable
+        exp_alerts:
+          - exp_labels:
+              job: scheduler
+              instance: scheduler:8080
+              severity: critical
+            exp_annotations:
+              summary: "Gateway monitoring target unavailable: scheduler"
+              description: "Check service health, DNS, networking, and metrics authentication. See docs/operations.md."
+          - exp_labels:
+              job: vllm
+              instance: spark15:8000
+              backend: spark-15-vllm
+              severity: critical
+            exp_annotations:
+              summary: "Gateway monitoring target unavailable: vllm"
+              description: "Check service health, DNS, networking, and metrics authentication. See docs/operations.md."
+
+  - name: missing scheduler scrape configuration is detected
+    interval: 1m
+    input_series:
+      - series: 'up{job="litellm",instance="litellm:4000"}'
+        values: '1x5'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: GatewayTargetUnavailable
+        exp_alerts:
+          - exp_labels:
+              job: scheduler
+              severity: critical
+            exp_annotations:
+              summary: "Gateway monitoring target unavailable: scheduler"
+              description: "Check service health, DNS, networking, and metrics authentication. See docs/operations.md."
+
+  - name: enabled health outage fires and resolves while disabled Spark16 stays quiet
+    interval: 1m
+    input_series:
+      - series: 'model_gateway_backend_healthy{job="scheduler",instance="scheduler:8080",backend="spark-15-vllm"}'
+        values: '0x3 1x3'
+      - series: 'model_gateway_backend_enabled{job="scheduler",instance="scheduler:8080",backend="spark-15-vllm"}'
+        values: '1x7'
+      - series: 'model_gateway_backend_healthy{job="scheduler",instance="scheduler:8080",backend="spark-16-vllm"}'
+        values: '0x7'
+      - series: 'model_gateway_backend_enabled{job="scheduler",instance="scheduler:8080",backend="spark-16-vllm"}'
+        values: '0x7'
+    alert_rule_test:
+      - eval_time: 1m
+        alertname: GatewayBackendUnhealthy
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: GatewayBackendUnhealthy
+        exp_alerts:
+          - exp_labels:
+              job: scheduler
+              instance: scheduler:8080
+              backend: spark-15-vllm
+              severity: critical
+            exp_annotations:
+              summary: "Enabled backend is unhealthy: spark-15-vllm"
+              description: "Check backend status and its last_error, service URL, credentials, and model process. See docs/operations.md."
+      - eval_time: 5m
+        alertname: GatewayBackendUnhealthy
+        exp_alerts: []
+
+  - name: slow admitted queue waits fire after sustained load
+    interval: 1m
+    input_series:
+      - series: 'model_gateway_queue_wait_seconds_bucket{model="code-32k",request_class="interactive",le="120"}'
+        values: '0x20'
+      - series: 'model_gateway_queue_wait_seconds_bucket{model="code-32k",request_class="interactive",le="600"}'
+        values: '0+20x20'
+      - series: 'model_gateway_queue_wait_seconds_bucket{model="code-32k",request_class="interactive",le="+Inf"}'
+        values: '0+20x20'
+      - series: 'model_gateway_queue_wait_seconds_count{model="code-32k",request_class="interactive"}'
+        values: '0+20x20'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: GatewayQueueWaitHigh
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: GatewayQueueWaitHigh
+        exp_alerts:
+          - exp_labels:
+              model: code-32k
+              severity: warning
+            exp_annotations:
+              summary: "Admitted requests wait too long: code-32k"
+              description: "The observed 95th-percentile queue wait exceeds 120 seconds. Check load and backend capacity before raising limits. See docs/operations.md."
+
+  - name: queue errors fire but one low-volume rejection does not
+    interval: 1m
+    input_series:
+      - series: 'model_gateway_requests_total{model="code-32k",status="queue_full"}'
+        values: '0+4x20'
+      - series: 'model_gateway_requests_total{model="code-32k",status="success"}'
+        values: '0+16x20'
+      - series: 'model_gateway_requests_total{model="low-volume",status="queue_timeout"}'
+        values: '0x3 1x16'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: GatewayQueueRejectionsHigh
+        exp_alerts:
+          - exp_labels:
+              model: code-32k
+              severity: warning
+            exp_annotations:
+              summary: "Queue rejection rate is high: code-32k"
+              description: "Over 10 percent of recorded requests are rejected by queue limits or deadlines. Inspect per-key quotas, long requests, and healthy capacity. See docs/operations.md."
+      - eval_time: 10m
+        alertname: GatewayRequestErrorsHigh
+        exp_alerts: []
+
+  - name: upstream errors fire while cancellations and invalid requests are excluded
+    interval: 1m
+    input_series:
+      - series: 'model_gateway_requests_total{model="code-32k",status="backend_connection_error"}'
+        values: '0+2x20'
+      - series: 'model_gateway_requests_total{model="code-32k",status="success"}'
+        values: '0+18x20'
+      - series: 'model_gateway_requests_total{model="client-errors",status="cancelled"}'
+        values: '0+50x20'
+      - series: 'model_gateway_requests_total{model="client-errors",status="rejected_output_limit"}'
+        values: '0+50x20'
+      - series: 'model_gateway_requests_total{model="low-volume",status="backend_error"}'
+        values: '0x3 1x16'
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: GatewayRequestErrorsHigh
+        exp_alerts:
+          - exp_labels:
+              model: code-32k
+              severity: critical
+            exp_annotations:
+              summary: "Gateway request error rate is high: code-32k"
+              description: "Over 5 percent of recorded requests fail in tokenization or backend handling. Check status labels and metadata logs. See docs/operations.md."

@@ -1,0 +1,120 @@
+name: ai-gateway
+services:
+  postgres:
+    image: ${POSTGRES_IMAGE:-postgres:16-alpine}
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-litellm}
+      POSTGRES_USER: ${POSTGRES_USER:-litellm}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  redis:
+    image: ${REDIS_IMAGE:-redis:7-alpine}
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in .env}
+    command:
+    - sh
+    - -c
+    - exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    volumes:
+    - redis_data:/data
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - redis-cli -a "$$REDIS_PASSWORD" ping | grep PONG
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  litellm:
+    image: ${LITELLM_IMAGE:-docker.litellm.ai/berriai/litellm:main-stable}
+    restart: unless-stopped
+    command:
+    - --config
+    - /app/config/litellm.yaml
+    - --port
+    - '4000'
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?Set LITELLM_MASTER_KEY in .env}
+      UI_USERNAME: ${LITELLM_UI_USERNAME:-admin}
+      UI_PASSWORD: ${LITELLM_UI_PASSWORD:?Set LITELLM_UI_PASSWORD in .env}
+      UI_LOGO_PATH: ${UI_LOGO_PATH:-http://localhost:${GATEWAY_PORT:-4000}/ui/branding/logo-light.png}
+      UI_LOGO_PATH_DARK: ${UI_LOGO_PATH_DARK:-http://localhost:${GATEWAY_PORT:-4000}/ui/branding/logo-dark.png}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-litellm}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-litellm}}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REQUEST_TIMEOUT: ${LITELLM_REQUEST_TIMEOUT_SECONDS:-1320}
+      STORE_MODEL_IN_DB: 'True'
+      SCHEDULER_INTERNAL_API_KEY: ${SCHEDULER_INTERNAL_API_KEY:?Set SCHEDULER_INTERNAL_API_KEY in .env}
+    volumes:
+    - ./config:/app/config:ro
+    - ./branding:${LITELLM_BRANDING_DIR:-/app/.venv/lib/python3.13/site-packages/litellm/proxy/_experimental/out/branding}:ro
+    ports:
+    - ${GATEWAY_BIND_ADDRESS:-127.0.0.1}:${GATEWAY_PORT:-4000}:4000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      scheduler:
+        condition: service_healthy
+    healthcheck:
+      test:
+      - CMD
+      - python3
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:4000/health/liveliness')
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+  scheduler:
+    image: ${SCHEDULER_IMAGE:-imvision-scheduler:20260916-amd64}
+    build:
+      context: ./scheduler
+      args:
+        PYTHON_IMAGE: ${SCHEDULER_PYTHON_IMAGE:-public.ecr.aws/docker/library/python:3.12-slim}
+    restart: unless-stopped
+    command:
+    - uvicorn
+    - app.main:app
+    - --host
+    - 0.0.0.0
+    - --port
+    - '8080'
+    - --workers
+    - '1'
+    - --no-access-log
+    environment:
+      BACKENDS_CONFIG: /app/config/backends.yaml
+      SCHEDULER_INTERNAL_API_KEY: ${SCHEDULER_INTERNAL_API_KEY:?Set SCHEDULER_INTERNAL_API_KEY in .env}
+      MAX_ACTIVE_PER_PRINCIPAL: ${MAX_ACTIVE_PER_PRINCIPAL:-1}
+      MAX_QUEUED_PER_PRINCIPAL: ${MAX_QUEUED_PER_PRINCIPAL:-2}
+      MAX_QUEUE_DEPTH: ${MAX_QUEUE_DEPTH:-50}
+      QUEUE_TIMEOUT_SECONDS: ${QUEUE_TIMEOUT_SECONDS:-600}
+      REQUEST_TIMEOUT_SECONDS: ${SCHEDULER_REQUEST_TIMEOUT_SECONDS:-1260}
+      LONG_QUEUE_PROMOTE_SECONDS: ${LONG_QUEUE_PROMOTE_SECONDS:-120}
+      SPARK_15_API_KEY: ${SPARK_15_API_KEY:-not-required}
+      SPARK_16_API_KEY: ${SPARK_16_API_KEY:-not-required}
+    volumes:
+    - ./config:/app/config:ro
+    healthcheck:
+      test:
+      - CMD
+      - python
+      - -c
+      - import urllib.request; urllib.request.urlopen('http://localhost:8080/health/live')
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+volumes:
+  postgres_data: null
+  redis_data: null

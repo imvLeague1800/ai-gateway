@@ -1,0 +1,22 @@
+name: Checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.11.20"
+          enable-cache: true
+      - name: Run tests with locked dependencies
+        run: uv run --locked --extra dev --project scheduler --python 3.12 pytest -q
+      - name: Validate deployment configuration
+        run: docker compose --env-file .env.example config --quiet

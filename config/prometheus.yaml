@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - prometheus-alerts.yaml
+
+scrape_configs:
+  - job_name: scheduler
+    static_configs:
+      - targets: [scheduler:8080]
+
+  - job_name: litellm
+    metrics_path: /metrics
+    static_configs:
+      - targets: [litellm:4000]
+
+  - job_name: vllm
+    metrics_path: /metrics
+    static_configs:
+      # Update alongside backend URLs.
+      # For the optional local profile, replace this with vllm:8000.
+      - targets: [10.169.25.15:8000]
+        labels:
+          backend: spark-15-vllm
+      - targets: [10.169.25.16:8000]
+        labels:
+          backend: spark-16-vllm

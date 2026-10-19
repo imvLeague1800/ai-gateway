@@ -1,0 +1,14 @@
+# Keep the tested upstream release; no application dependencies are reinstalled.
+ARG LITELLM_BASE_IMAGE=docker.litellm.ai/berriai/litellm@sha256:c8756e7b9a61fe45df2ccb5b781d388c3b2f3a21ef9e4956630caef20f9f03aa
+FROM ${LITELLM_BASE_IMAGE}
+
+COPY branding/logo-light.png /opt/imvision/branding/logo-light.png
+COPY branding/logo-dark.png /opt/imvision/branding/logo-dark.png
+COPY config/litellm.yaml /opt/imvision/litellm.yaml
+
+# The browser requests /get_image from whichever hostname serves this gateway.
+# These are container-local files, not Windows paths or external image URLs.
+ENV UI_LOGO_PATH=/opt/imvision/branding/logo-light.png \
+    UI_LOGO_PATH_DARK=/opt/imvision/branding/logo-dark.png
+
+CMD ["--config", "/opt/imvision/litellm.yaml", "--port", "4000"]
