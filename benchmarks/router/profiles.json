@@ -1,0 +1,12 @@
+{
+  "seed": 20261123,
+  "mix": {"agent": 0.4, "qa": 0.3, "rag": 0.3},
+  "real_session_share": 0,
+  "sessions": {"agent": 60, "qa": 90, "rag": 45},
+  "stable_sessions": {"agent": 20, "rag": 20},
+  "rounds": 3,
+  "rates": {"high": 3.0, "light": 1.5, "stable": 0.75, "calibration": 3.0},
+  "window_tail_s": 45,
+  "calibration_partition": "Calibration CLI creates variant tasks. Calibration is separate from acceptance replay",
+  "prefix_distribution": "Each two-step session has a distinct prefix, repeated on its second step"
+}

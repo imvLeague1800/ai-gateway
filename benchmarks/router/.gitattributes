@@ -1,0 +1,9 @@
+# Preserve the byte sequences checked by the recorded manifest.
+# Its generator inputs were frozen with Windows line endings.
+/cases.jsonl -text
+/sessions.jsonl -text
+/profiles.json -text whitespace=cr-at-eol
+/generate.py -text whitespace=cr-at-eol
+/prompts.py -text whitespace=cr-at-eol,-blank-at-eof
+/manifest.json -text whitespace=cr-at-eol
+/start-router.sh text eol=lf

@@ -1,0 +1,7 @@
+{
+  "agent_cold": 21000,
+  "agent_warm": 17000,
+  "qa": 15000,
+  "rag_cold": 16000,
+  "rag_warm": 17000
+}
