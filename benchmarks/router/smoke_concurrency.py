@@ -14,6 +14,7 @@ from pathlib import Path
 import httpx
 
 import transport
+import scenario_stats as stats
 
 BASE = Path(__file__).resolve().parent
 OUT = BASE.parents[1] / ".verification" / "dual-qwen" / "smoke" / "concurrency"

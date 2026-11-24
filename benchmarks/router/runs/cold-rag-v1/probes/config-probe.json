@@ -1,0 +1,89 @@
+{
+  "actual_replicas": {
+    "10.169.25.15": {
+      "status": 200,
+      "model": "qwen3.6-35b-a3b-nvfp4",
+      "max_model_len": 262144
+    },
+    "10.169.25.16": {
+      "status": 200,
+      "model": "qwen3.6-35b-a3b-nvfp4",
+      "max_model_len": 262144
+    }
+  },
+  "root_config": {
+    "requests": [
+      {
+        "status": 200,
+        "backend_id": "spark-15-vllm",
+        "body_model": "qwen3.6-35b-a3b-nvfp4",
+        "body_error": null
+      },
+      {
+        "status": 200,
+        "backend_id": "spark-16-vllm",
+        "body_model": "qwen3.6-35b-a3b-nvfp4",
+        "body_error": null
+      },
+      {
+        "status": 200,
+        "backend_id": "spark-15-vllm",
+        "body_model": "qwen3.6-35b-a3b-nvfp4",
+        "body_error": null
+      }
+    ],
+    "sha256": "819dfe977f0bd7d46c8b96b8341c26a60e305f54854812a2dedb081b19fc2db1"
+  },
+  "single_replica": {
+    "config": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\config-probe\\single-backends.yaml",
+    "config_sha256": "1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a",
+    "long_requests": [
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 4972.82,
+        "backend_id": "qwen15-cold-rag",
+        "queue_wait_ms": 0.07,
+        "output_tokens": 342
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 14810.81,
+        "backend_id": "qwen15-cold-rag",
+        "queue_wait_ms": 11511.46,
+        "output_tokens": 316
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 5500.13,
+        "backend_id": "qwen15-cold-rag",
+        "queue_wait_ms": 0.06,
+        "output_tokens": 352
+      }
+    ]
+  },
+  "context_rejection": {
+    "status": 400,
+    "body": {
+      "error": {
+        "message": "Prompt plus requested output exceeds the 262144-token model limit.",
+        "type": "invalid_request_error",
+        "param": "messages",
+        "code": "context_length_exceeded"
+      }
+    },
+    "config_sha256": "2eaf207df78a55c21aa913cb2a74f76e0f83975d8e436e50e80bc87785680c94"
+  },
+  "litellm_alias": [
+    "model_list:",
+    "- model_name: qwen3.8-27b",
+    "  litellm_params:",
+    "    model: openai/qwen3.8-27b",
+    "    api_base: http://scheduler:8080/v1",
+    "    api_key: os.environ/SCHEDULER_INTERNAL_API_KEY",
+    "    allowed_openai_params:",
+    "    - user"
+  ]
+}

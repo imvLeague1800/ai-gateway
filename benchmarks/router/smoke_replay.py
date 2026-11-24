@@ -14,6 +14,7 @@ from pathlib import Path
 import httpx
 
 import transport
+import scenario_stats as stats
 
 BASE = Path(__file__).resolve().parent
 ROUTER_API = "http://127.0.0.1:18100"
@@ -82,15 +83,8 @@ def load_specs() -> tuple[dict, list[dict]]:
 
 
 def cache_delta(before: dict, after: dict) -> dict:
-    delta = {}
-    for engine in sorted(set(before) | set(after)):
-        b = before.get(engine, {})
-        a = after.get(engine, {})
-        hits = a.get("vllm:prefix_cache_hits_total", 0) - b.get("vllm:prefix_cache_hits_total", 0)
-        queries = a.get("vllm:prefix_cache_queries_total", 0) - b.get("vllm:prefix_cache_queries_total", 0)
-        delta[engine] = {"hits": hits, "queries": queries,
-                         "ratio": round(hits / queries, 4) if queries > 0 else None}
-    return delta
+    return {engine: stats.endpoint_cache_delta(before.get(engine, {}), after.get(engine, {}))
+            for engine in sorted(set(before) | set(after))}
 
 
 def worker_delta(before: dict, after: dict) -> dict[str, float]:
@@ -152,9 +146,9 @@ def summarize(policy: str, rows: list[dict], health: dict, warmup: list[dict]) -
         parent = next((p for p in rows if p["session"] == r["session"] and p["step"] == r["step"] - 1), None)
         if parent and parent.get("worker") and parent["worker"] == r["worker"]:
             same += 1
-    hits = sum(sum(e["hits"] for e in r["cache_delta"].values()) for r in rows if r.get("cache_delta"))
-    queries = sum(sum(e["queries"] for e in r["cache_delta"].values()) for r in rows if r.get("cache_delta"))
-    warm_hits = sum(sum(e["hits"] for e in r["cache_delta"].values()) for r in warm if r.get("cache_delta"))
+    hits = sum(sum(e["hits"] for e in r["cache_delta"].values() if e.get("hits") is not None) for r in rows if r.get("cache_delta"))
+    queries = sum(sum(e["queries"] for e in r["cache_delta"].values() if e.get("queries") is not None) for r in rows if r.get("cache_delta"))
+    warm_hits = sum(sum(e["hits"] for e in r["cache_delta"].values() if e.get("hits") is not None) for r in warm if r.get("cache_delta"))
     workers = Counter(r["worker"] for r in rows if r.get("worker"))
     recall = [r for r in rows if r["group"] == "rag_recall" and r.get("warm")]
     recall_new = sum(1 for r in recall if r.get("quality"))

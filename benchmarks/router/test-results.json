@@ -70,5 +70,165 @@
   "percentile": {
     "p50": 3,
     "p95": 4
+  },
+  "stats_regression": {
+    "inside": 3,
+    "outside": 1,
+    "unassignable": 1,
+    "online": {
+      "window_requests": 3,
+      "failures": 2,
+      "by_scenario": {
+        "short_agent": {
+          "requests": 2,
+          "success": 1,
+          "states": {
+            "success": 1,
+            "client_exception": 1
+          },
+          "failures": 1,
+          "ttft_ms": {
+            "p50": 100.0,
+            "p95": 100.0,
+            "max": 100.0
+          },
+          "per_lane_tps": {
+            "p50": 50.0,
+            "p10": 50.0
+          },
+          "gateway_queue_ms": {
+            "p50": 0.0,
+            "p95": 0.0
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 1000.0,
+            "p95": 1000.0
+          },
+          "output_tokens": {
+            "min": 10,
+            "median": 10,
+            "max": 10
+          }
+        },
+        "cold_rag": {
+          "requests": 1,
+          "success": 0,
+          "states": {
+            "client_exception": 1
+          },
+          "failures": 1,
+          "ttft_ms": {
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "per_lane_tps": {
+            "p50": null,
+            "p10": null
+          },
+          "gateway_queue_ms": {
+            "p50": null,
+            "p95": null
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": null,
+            "p95": null
+          },
+          "output_tokens": {
+            "min": null,
+            "median": null,
+            "max": null
+          }
+        }
+      }
+    },
+    "offline": {
+      "by_scenario": {
+        "short_agent": {
+          "requests": 2,
+          "success": 1,
+          "states": {
+            "success": 1,
+            "client_exception": 1
+          },
+          "failures": 1,
+          "ttft_ms": {
+            "p50": 100.0,
+            "p95": 100.0,
+            "max": 100.0
+          },
+          "per_lane_tps": {
+            "p50": 50.0,
+            "p10": 50.0
+          },
+          "gateway_queue_ms": {
+            "p50": 0.0,
+            "p95": 0.0
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 1000.0,
+            "p95": 1000.0
+          },
+          "output_tokens": {
+            "min": 10,
+            "median": 10,
+            "max": 10
+          }
+        },
+        "cold_rag": {
+          "requests": 1,
+          "success": 0,
+          "states": {
+            "client_exception": 1
+          },
+          "failures": 1,
+          "ttft_ms": {
+            "p50": null,
+            "p95": null,
+            "max": null
+          },
+          "per_lane_tps": {
+            "p50": null,
+            "p10": null
+          },
+          "gateway_queue_ms": {
+            "p50": null,
+            "p95": null
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": null,
+            "p95": null
+          },
+          "output_tokens": {
+            "min": null,
+            "median": null,
+            "max": null
+          }
+        }
+      },
+      "unknown_scenario": 0,
+      "failures": 2,
+      "truncated": 0,
+      "states": {
+        "success": 1,
+        "client_exception": 2
+      }
+    }
   }
 }

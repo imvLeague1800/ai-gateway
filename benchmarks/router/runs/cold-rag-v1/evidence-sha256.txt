@@ -28,4 +28,13 @@ c64c190933e92a51b911ef2d95bf3904b8eef82371f48a0de4b97ce0fd62f776  .verification/
 be7587f1a2dfc6419eb24ce55eaa218f22022da448f5da5e1dac4716ed8095d2  .verification/dual-qwen/cold-rag/matrix/g3-long1-scheduler.log
 3b8e2393cde2066c120fe205a04df0841c1c59bb0f392c7820a590193fdc3d5f  .verification/dual-qwen/cold-rag/matrix/g3-long2-client.log
 f498f3960ae5b16462e163c268f8f2a5e376c297dcde2199b725e7a52d7c6ee8  .verification/dual-qwen/cold-rag/matrix/g3-long2-scheduler.log
-f6f9387160455537503fe08e5dfb2bd3542ba4c53e98e09478d497db8e70d9f2  benchmarks/router/cold-rag-analysis.json
+3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3  benchmarks/router/cold-rag-analysis.json
+fddfd99e49668ddec34f9e0ed2c3c981d715d048240b63ffbc8bedc38876df27  benchmarks/router/runs/cold-rag-v1/analysis/archive-recompute.json
+f1828755b041787feb9c5d8d48ffd803a26911d47728aadd99724ba4b94ef177  benchmarks/router/runs/cold-rag-v1/configs/backends-long1.yaml
+1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a  benchmarks/router/runs/cold-rag-v1/configs/backends-long2.yaml
+2effb780117238f791a73421339e8f1d69d529f4cd6cacb4774b1baadea13caf  benchmarks/router/runs/cold-rag-v1/probes/config-probe.json
+2eaf207df78a55c21aa913cb2a74f76e0f83975d8e436e50e80bc87785680c94  benchmarks/router/runs/cold-rag-v1/probes/context-reject-backends.yaml
+28c75651a698610ab141e68e198eae15832c2485293249753164fc429b4abeb5  benchmarks/router/runs/cold-rag-v1/probes/context-scheduler.log
+985035b1f465dabfd991fedd191954b50ae5f3c3c7d23ea9707399b1310bad13  benchmarks/router/runs/cold-rag-v1/probes/root-scheduler.log
+1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a  benchmarks/router/runs/cold-rag-v1/probes/single-backends.yaml
+ddb97f9be0201d0e222c7f82a2f7fa85c02ba2935129c326cd49cf5c3fd0efea  benchmarks/router/runs/cold-rag-v1/probes/single-scheduler.log

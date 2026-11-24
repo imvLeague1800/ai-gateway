@@ -1,6 +1,7 @@
 """Run the three paired long-cold groups against the first-version Scheduler."""
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -31,10 +32,10 @@ def wait_ready(timeout: float = 60) -> None:
     raise RuntimeError("scheduler did not become ready")
 
 
-def start_scheduler(limit: int, log_path: Path):
+def start_scheduler(limit: int, log_path: Path, config_path: Path):
     env = os.environ.copy()
     env.update({
-        "BACKENDS_CONFIG": str(BASE / f"backends-long{limit}.yaml"),
+        "BACKENDS_CONFIG": str(config_path),
         "SCHEDULER_INTERNAL_API_KEY": KEY,
         "MAX_ACTIVE_PER_PRINCIPAL": "1",
         "MAX_QUEUED_PER_PRINCIPAL": "2",
@@ -81,19 +82,27 @@ def main() -> None:
     for group, limits in enumerate(order, start=1):
         for limit in limits:
             run_dir = OUT / f"g{group}-long{limit}"
+            run_dir.mkdir(parents=True, exist_ok=True)
+            config_path = run_dir / "backends.yaml"
+            config_path.write_text(
+                (BASE / "backends-template.yaml").read_text(encoding="utf-8").replace(
+                    "__MAX_LONG_REQUESTS__", str(limit)
+                ), encoding="utf-8"
+            )
             sched_log = OUT / f"g{group}-long{limit}-scheduler.log"
             client_log = OUT / f"g{group}-long{limit}-client.log"
             started = time.time()
             process = None
             log = None
             try:
-                process, log = start_scheduler(limit, sched_log)
+                process, log = start_scheduler(limit, sched_log, config_path)
                 with client_log.open("w", encoding="utf-8") as client:
                     result = subprocess.run(
                         [str(PYTHON), str(BASE / "cold_rag_replay.py"),
                          "--limit", str(limit), "--group", str(group), "--rate", "0.23",
                          "--duration", "120", "--warmup", "15",
-                         "--output", str(run_dir), "--tag", f"matrix-g{group}-l{limit}"],
+                         "--output", str(run_dir), "--config", str(config_path),
+                         "--tag", f"matrix-g{group}-l{limit}"],
                         cwd=BASE, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
                         stdout=client, stderr=subprocess.STDOUT, text=True,
                     )
@@ -102,7 +111,8 @@ def main() -> None:
                     "warmup_s": 15, "returncode": result.returncode,
                     "elapsed_s": round(time.time() - started, 2),
                     "directory": str(run_dir), "scheduler_log": str(sched_log),
-                    "client_log": str(client_log),
+                    "client_log": str(client_log), "config": str(config_path),
+                    "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
                 }
                 summary_path = run_dir / "summary.json"
                 if summary_path.exists():

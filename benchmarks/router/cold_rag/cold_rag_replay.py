@@ -1,4 +1,4 @@
-"""Open-loop short-Agent + 16K cold-RAG replay through the first-version Scheduler."""
+"""Open-loop short-Agent + 17.5K cold-RAG replay through the first-version Scheduler."""
 from __future__ import annotations
 
 import argparse
@@ -6,7 +6,6 @@ import asyncio
 import hashlib
 import json
 import os
-import statistics
 import sys
 import time
 from collections import Counter
@@ -19,6 +18,8 @@ ROOT = BASE.parents[2]
 sys.path.insert(0, str(BASE.parent))
 import transport
 import smoke_concurrency as smoke
+import scenario_stats as stats
+
 DEFAULT_URL = "http://127.0.0.1:18080"
 ENGINE = os.getenv("WORKER_A", "http://10.169.25.15:8000")
 METRIC_NAMES = {
@@ -31,18 +32,6 @@ METRIC_NAMES = {
     "vllm:num_preemptions_total",
     "vllm:kv_cache_usage_perc",
 }
-
-
-def pct(values: list[float], q: float) -> float | None:
-    if not values:
-        return None
-    ordered = sorted(values)
-    index = min(len(ordered) - 1, max(0, round((len(ordered) - 1) * q)))
-    return round(ordered[index], 2)
-
-
-def read_json(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def short_agent_case(marker: str) -> dict:
@@ -112,13 +101,6 @@ def delta(before: dict, after: dict, name: str) -> float | None:
     return value if value >= 0 else None
 
 
-def cache_ratio(before: dict, after: dict) -> dict:
-    hits = delta(before, after, "vllm:prefix_cache_hits_total")
-    queries = delta(before, after, "vllm:prefix_cache_queries_total")
-    return {"hits": hits, "queries": queries,
-            "ratio": round(hits / queries, 4) if hits is not None and queries else None}
-
-
 async def send_request(client: httpx.AsyncClient, spec: dict, planned: float, run_tag: str,
                        limit: int, group: int, url: str) -> dict:
     headers = {}
@@ -127,29 +109,22 @@ async def send_request(client: httpx.AsyncClient, spec: dict, planned: float, ru
     )
     queue_text = headers.get("x-gateway-queue-wait-seconds")
     queue_ms = round(float(queue_text) * 1000, 2) if queue_text not in (None, "") else None
-    started = result["started"]
-    ended = result["ended"]
-    first = result.get("first_at")
-    last = result.get("last_at")
     usage = result.get("usage") or {}
     completion_tokens = usage.get("completion_tokens")
-    tps_after_first = None
-    if completion_tokens and first and last and last > first:
-        tps_after_first = round((completion_tokens - 1) / (last - first), 3)
     result.update({
         "run_tag": run_tag,
         "limit": limit,
         "group": group,
         "scenario": spec["scenario"],
         "planned": planned,
-        "arrival_delay_ms": round((started - planned) * 1000, 2),
+        "arrival_delay_ms": round((result["started"] - planned) * 1000, 2),
         "gateway_headers": headers,
         "gateway_queue_wait_ms": queue_ms,
         "backend_id": headers.get("x-gateway-backend-id"),
         "user": spec.get("user"),
         "prompt_tokens": usage.get("prompt_tokens"),
         "output_tokens": completion_tokens,
-        "output_tps_after_first": tps_after_first,
+        "output_tps_after_first": stats.after_first_tps(usage, result.get("first_at"), result.get("last_at")),
         "engine_queue_wait_ms": None,  # vLLM exposes only aggregate waiting counters
         "cache_delta": None,  # concurrent requests cannot be attributed per request
         "content": result.get("content", "")[:2000],
@@ -158,47 +133,51 @@ async def send_request(client: httpx.AsyncClient, spec: dict, planned: float, ru
     return result
 
 
+def client_exception(spec: dict, planned: float, sent_at: float | None, exc: BaseException,
+                     run_tag: str, limit: int, group: int) -> dict:
+    now = time.perf_counter()
+    started = sent_at if sent_at is not None else None
+    return {
+        "id": spec.get("id"),
+        "scenario": spec.get("scenario"),
+        "run_tag": run_tag, "limit": limit, "group": group,
+        "planned": planned, "started": started, "ended": now,
+        "arrival_delay_ms": round(((started if started is not None else planned) - planned) * 1000, 2),
+        "state": "client_exception", "status": 0,
+        "ttft_ms": None, "complete_ms": round((now - (started or planned)) * 1000, 2),
+        "output_tokens": None, "output_tps_after_first": None,
+        "gateway_queue_wait_ms": None, "backend_id": None,
+        "user": spec.get("user"), "error": type(exc).__name__ + ": " + str(exc),
+    }
+
+
 def summarize(rows: list[dict], window_start: float, window_end: float, engine_before: dict,
               engine_after: dict, duration: float, waiting_samples: list[float]) -> dict:
-    window_rows = [r for r in rows if window_start <= r["started"] < window_end]
-    by_scenario = {}
-    for scenario in ("short_agent", "cold_rag"):
-        selected = [r for r in window_rows if r["scenario"] == scenario]
-        ttft = [r["ttft_ms"] for r in selected if r.get("ttft_ms") is not None]
-        complete = [r["complete_ms"] for r in selected if r.get("complete_ms") is not None]
-        tps = [r["output_tps_after_first"] for r in selected if r.get("output_tps_after_first")]
-        queue = [r["gateway_queue_wait_ms"] for r in selected if r.get("gateway_queue_wait_ms") is not None]
-        by_scenario[scenario] = {
-            "requests": len(selected),
-            "success": sum(1 for r in selected if r.get("state") == "success"),
-            "states": dict(Counter(r.get("state") for r in selected)),
-            "ttft_ms": {"p50": pct(ttft, 0.5), "p95": pct(ttft, 0.95), "max": round(max(ttft), 2) if ttft else None},
-            "per_lane_tps": {"p50": pct(tps, 0.5), "p10": pct(tps, 0.1)},
-            "gateway_queue_ms": {"p50": pct(queue, 0.5), "p95": pct(queue, 0.95)},
-            "engine_queue_ms": {"status": "unavailable", "reason": "vLLM exposes aggregate waiting only"},
-            "complete_ms": {"p50": pct(complete, 0.5), "p95": pct(complete, 0.95)},
-            "output_tokens": {"min": min([r["output_tokens"] or 0 for r in selected], default=None),
-                              "median": statistics.median([r["output_tokens"] or 0 for r in selected]) if selected else None,
-                              "max": max([r["output_tokens"] or 0 for r in selected], default=None)},
-        }
+    window_rows, outside_rows, unassignable = stats.assign_window(rows, window_start, window_end)
+    scenario = stats.summarize_scenarios(window_rows)
     generation = delta(engine_before, engine_after, "vllm:generation_tokens_total")
-    usage_tokens = sum((r.get("output_tokens") or 0) for r in window_rows if r.get("ended") is not None and r["ended"] <= window_end)
+    usage_tokens = sum((r.get("output_tokens") or 0) for r in window_rows
+                       if r.get("ended") is not None and r["ended"] <= window_end)
     return {
         "window_s": duration,
         "window_requests": len(window_rows),
-        "by_scenario": by_scenario,
+        "outside_requests": len(outside_rows),
+        "unassignable_requests": len(unassignable),
+        **scenario,
         "engine_generation_tokens_delta": generation,
         "engine_window_tps": round(generation / duration, 3) if generation is not None else None,
         "usage_tokens_completed_in_window": usage_tokens,
         "usage_window_tps": round(usage_tokens / duration, 3),
-        "engine_cache": cache_ratio(engine_before, engine_after),
+        "engine_cache": stats.endpoint_cache_delta(engine_before, engine_after),
         "engine_waiting_max": max(waiting_samples) if waiting_samples else None,
         "engine_queue_ms": {"status": "unavailable", "note": "aggregate waiting sampled; per-request queue not exposed by vLLM"},
-        "failures": sum(1 for r in window_rows if r.get("state") not in ("success", "truncated")),
-        "truncated": sum(1 for r in window_rows if r.get("state") == "truncated"),
-        "drain_s": round(max((r["ended"] for r in rows), default=window_end) - window_end, 2),
-        "arrival_delay_ms": {"p50": pct([r["arrival_delay_ms"] for r in window_rows], 0.5),
-                             "p95": pct([r["arrival_delay_ms"] for r in window_rows], 0.95)},
+        "drain_s": round(max((r["ended"] for r in rows if r.get("ended") is not None), default=window_end) - window_end, 2),
+        "arrival_delay_ms": {
+            "p50": stats._pct([r["arrival_delay_ms"] for r in window_rows
+                               if r.get("arrival_delay_ms") is not None], 0.5),
+            "p95": stats._pct([r["arrival_delay_ms"] for r in window_rows
+                               if r.get("arrival_delay_ms") is not None], 0.95),
+        },
         "users": dict(Counter(r.get("user") for r in window_rows)),
     }
 
@@ -212,6 +191,7 @@ async def main() -> None:
     parser.add_argument("--warmup", type=float, default=15)
     parser.add_argument("--url", default=DEFAULT_URL)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--config", default="")
     parser.add_argument("--tag", default="")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -239,6 +219,7 @@ async def main() -> None:
         start = time.perf_counter() + 2
         window_start = start + args.warmup
         window_end = window_start + args.duration
+
         async def metrics_sampler():
             samples = []
             async with httpx.AsyncClient(timeout=10, trust_env=False) as metrics_client:
@@ -256,27 +237,33 @@ async def main() -> None:
 
         async def one(index: int, spec: dict):
             planned = start + index / args.rate
-            await asyncio.sleep(max(0.0, planned - time.perf_counter()))
-            return await send_request(client, spec, planned, run_tag, args.limit, args.group, args.url)
+            sent_at = None
+            try:
+                await asyncio.sleep(max(0.0, planned - time.perf_counter()))
+                sent_at = time.perf_counter()
+                return await send_request(client, spec, planned, run_tag, args.limit, args.group, args.url)
+            except Exception as exc:
+                return client_exception(spec, planned, sent_at, exc, run_tag, args.limit, args.group)
 
         sampler_task = asyncio.create_task(metrics_sampler())
         tasks = [asyncio.create_task(one(i, spec)) for i, spec in enumerate(specs)]
         rows = await asyncio.gather(*tasks, return_exceptions=True)
         sampler, engine_before, engine_after = await sampler_task
         clean_rows = []
-        for row in rows:
-            if isinstance(row, BaseException):
-                clean_rows.append({"state": "client_exception", "error": type(row).__name__ + ": " + str(row),
-                                   "scenario": "unknown", "started": window_end, "ended": window_end})
-            else:
+        for index, row in enumerate(rows):
+            if isinstance(row, dict):
                 clean_rows.append(row)
+            else:
+                clean_rows.append(client_exception(
+                    specs[index], start + index / args.rate, None, row, run_tag, args.limit, args.group
+                ))
         waiting = [s["waiting"] for s in sampler if s.get("waiting") is not None]
         summary = summarize(clean_rows, window_start, window_end, engine_before, engine_after,
                             args.duration, waiting)
         summary.update({
             "run_tag": run_tag, "limit": args.limit, "group": args.group, "rate": args.rate,
             "warmup_s": args.warmup, "scheduler_url": args.url, "engine": ENGINE,
-            "config": str(BASE / f"backends-long{args.limit}.yaml"),
+            "config": args.config or str(BASE / "backends-template.yaml"),
             "all_requests": len(clean_rows), "window_start": window_start, "window_end": window_end,
             "output_budget_tokens": 512,
         })

@@ -112,8 +112,11 @@ def test_shipped_spark_configuration() -> None:
     root = Path(__file__).resolve().parents[2]
     config = load_gateway_config(root / "config" / "backends.yaml")
     route = config.models["qwen3.8-27b"]
-    assert route.upstream_model == "qwen3.8-27b"
+    assert route.upstream_model == "qwen3.6-35b-a3b-nvfp4"
+    assert route.max_context_tokens == 262144
     first, second = config.backend_pools[route.backend_pool].backends
+    assert first.max_concurrent_requests == 2 and second.max_concurrent_requests == 2
+    assert first.max_long_requests == 2 and second.max_long_requests == 2
     assert first.host_id == "10.169.25.15"
     assert first.url == "http://10.169.25.15:8000"
     assert first.enabled

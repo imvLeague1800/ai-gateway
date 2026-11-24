@@ -11,6 +11,7 @@ from pathlib import Path
 import httpx
 
 import replay
+import scenario_stats as stats
 import transport
 
 BASE = Path(__file__).resolve().parent
@@ -102,6 +103,42 @@ async def run_cases() -> dict:
     return outcomes
 
 
+def stats_regression() -> dict:
+    start, end = 100.0, 200.0
+    common = {"output_tps_after_first": 50.0, "gateway_queue_wait_ms": 0.0,
+              "output_tokens": 10, "user": "u", "arrival_delay_ms": 0.0,
+              "ttft_ms": 100.0, "complete_ms": 1000.0, "ended": 1010.0}
+    rows = [
+        {"scenario": "short_agent", "state": "success", "started": 150.0, **common},
+        {"scenario": "cold_rag", "state": "client_exception", "started": 160.0,
+         "planned": 110.0, "ended": 160.0, "ttft_ms": None, "complete_ms": None,
+         "output_tps_after_first": None, "gateway_queue_wait_ms": None,
+         "output_tokens": None, "user": "u", "arrival_delay_ms": None},
+        {"scenario": "short_agent", "state": "client_exception", "planned": 120.0,
+         "ended": 120.0, "ttft_ms": None, "complete_ms": None,
+         "output_tps_after_first": None, "gateway_queue_wait_ms": None,
+         "output_tokens": None, "user": "u", "arrival_delay_ms": None},
+        {"scenario": "cold_rag", "state": "success", "started": 200.0, **common},
+        {"scenario": "cold_rag", "state": "success", **common},
+    ]
+    inside, outside, unassignable = stats.assign_window(rows, start, end)
+    online = __import__("cold_rag.cold_rag_replay", fromlist=["summarize"]).summarize(
+        rows, start, end, {}, {}, 100.0, []
+    )
+    offline = stats.summarize_scenarios(inside)
+    assert len(inside) == 3 and len(outside) == 1 and len(unassignable) == 1
+    assert online["window_requests"] == 3
+    assert online["failures"] == 2
+    assert online["by_scenario"]["short_agent"]["requests"] == 2
+    assert online["by_scenario"]["cold_rag"]["requests"] == 1
+    assert offline["failures"] == 2
+    assert offline["by_scenario"]["short_agent"]["requests"] == 2
+    assert offline["by_scenario"]["cold_rag"]["requests"] == 1
+    return {"inside": len(inside), "outside": len(outside), "unassignable": len(unassignable),
+            "online": {k: online[k] for k in ("window_requests", "failures", "by_scenario")},
+            "offline": offline}
+
+
 def main() -> None:
     cases, sessions, profiles = replay.load()
     checks = {"dataset": {"cases": len(cases), "sessions": len(sessions), "profiles_seed": profiles["seed"]}}
@@ -111,6 +148,7 @@ def main() -> None:
     cache = replay.cache_ratio([before, after])
     checks["cache"] = cache
     checks["percentile"] = {"p50": replay.percentile([1, 2, 3, 4], 0.50), "p95": replay.percentile([1, 2, 3, 4], 0.95)}
+    checks["stats_regression"] = stats_regression()
     assert checks["timing_and_states"]["success"]["state"] == "success"
     assert checks["timing_and_states"]["429"]["state"] == "rejected"
     assert checks["timing_and_states"]["500"]["state"] == "http_error"

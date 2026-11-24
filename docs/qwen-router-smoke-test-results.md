@@ -1,4 +1,4 @@
-> 归档说明：本报告复现时使用 `manifest.json` v1.2.0 和 `smoke.json` SHA-256 `8760e370…`。后续 v1.2.1 仅为 `transport.py` 增加可选 `user`/`max_tokens`/响应头参数并更新 README 元数据；本报告与 `runs/smoke-v1/` 保留旧指纹，不重算。
+> 归档说明：本报告复现时使用 `manifest.json` v1.2.0 和 `smoke.json` SHA-256 `8760e370…`。后续 v1.2.2 增加了 `transport.py` 可选参数、共享统计/异常回归和 README 元数据；本报告与 `runs/smoke-v1/` 保留旧指纹，不重算。
 
 # Qwen Router 快速回归与单机并发测试结果
 

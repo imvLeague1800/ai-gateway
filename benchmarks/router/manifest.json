@@ -1,5 +1,5 @@
 {
-  "version": "1.2.1",
+  "version": "1.2.2",
   "schema_version": 1,
   "generator_version": 1,
   "seed": 20261123,
@@ -18,19 +18,20 @@
     "calibration_sessions.jsonl": "f074e8d27d87095d49c02083e6b49f0850db11596309a32c4c6af1ee56c76c3d",
     "calibration-results.json": "1e95e179416b30dec69a0419b68df2f064b7041dc98081d0332382ce6d8b3626",
     "budgets.json": "014e457edabac36f24bdb7a11f7ef5f0133b8a09350540d7a79f19563cd3ba35",
-    "test-results.json": "51d073dcd476b362d0967fd2cf82e50daa34826c73eeb4cfb47c8eea9c99c0bd",
+    "test-results.json": "8817a9d1f1836b992e8e8ed7dbfdb9e2aa25f32b157c1724a0620d942ac6f651",
     "replay.py": "f1a30b712838b5627ab1c16b4d699b4d09b31a0f103379b35d4db9a01de9d385",
     "transport.py": "304452130909262ccfbaf6fbc556797e6a42d219e90414c2ffeb0cae942a4036",
-    "test_harness.py": "9c7993464e546c6358cc4573fa972f432edffc391c82eda707c5a5fe023030cb",
+    "test_harness.py": "37229cfad9464d69a43b44f9445fc1b42fb9982fb339f290f1e9f78dcf9804e6",
     "make_calibration.py": "e8a4a4e530ce2bc4ee6b8963ecd12d1b83b3b887f8340b6243beb8081e942e91",
-    "README.md": "a3fe0222ea90964d69f58facdff1f692cd7a928e8537bbd206905a0d9870b788",
+    "README.md": "73f7a856c51c169293244fa9f44e5bc765cbbb94f1b54da9b0f47763f0df2e73",
     "real/README.md": "e6993536ab8e879fd04ca6f226dd752ea9abdb2355736c2a0519ecc5fcce778a",
     "run_retest.py": "2589f7cf10ca8ed67dd239049ee49b72866b5980a5b4ad7487bca9c357264a4c",
     "analyze_retest.py": "16449ca097912b6b39f745983b747750d0eb2a8a04664c48f1ba0271bb316420",
     "fault_retest.py": "62fbba4a6ebce407f3d8f9a18accad5e852aa25aac98fc713457db12d32dbf2a",
     "hot_forced.py": "3db831c1e6d0e7f389c67bd323152fdde12be750c014c872476829b2f81ac63c",
     "run_fault_matrix.py": "98c36f87731ffe3f0220ddf29cf561558fe82d0e8e64285d64aa62353dfb47c0",
-    "analyze_fault.py": "2769edaa102168c1b73400a904759aefdabad4d43bf1568a31b21de8b3eb8f0f"
+    "analyze_fault.py": "2769edaa102168c1b73400a904759aefdabad4d43bf1568a31b21de8b3eb8f0f",
+    "scenario_stats.py": "e448adc64f0add72b6a022134a964282ca5009fdfc3e54612de60e5c555542af"
   },
   "usage_scope": "internal-only routing evaluation; not a model-quality or business-accuracy benchmark",
   "calibration_cases": 60,
@@ -42,6 +43,7 @@
   "notes": [
     "v1.2.0 replaces the unreliable 17*23 QA prompt with 2+2; v1.1 calibration remains under .verification for audit.",
     "v1.2 formal rates frozen: high 2.0, light 1.5, stable 0.75; 3.0 was overloaded.",
-    "v1.2.1 adds optional user/max_tokens/response-header capture to transport.py and documents the smoke/cold-RAG entry points; dataset, calibration, profiles and budgets are unchanged."
+    "v1.2.1 adds optional user/max_tokens/response-header capture to transport.py and documents the smoke/cold-RAG entry points; dataset, calibration, profiles and budgets are unchanged.",
+    "v1.2.2 shares scenario/window statistics, adds the client-exception regression, and uses generated cold-RAG configs; archived smoke/cold fingerprints remain unchanged."
   ]
 }

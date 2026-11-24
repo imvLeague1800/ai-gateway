@@ -19,6 +19,7 @@ def sha(path: Path) -> str:
 def main() -> None:
     (DST / "runs").mkdir(parents=True, exist_ok=True)
     (DST / "analysis").mkdir(parents=True, exist_ok=True)
+    (DST / "probes").mkdir(parents=True, exist_ok=True)
     rows = []
     for directory in sorted(RAW.glob("g*-long*")):
         if not directory.is_dir():
@@ -38,6 +39,13 @@ def main() -> None:
     analysis = BASE.parent / "cold-rag-analysis.json"
     if analysis.exists():
         shutil.copy2(analysis, DST / "analysis" / "cold-rag-analysis.json")
+    probe_dir = RAW.parent / "config-probe"
+    if probe_dir.exists():
+        for name in ("config-probe.json", "root-scheduler.log", "single-scheduler.log",
+                     "context-scheduler.log", "single-backends.yaml", "context-reject-backends.yaml"):
+            path = probe_dir / name
+            if path.exists():
+                shutil.copy2(path, DST / "probes" / name)
     (DST / "run-index.jsonl").write_text(
         "\n".join(json.dumps(row, ensure_ascii=True) for row in rows) + "\n", encoding="utf-8")
     files = []
@@ -50,12 +58,24 @@ def main() -> None:
         files.append(f"{sha(path)}  {path.relative_to(ROOT).as_posix()}")
     if analysis.exists():
         files.append(f"{sha(analysis)}  {analysis.relative_to(ROOT).as_posix()}")
+    recompute = DST / "analysis" / "archive-recompute.json"
+    if recompute.exists():
+        files.append(f"{sha(recompute)}  {recompute.relative_to(ROOT).as_posix()}")
+    for path in sorted((DST / "configs").glob("*.yaml")):
+        files.append(f"{sha(path)}  {path.relative_to(ROOT).as_posix()}")
+    for path in sorted((DST / "probes").glob("*")):
+        if path.is_file():
+            files.append(f"{sha(path)}  {path.relative_to(ROOT).as_posix()}")
     (DST / "evidence-sha256.txt").write_text("\n".join(files) + "\n", encoding="utf-8")
     env = {
         "captured": "2026-11-24",
         "git_revision": __import__("subprocess").check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         "manifest_sha256": sha(ROOT / "benchmarks" / "router" / "manifest.json"),
-        "configs": {name: sha(BASE / name) for name in ("backends-long1.yaml", "backends-long2.yaml")},
+        "configs": {"backends-template.yaml": sha(BASE / "backends-template.yaml")},
+        "archived_configs": {
+            "backends-long1.yaml": sha(DST / "configs" / "backends-long1.yaml"),
+            "backends-long2.yaml": sha(DST / "configs" / "backends-long2.yaml"),
+        },
         "scripts": {name: sha(BASE / name) for name in
                     ("cold_rag_replay.py", "run_cold_rag_matrix.py", "analyze_cold_rag.py",
                      "register_cold_rag_evidence.py")},

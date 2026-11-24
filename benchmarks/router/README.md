@@ -31,7 +31,7 @@ run outputs belong in internal persistent storage and are referenced by run ID.
 | `test_harness.py`, `test-results.json` | Mock checks for timing, cache aggregation, state classification and scoring. |
 | `make_calibration.py` | Rebuilds the calibration files and budgets. |
 | `smoke.json`, `smoke_replay.py`, `smoke_queue.py`, `smoke_failure.py`, `smoke_concurrency.py` | Frozen 16-session quick regression, queue/cancel, one-replica removal and direct 1–4 lane concurrency. |
-| `cold_rag/backends-long{1,2}.yaml`, `cold_rag/cold_rag_replay.py`, `cold_rag/run_cold_rag_matrix.py`, `cold_rag/analyze_cold_rag.py` | First-version Scheduler long-cold admission comparison; separate `.verification/dual-qwen/cold-rag/` evidence. |
+| `cold_rag/backends-template.yaml`, `cold_rag/cold_rag_replay.py`, `cold_rag/run_cold_rag_matrix.py`, `cold_rag/analyze_cold_rag.py`, `cold_rag/config_probe.py`, `scenario_stats.py` | First-version Scheduler long-cold admission comparison, generated per-run configs, shared window/statistics, and isolated config probes; separate `.verification/dual-qwen/cold-rag/` evidence. |
 
 ## Frozen budgets
 
@@ -57,6 +57,7 @@ python test_harness.py
 python smoke_replay.py --policy cache_aware --output ../../.verification/dual-qwen/smoke/cache_aware
 python cold_rag/run_cold_rag_matrix.py
 python cold_rag/analyze_cold_rag.py
+python cold_rag/config_probe.py
 python make_calibration.py         # only when intentionally re-freezing budgets
 python run_retest.py               # 3 paired groups x stable/high/light
 python fault_retest.py --policy power_of_two --host 16 --repeat 1

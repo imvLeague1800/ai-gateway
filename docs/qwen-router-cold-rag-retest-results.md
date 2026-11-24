@@ -28,7 +28,7 @@
 
 清理前已保存 tracked diff、未跟踪源码 tar 和 `git status` 到 `.verification/cold-rag/backup/`；产品基线提交为 `1e4645c21940794d604036295d0532a977f79215`。
 
-测试资产版本为 `benchmarks/router/manifest.json` v1.2.1；与归档的 2026-11-23 smoke 报告使用的 v1.2.0 相比，差异仅为 `transport.py` 的可选 `user`/`max_tokens`/响应头捕获和 README 元数据，数据、校准、预算文件哈希未变。
+测试资产版本为 `benchmarks/router/manifest.json` v1.2.2；与归档的 2026-11-23 smoke 报告使用的 v1.2.0 相比，差异包括 `transport.py` 的可选 `user`/`max_tokens`/响应头捕获、共享统计模块、异常回归和 README 元数据；数据、校准、预算文件哈希未变。
 
 ## 部署与准入配置
 
@@ -36,7 +36,26 @@
 - `.16`：同一 Qwen 镜像/权重/参数，`max_model_len=262144`；本轮测试结束后保留 Qwen，Gemma 停用并保留启动配置备份。
 - Scheduler：第一版 `scheduler/app`，独立实例 `127.0.0.1:18080`；`max_concurrent_requests=2`，`max_long_requests` 分别 1/2，`long_request_threshold_tokens=8192`；`max_active_per_principal=1`，客户端使用 8 个独立 principal，避免每 Key 上限把总准入压到 1。
 - 认证：`SCHEDULER_INTERNAL_API_KEY=cold-rag-test-key`；不经过 LiteLLM，不叠加 Router；客户端直接调用 Scheduler `/v1/chat/completions` 并携带 `x-gateway-queue-wait-seconds` 响应头。
-- 配置：`benchmarks/router/cold_rag/backends-long1.yaml` / `backends-long2.yaml`。
+- 配置模板：`benchmarks/router/cold_rag/backends-template.yaml`；矩阵入口按 `max_long_requests` 生成每轮 `backends.yaml`，实际配置和哈希随运行目录归档。旧实际配置保存在 `runs/cold-rag-v1/configs/`。
+
+### 配置对齐与隔离验证
+
+- `.15`/`.16` 实际 `/v1/models` 均为 `qwen3.6-35b-a3b-nvfp4`、`max_model_len=262144`，两台 health 200。
+- 根 `config/backends.yaml`：客户端别名仍为 `qwen3.8-27b`，`upstream_model=qwen3.6-35b-a3b-nvfp4`；模型路由和两台副本 `max_context_tokens=262144`，每台 `max_concurrent_requests=2`、`max_long_requests=2`。`config/litellm.yaml` 仍将 `qwen3.8-27b` 映射到 Scheduler。
+- 根配置（SHA-256 `819dfe977f0bd7d46c8b96b8341c26a60e305f54854812a2dedb081b19fc2db1`）隔离实例：3 个显式别名短请求均 200，实际落点 `spark-15-vllm`/`spark-16-vllm`，响应 `model` 均为 `qwen3.6-35b-a3b-nvfp4`。
+- 单副本探针（`max_concurrent_requests=2`、`max_long_requests=2`）：3 个 17.5K 冷文档同时发出，2 个立即接单、1 个 `x-gateway-queue-wait-seconds` 约 11.5s；3 个均成功。Scheduler `MAX_ACTIVE_PER_PRINCIPAL=1`，每 Key 同时最多 1 条，客户端使用不同 principal 才达到每副本 2 条。
+- 上下文拒绝探针（max_output 临时设为 262143）：2 个输入 token + `max_tokens=262143` 预留超过 262144，Scheduler 返回 **400 `context_length_exceeded`**。
+- 证据：`.verification/dual-qwen/cold-rag/config-probe/config-probe.json`；副本上限和每 Key 上限分别记录在配置/Scheduler 环境，未把每 Key 上限误当作副本上限。
+- 根配置未改动线上进程；本轮只做隔离实例探测，线上生效需走既有部署流程。LiteLLM 只做配置映射静态核对，未另起完整 LiteLLM 链路。
+
+### 统计与异常回归
+
+- 逐场景统计统一到 `benchmarks/router/scenario_stats.py`，复用 `replay.percentile`；长冷在线 `cold_rag_replay` 与离线 `analyze_cold_rag` 共用 `assign_window`/`summarize_scenarios`。
+- 窗口归属：有实际 `started` 用实际发送时间；发送前异常用计划 `planned`；窗口 `[start,end)`；缺两者标记 unassignable。客户端异常保留原场景、planned、实际失败时间，进入分母且只计一次失败。
+- 引擎缓存差值统一到 `endpoint_cache_delta`，smoke 与长冷共用；缺失、回退或分母为 0 时返回 unknown。
+- 每路 TPS 使用 `output_tps_after_first = (completion_tokens-1)/(last-first)`；旧 `output_tps` 字段保留。整机稳态仍用引擎 `generation_tokens_total` 窗口增量；smoke 历史完整窗口吞吐保留原口径。
+- mock 回归覆盖窗口内异常、发送前异常、窗口右边界和无法归属：窗口内 3 条、失败 2、短 Agent 2、冷文档 1；在线和离线结果一致。
+- 旧归档重算：smoke 分析 SHA-256 与归档 `d42628c4…` 一致；长冷成功请求数仍为上限 1：短 Agent 42/冷文档 42，上限 2：短 Agent 42/冷文档 42，截断数仍为 7/8；旧归档 unassignable 0，窗口外预热各 12 条。
 
 ## 重放与指标
 
@@ -84,17 +103,30 @@
 - **单副本**：只验证 `.15` 和第一版 Scheduler 准入；`.16` 双副本、真实 Agent 和故障场景留给下一阶段。
 - **稳定性**：0.23 req/s 由 30s 预演选定（0.2 无排队、0.25 在 120s 下长冷队列持续增长）；正式 3 组 120s 的结果仍需结合长冷等待和吞吐判断，不能据此宣称最大容量。
 
-### 证据指纹
+### 验收
+
+| 检查 | 结果 |
+| --- | --- |
+| 根配置加载 / Scheduler 单元测试 | `pytest -q`：**208 passed**；`test_shipped_spark_configuration` 已按 `qwen3.6-35b-a3b-nvfp4`、262144、每副本 2/2 更新。 |
+| 数据集校验 | `replay.py validate`：300 cases / 195 sessions。 |
+| mock 检查 | `test_harness.py` 通过；新增场景/窗口回归见“统计与异常回归”。 |
+| 旧归档重算 | smoke 分析 SHA-256 与归档 `d42628c4…` 一致；长冷成功计数与截断计数不变。 |
+| 配置隔离探测 | 两台映射、256K 上下文拒绝、单副本 2 在途/1 等待、long 2 均通过。 |
+
+## 证据指纹
 
 | 文件 | SHA-256 |
 | --- | --- |
-| `manifest.json` v1.2.1 | `d20dce14cc5715b43ae2a334afa391d7538428de5f76d6090ca7203bc25eaa82` |
-| `cold_rag/backends-long1.yaml` | `f1828755b041787feb9c5d8d48ffd803a26911d47728aadd99724ba4b94ef177` |
-| `cold_rag/backends-long2.yaml` | `1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a` |
-| `cold-rag-analysis.json` | `f6f9387160455537503fe08e5dfb2bd3542ba4c53e98e09478d497db8e70d9f2` |
+| `manifest.json` v1.2.2 | `1b5eada37bfb1558aa2060e3e06475c9064196535c105e52c0d6a8f991389f0f` |
+| `cold_rag/backends-template.yaml` | `2ba72b714e01eab7029d9d28014c420d56e6a6f4057da0a0f5aaaed97903753e` |
+| `runs/cold-rag-v1/probes/config-probe.json` | `2effb780117238f791a73421339e8f1d69d529f4cd6cacb4774b1baadea13caf` |
+| `runs/cold-rag-v1/configs/backends-long1.yaml` | `f1828755b041787feb9c5d8d48ffd803a26911d47728aadd99724ba4b94ef177` |
+| `runs/cold-rag-v1/configs/backends-long2.yaml` | `1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a` |
+| `cold-rag-analysis.json` | `3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3` |
+| `runs/cold-rag-v1/analysis/archive-recompute.json` | `fddfd99e49668ddec34f9e0ed2c3c981d715d048240b63ffbc8bedc38876df27` |
 | `runs/cold-rag-v1/run-index.jsonl` | `f6aabf7d3d327c1d5f18d5e4aab15a8deb1e32383c2f5b279539320b37412e02` |
-| `runs/cold-rag-v1/evidence-sha256.txt` | `02a9c9f79a18529fa62f01f9aa71cf65396d25aad4bda2f51eab0b7d8021d642` |
-| `runs/cold-rag-v1/environment.json` | `2954eddc36fef2d586e3c92cfdaa5a47ddcdefbf71a9beda08492eb88cb01340` |
+| `runs/cold-rag-v1/evidence-sha256.txt` | `4effd6df8e37507e2e0a86d11795d74907dfb1a74e88326fd1be2d388af4ff22` |
+| `runs/cold-rag-v1/environment.json` | `23809342df04f780ab0a0748f574359d0288ec53657958b0d27f8658f02df9d5` |
 
 代码 revision：`1e4645c21940794d604036295d0532a977f79215`（产品清理提交）。原始矩阵目录共 31 个登记文件。
 
