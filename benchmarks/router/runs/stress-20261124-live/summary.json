@@ -1,0 +1,37 @@
+{
+  "run_id": "stress-20261124-live",
+  "modes": [
+    "replay",
+    "concurrency",
+    "cold-rag"
+  ],
+  "stages": [
+    {
+      "mode": "replay",
+      "elapsed_s": 3655.68,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\stress-20261124-live\\replay.log"
+    },
+    {
+      "mode": "concurrency",
+      "elapsed_s": 1268.04,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\stress-20261124-live\\concurrency.log"
+    },
+    {
+      "mode": "cold-rag",
+      "elapsed_s": 929.02,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\stress-20261124-live\\cold-rag.log"
+    }
+  ],
+  "replay": {
+    "pass": true,
+    "returncode": 0,
+    "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\stress-20261124-live\\replay.log",
+    "run_index": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\stress-20261124-live\\replay\\run-index.jsonl"
+  },
+  "total_s": 5852.74,
+  "pass": true,
+  "dry_run": false
+}

@@ -1,0 +1,7 @@
+71250941053dced487f394a4aa86ae84c0fbc751e18a8a8e01c6790533f16dd9  .verification/dual-qwen/stress-20261124-live/summary.json
+11af0519aa4fefabc3a1403e97debd25a029fdc248c28a9d428e0c55689edb4a  .verification/dual-qwen/stress-20261124-live/replay/run-index.jsonl
+b20b232c6a22be5fdc6a224e4298f3faaaa5cbf7038904df3dcc0a80fb502c7e  .verification/dual-qwen/stress-20261124-live/concurrency/run-index.jsonl
+fe5020fd462bc1f5ffdf93d7c41afd85956e589a403f4a21ff3c2a9cd6a9c890  .verification/dual-qwen/stress-20261124-live/cold-rag/run-index.jsonl
+61088b7225c5ceb86a57b959f303a4bd0aa8617cf692a0b77a39def384b3309b  .verification/dual-qwen/stress-20261124-live/replay.log
+fd68fec8851aebce414316fc334e641c94b2db306a0226a1e66675fbf4aa72b0  .verification/dual-qwen/stress-20261124-live/concurrency.log
+fe5020fd462bc1f5ffdf93d7c41afd85956e589a403f4a21ff3c2a9cd6a9c890  .verification/dual-qwen/stress-20261124-live/cold-rag.log

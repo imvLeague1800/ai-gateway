@@ -25,7 +25,7 @@ file sizes, and SHA-256 hashes so the evidence can be checked without committing
   stage, 88.08 s total.
 - `smoke-daily-v3/` — 2026-11-24 current daily smoke on final manifest v1.2.8: core 28/28,
   queue/cancel, no fault stage, 87.18 s total.
-- `fault-20261124-1x-r2/` — 2026-11-24 manual real-fault drill (one cycle, manifest v1.2.9):
+- `fault-20261124-1x-r2/` — 2026-11-24 manual real-fault drill (one cycle, manifest v1.2.9, old preflight method):
   `.16` Qwen stop/restore 8.93 s removed / 18.83 s reaccepted, first complete `.16` response
   19.469 s after direct health, request ID `50a06a4b32d74562a81afb64873e756a`, exit code 0.
 - `smoke-daily-v4/` — 2026-11-24 earlier daily smoke on manifest v1.2.9: core 28/28,
@@ -38,6 +38,11 @@ file sizes, and SHA-256 hashes so the evidence can be checked without committing
 - `preflight-20261124/` — 2026-11-24 read-only drill preflight evidence: run A exits 2
   with the Router down and starts nothing; run B exits 0 against the ready Router. Both
   stop/start counts are zero.
+- `stress-20261124-live/` — 2026-11-24 full stress acceptance: replay 18/18, concurrency 12/12,
+  cold-rag 6/6 rounds exit 0; 5852.74 s total, exit code 0.
+- `fault-20261124-newpreflight/` — 2026-11-24 new read-only preflight plus one real cycle:
+  Router reused (`cache_aware`), removal 6.93 s, first complete `.16` response 6.235 s after
+  direct health, request ID `2bcca0eb8a8f437c9632a89837152cc5`, exit code 0.
 
 To re-check an evidence tree on this machine:
 
