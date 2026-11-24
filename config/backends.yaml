@@ -26,3 +26,15 @@ backend_pools:
         max_concurrent_requests: 4
         max_long_requests: 1
         health_path: /health
+      - id: spark-16-vllm
+        host_id: 10.169.25.16
+        # Service root: the gateway appends /tokenize and /v1/chat/completions.
+        url: http://10.169.25.16:8000
+        # Set SPARK_16_API_KEY here if authentication is enabled.
+        api_key_env: null
+        enabled: true
+        weight: 1.0
+        max_context_tokens: 32768
+        max_concurrent_requests: 4
+        max_long_requests: 1
+        health_path: /health
