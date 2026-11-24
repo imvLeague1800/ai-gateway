@@ -1,0 +1,104 @@
+{
+  "run_id": "smoke-entry-v1",
+  "policy": "cache_aware",
+  "baseline": false,
+  "stages": [
+    {
+      "name": "core",
+      "elapsed_s": 54.58,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\smoke-entry-v1\\core-cache_aware.log"
+    },
+    {
+      "name": "queue",
+      "elapsed_s": 31.47,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\smoke-entry-v1\\queue-cache_aware.log"
+    },
+    {
+      "name": "failover",
+      "elapsed_s": 1.37,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\smoke-entry-v1\\failover.log"
+    },
+    {
+      "name": "analysis",
+      "elapsed_s": 0.36,
+      "returncode": 0,
+      "log": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\smoke-entry-v1\\analysis.log"
+    }
+  ],
+  "total_s": 87.8,
+  "within_10_minutes": true,
+  "both_engines_running_after": true,
+  "final_health": {
+    "15": 200,
+    "16": 200
+  },
+  "core": {
+    "requests": 28,
+    "states": {
+      "success": 28
+    },
+    "protocol_ok": 28,
+    "quality_ok": 28,
+    "policy_ok": true,
+    "cache": {
+      "hits": 92224.0,
+      "queries": 336876.0,
+      "ratio": 0.2738,
+      "warm_hits": 92224.0
+    },
+    "recall": {
+      "warm_requests": 4,
+      "new_value_ok": 4
+    },
+    "both_workers_routed": false
+  },
+  "queue": {
+    "states": {
+      "success": 9,
+      "truncated": 1
+    },
+    "cancelled_ids": [
+      "queue-0",
+      "queue-11"
+    ],
+    "completed": 10,
+    "recovery": {
+      "recovered_s": 0.07,
+      "engines": {
+        "qwen15": {
+          "running": 0.0,
+          "waiting": 0.0
+        },
+        "qwen16": {
+          "running": 0.0,
+          "waiting": 0.0
+        }
+      },
+      "router_running": 0.0,
+      "recovered": true
+    }
+  },
+  "failover": {
+    "mode": "mock-router-omit-16",
+    "mock_worker": "qwen15",
+    "status": 200,
+    "state": "success",
+    "ttft_ms": 137.9,
+    "content": "OK",
+    "engines_before": {
+      "15": 200,
+      "16": 200
+    },
+    "engines_after": {
+      "15": 200,
+      "16": 200
+    },
+    "both_engines_stayed_up": true,
+    "all_200": true
+  },
+  "baseline_core": null,
+  "pass": true
+}

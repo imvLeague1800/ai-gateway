@@ -1,15 +1,19 @@
-"""Print markdown tables from cold-rag-analysis.json."""
+"""Print markdown tables from a cold-rag analysis archive."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
-ANALYSIS = BASE.parent / "cold-rag-analysis.json"
+DEFAULT_ANALYSIS = BASE.parent / "runs" / "cold-rag-v1" / "analysis" / "cold-rag-analysis.json"
 
 
 def main() -> None:
-    data = json.loads(ANALYSIS.read_text(encoding="utf-8"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--analysis", type=Path, default=DEFAULT_ANALYSIS)
+    args = parser.parse_args()
+    data = json.loads(args.analysis.read_text(encoding="utf-8"))
     print("| 长冷上限 | 场景 | 请求数 | TTFT P50/P95 | 每路 TPS P50/P10 | 网关排队 P50/P95 | 引擎排队 | 完成 P95 | 稳态整机 TPS | 失败/超时/截断 |")
     print("| ---: | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: | ---: |")
     for limit in ("1", "2"):

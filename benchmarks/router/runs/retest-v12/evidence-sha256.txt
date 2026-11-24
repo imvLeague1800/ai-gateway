@@ -115,3 +115,4 @@ aab0d9668abb86bdcfdb239c22eaecb5e777f6a1c79ae73fc308b6555dd6248f  .verification/
 6f33ccef75468fbc471ae8036f2b77bbfad824fc5d6e3a2481aa2253096dc883  .verification/dual-qwen/fault-v12/power_of_two-qwen16-r3.log
 1085e2ef3865e8f4706be45ddb14828fc7839f8c96d99e107319db1ff64d5b37  .verification/dual-qwen/hot-forced-v12/cache_aware-qwen15-r1.json
 db6cc6e61f210a1fbc8c2707161a594d3e3d1b858c0088084fbb6a00faf62b20  .verification/dual-qwen/hot-forced-v12/cache_aware-qwen16-r1.json
+07f4fcbb16e8072dc68e36ca317932f2a04f2ded730e6b64458a557ce409cdbf  benchmarks/router/runs/retest-v12/analysis/request-digests.jsonl

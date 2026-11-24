@@ -1,0 +1,18 @@
+{
+  "mode": "mock-router-omit-16",
+  "mock_worker": "qwen15",
+  "status": 200,
+  "state": "success",
+  "ttft_ms": 137.9,
+  "content": "OK",
+  "engines_before": {
+    "15": 200,
+    "16": 200
+  },
+  "engines_after": {
+    "15": 200,
+    "16": 200
+  },
+  "both_engines_stayed_up": true,
+  "all_200": true
+}

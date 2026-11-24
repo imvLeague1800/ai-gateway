@@ -1,0 +1,8 @@
+df0146b58b198fef2f6933ae0e94819359df93bf8742fd20853e7301f3406205  .verification/dual-qwen/smoke-proxy-v6/cache_aware/requests.jsonl
+7b8a443e3c1fe22f0bed00efc5a6072e8b60733f36fdfce3d2183b89d30e05f2  .verification/dual-qwen/smoke-proxy-v6/cache_aware/summary.json
+b3d1813f012e4b54e81809b9d5f947523756fc4d5f8f2c47882d098a2a5fad3b  .verification/dual-qwen/smoke-proxy-v6/cache_aware/warmup.jsonl
+2897f540596c1c8992e347447dddb6127f0bcc7b2888654468c54845aa6106dd  .verification/dual-qwen/smoke-proxy-v6/queue-cache_aware/queue-requests.jsonl
+4f9876fa1508efe24c1173bf032a74057baefa03fdf6b85758b08f28250890b0  .verification/dual-qwen/smoke-proxy-v6/queue-cache_aware/queue-summary.json
+186cf80345e7766a6fb3ceefd99c1469f83ef094dbda9a774a44471637b97c4b  .verification/dual-qwen/smoke-proxy-v6/failover/summary.json
+cacf2d4b16ae5b311a704111090e97071f29c5c1ff80c0513b1fc1b94ef8a648  .verification/dual-qwen/smoke-proxy-v6/summary.json
+1b2b520169c54b6cec25ddc953d2ed65fcdf0be14dd9af056f649ee3442d5379  .verification/dual-qwen/smoke-proxy-v6/analysis/smoke-analysis.json

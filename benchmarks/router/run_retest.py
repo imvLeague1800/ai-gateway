@@ -1,6 +1,7 @@
 """Run the frozen 3-group paired retest through the isolated Router."""
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
@@ -41,18 +42,25 @@ def restart(policy: str) -> None:
 
 
 def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    index_path = OUT / "run-index.jsonl"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-id", default="")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    out = args.output or (OUT if not args.run_id else
+                          ROOT / ".verification" / "dual-qwen" / args.run_id / "replay")
+    out.mkdir(parents=True, exist_ok=True)
+    index_path = out / "run-index.jsonl"
     index_path.write_text("", encoding="utf-8")
+    failures: list[dict] = []
     for group in GROUPS:
         order = ("power_of_two", "cache_aware") if group % 2 else ("cache_aware", "power_of_two")
         for profile in PROFILES:
             for policy in order:
                 restart(policy)
                 namespace = f"retest-v12-g{group}-{profile}-{uuid.uuid4().hex[:10]}"
-                log_path = OUT / f"g{group}-{profile}-{policy}.log"
+                log_path = out / f"g{group}-{profile}-{policy}.log"
                 command = [PYTHON, "replay.py", profile, "--policy", policy, "--group", str(group),
-                           "--namespace", namespace, "--budgets", "budgets.json", "--output", str(OUT)]
+                           "--namespace", namespace, "--budgets", "budgets.json", "--output", str(out)]
                 started = time.time()
                 print(f"START {profile} group={group} policy={policy} namespace={namespace}", flush=True)
                 with log_path.open("w", encoding="utf-8") as log:
@@ -60,6 +68,9 @@ def main() -> None:
                 record = {"profile": profile, "group": group, "policy": policy, "namespace": namespace,
                           "returncode": process.returncode, "log": str(log_path), "started": started,
                           "elapsed_s": round(time.time() - started, 2)}
+                if process.returncode != 0:
+                    failures.append({key: record[key] for key in
+                                     ("group", "profile", "policy", "returncode", "log")})
                 if process.returncode == 0:
                     try:
                         payload = json.loads(log_path.read_text(encoding="utf-8").splitlines()[-1])
@@ -70,6 +81,10 @@ def main() -> None:
                 with index_path.open("a", encoding="utf-8") as fh:
                     fh.write(json.dumps(record, ensure_ascii=True) + "\n")
                 print(json.dumps({k: record.get(k) for k in ("profile", "group", "policy", "returncode", "elapsed_s")}, ensure_ascii=True), flush=True)
+    if failures:
+        print(json.dumps({"pass": False, "failures": failures,
+                          "run_index": str(index_path)}, ensure_ascii=True), flush=True)
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

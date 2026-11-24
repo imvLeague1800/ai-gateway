@@ -117,15 +117,15 @@
 
 | 文件 | SHA-256 |
 | --- | --- |
-| `manifest.json` v1.2.2 | `1b5eada37bfb1558aa2060e3e06475c9064196535c105e52c0d6a8f991389f0f` |
+| `manifest.json` v1.2.6 | `379f44061882a220c188922e8ea3f189c7dce7edb7342fa5637ef7c1d8efdaa5` |
 | `cold_rag/backends-template.yaml` | `2ba72b714e01eab7029d9d28014c420d56e6a6f4057da0a0f5aaaed97903753e` |
 | `runs/cold-rag-v1/probes/config-probe.json` | `2effb780117238f791a73421339e8f1d69d529f4cd6cacb4774b1baadea13caf` |
 | `runs/cold-rag-v1/configs/backends-long1.yaml` | `f1828755b041787feb9c5d8d48ffd803a26911d47728aadd99724ba4b94ef177` |
 | `runs/cold-rag-v1/configs/backends-long2.yaml` | `1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a` |
-| `cold-rag-analysis.json` | `3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3` |
+| `runs/cold-rag-v1/analysis/cold-rag-analysis.json` | `3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3` |
 | `runs/cold-rag-v1/analysis/archive-recompute.json` | `fddfd99e49668ddec34f9e0ed2c3c981d715d048240b63ffbc8bedc38876df27` |
 | `runs/cold-rag-v1/run-index.jsonl` | `f6aabf7d3d327c1d5f18d5e4aab15a8deb1e32383c2f5b279539320b37412e02` |
-| `runs/cold-rag-v1/evidence-sha256.txt` | `4effd6df8e37507e2e0a86d11795d74907dfb1a74e88326fd1be2d388af4ff22` |
+| `runs/cold-rag-v1/evidence-sha256.txt` | `c8ef597ff92aebc58d38378fbf5d4e0406b53df1bf40b6f54e88590392efe533` |
 | `runs/cold-rag-v1/environment.json` | `23809342df04f780ab0a0748f574359d0288ec53657958b0d27f8658f02df9d5` |
 
 代码 revision：`1e4645c21940794d604036295d0532a977f79215`（产品清理提交）。原始矩阵目录共 31 个登记文件。
@@ -134,5 +134,5 @@
 
 - `.verification/dual-qwen/cold-rag/matrix/`：6 个配对 run 的 requests.jsonl、metrics.jsonl、summary.json、Scheduler/client 日志。
 - `.verification/dual-qwen/cold-rag/rehearsal-*`：0.2/0.23/0.25/0.3/0.4 预演记录；`matrix-aborted-*` 为正式矩阵前的失败/无效尝试。
-- 分析结果：`benchmarks/router/cold-rag-analysis.json`。
+- 分析结果：`benchmarks/router/runs/cold-rag-v1/analysis/cold-rag-analysis.json`（根目录副本已删除）。
 - 测试脚本：`benchmarks/router/cold_rag/cold_rag_replay.py`、`run_cold_rag_matrix.py`、`analyze_cold_rag.py`。

@@ -1,0 +1,161 @@
+{
+  "run_id": "fault-20261124-1x-r2",
+  "mode": "manual-real-fault-drill",
+  "policy": "cache_aware",
+  "cycles_requested": 1,
+  "cycles_completed": 1,
+  "maintenance_window_ack": true,
+  "target": ".16",
+  "survivor": ".15",
+  "actual_engines_stopped": [
+    ".16"
+  ],
+  "cycles": [
+    {
+      "cycle": 1,
+      "pass": true,
+      "service_stopped": true,
+      "direct_failure_s": 2.85,
+      "detection_s": 8.93,
+      "stop_command_s": 11.12,
+      "start_to_health_s": 197.486,
+      "health_before_start_returned": false,
+      "health_to_accept_s": 19.469,
+      "recovery_gap_s": 19.46877839998342,
+      "service_running": true,
+      "router_reaccept_s": 18.83,
+      "recovery_first_target_s": 19.48,
+      "recovery_request_id": "50a06a4b32d74562a81afb64873e756a",
+      "recovery_confirmed": true,
+      "router_accepts_16": true,
+      "same_router_container": true,
+      "error": null,
+      "recovery_error": null
+    }
+  ],
+  "pass": true,
+  "preflight": {
+    "ssh_login": {
+      "host": "dgx@10.169.25.16",
+      "command": "echo preflight-ok",
+      "returncode": 0,
+      "stdout": "preflight-ok",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:0000018E2EB52E80",
+      "elapsed_s": 0.41
+    },
+    "service_ps": {
+      "host": "dgx@10.169.25.16",
+      "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen ps -q qwen",
+      "returncode": 0,
+      "stdout": "535c2a8243d46740e2f95ddac8859b211fd3bd0520fd11abe654029f3814069f",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000001F52BCA6D00",
+      "elapsed_s": 0.48
+    },
+    "container": {
+      "host": "dgx@10.169.25.16",
+      "command": "docker inspect --format '{{.State.Status}} {{.Id}}' spark-vllm-qwen36",
+      "returncode": 0,
+      "stdout": "running 535c2a8243d46740e2f95ddac8859b211fd3bd0520fd11abe654029f3814069f",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000001D4D6AF75F0",
+      "elapsed_s": 0.4
+    },
+    "direct_health": {
+      "15": 200,
+      "16": 200
+    },
+    "model_ids": [
+      "qwen3.6-35b-a3b-nvfp4"
+    ],
+    "permissions": {
+      "account": {
+        "host": "dgx@10.169.25.16",
+        "command": "id -un",
+        "returncode": 0,
+        "stdout": "dgx",
+        "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:0000017220CCD5E0",
+        "elapsed_s": 0.4
+      },
+      "compose_version": {
+        "host": "dgx@10.169.25.16",
+        "command": "cd /home/dgx/spark-vllm && docker compose version --short",
+        "returncode": 0,
+        "stdout": "2.39.1",
+        "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:0000022ADAA3BAB0",
+        "elapsed_s": 0.43
+      },
+      "compose_dry_run_supported": true,
+      "service": "qwen",
+      "host": "10.169.25.16",
+      "project_dir": "/home/dgx/spark-vllm",
+      "stop_probe": {
+        "host": "dgx@10.169.25.16",
+        "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen --dry-run stop qwen",
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "DRY-RUN MODE -  Container spark-vllm-qwen36  Stopping\n DRY-RUN MODE -  Container spark-vllm-qwen36  Stopped\nclose - IO is still pending on closed socket. read:1, write:0, io:000001B7141F9B10",
+        "elapsed_s": 0.51,
+        "action": "stop",
+        "dry_run_honored": true,
+        "denied": false,
+        "granted": true
+      },
+      "start_probe": {
+        "host": "dgx@10.169.25.16",
+        "command": "id=$(docker ps -q -f name=spark-vllm-qwen36); before=$(docker inspect --format \"{{.State.StartedAt}}\" \"$id\"); docker start \"$id\" >/dev/null; rc=$?; after=$(docker inspect --format \"{{.State.StartedAt}}\" \"$id\"); printf 'id=%s\\nbefore=%s\\nafter=%s\\n' \"$id\" \"$before\" \"$after\"; exit $rc",
+        "returncode": 0,
+        "stdout": "id=535c2a8243d4\nbefore=2026-11-24T03:25:07.734700576Z\nafter=2026-11-24T03:25:07.734700576Z",
+        "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000001A5E4E37B50",
+        "elapsed_s": 0.54,
+        "action": "start",
+        "container_id": "535c2a8243d4",
+        "started_at_before": "2026-11-24T03:25:07.734700576Z",
+        "started_at_after": "2026-11-24T03:25:07.734700576Z",
+        "state_unchanged": true,
+        "state_changed": false,
+        "denied": false,
+        "granted": true
+      },
+      "query_probe": {
+        "host": "dgx@10.169.25.16",
+        "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen ps -q qwen",
+        "returncode": 0,
+        "stdout": "535c2a8243d46740e2f95ddac8859b211fd3bd0520fd11abe654029f3814069f",
+        "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:00000268927B6DC0",
+        "elapsed_s": 0.44
+      },
+      "stop_confirmed": true,
+      "start_confirmed": true,
+      "query_confirmed": true,
+      "both_granted": true,
+      "state": "both-granted",
+      "reason": "",
+      "service_unchanged": true
+    }
+  },
+  "router": {
+    "policy": "cache_aware",
+    "started_by_drill": true,
+    "ready_s": 0.81,
+    "container_id": "eacbab0d9872",
+    "worker_urls": [
+      "http://10.169.25.15:8000",
+      "http://10.169.25.16:8000"
+    ],
+    "health_check_interval_secs": 5,
+    "health_failure_threshold": 2,
+    "health_success_threshold": 2
+  },
+  "final_health": {
+    "15": 200,
+    "16": 200
+  },
+  "router_removed": {
+    "host": "dgx@10.169.25.16",
+    "command": "docker rm -f vllm-router-test",
+    "returncode": 0,
+    "stdout": "vllm-router-test",
+    "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:0000024D04921590",
+    "elapsed_s": 0.47
+  },
+  "total_s": 252.36
+}

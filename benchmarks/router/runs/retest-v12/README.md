@@ -17,6 +17,10 @@ Reproduce the headline checks:
 ```bash
 cd benchmarks/router
 python replay.py validate
-python analyze_retest.py    # paired acceptance, writes retest-analysis.json
-python analyze_fault.py     # 20-second fault targets, writes fault-analysis.json
+python analyze_retest.py --input runs/retest-v12 --output /tmp/retest-analysis.json
+python analyze_fault.py --input runs/retest-v12/fault --output /tmp/fault-analysis.json
 ```
+
+`analysis/request-digests.jsonl` stores only `{run, state, ttft_ms}` per request so the paired
+analysis (including the combined p99) can be rebuilt without the Git-ignored raw request streams.
+The reconstructed retest analysis is byte-identical to `analysis/retest-analysis.json`.

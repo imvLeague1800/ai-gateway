@@ -175,9 +175,9 @@
 | 环境快照 | `benchmarks/router/runs/retest-v12/environment.json`，SHA-256 `f49b9c26…a1a87cf3` |
 | Router | `vllm/vllm-router:v0.1.17`，arm64 digest `sha256:1128e09f5dc92b201753bc2f306488942d608ec747410f6c207354f0bf377c42` |
 | 运行索引 | `benchmarks/router/runs/retest-v12/run-index.jsonl`，SHA-256 `e9daafde…3e256c59` |
-| 原始证据哈希清单 | `benchmarks/router/runs/retest-v12/evidence-sha256.txt`，SHA-256 `78a307c0…33db79bd`（覆盖 117 个原始文件） |
-| 分析结果 | `retest-analysis.json` `a92772d9…c411fa05`；`fault-analysis.json` `8146d890…b6f6726b` |
-| 证据登记说明 | `benchmarks/router/runs/README.md` `914e68b4982483accab5c4a7da0f4b53eeba5453c71815d0fb45fdb6826f2cef`；`runs/retest-v12/README.md` `a537bc1be14a51dec192a135b1996bd87f994c13f1b9e09938073acb01ed1f36` |
+| 原始证据哈希清单 | `benchmarks/router/runs/retest-v12/evidence-sha256.txt`，SHA-256 `9988f529…675173f`（覆盖 118 个原始/派生文件） |
+| 分析结果 | `benchmarks/router/runs/retest-v12/analysis/retest-analysis.json` `a92772d9…c411fa05`；`runs/retest-v12/analysis/fault-analysis.json` `8146d890…b6f6726b`；请求摘要 `runs/retest-v12/analysis/request-digests.jsonl` `07f4fcbb…409cdbf` |
+| 证据登记说明 | `benchmarks/router/runs/README.md` `0403fa457a09e6d13cc6de67c7148b8f635189406fddc5c3625dd624cf82138c`；`runs/retest-v12/README.md` `0a36a5892544f0a8e9c47c249633f53df389ebc7d01494e2078cc5b07eeae71e` |
 
 哈希缩写只用于可读性；完整值在对应文件和 `evidence-sha256.txt` 中。`run-index.jsonl` 里每个 run 另存 `manifest_sha256_at_run`、`summary_sha256`、`requests_sha256` 和 `metrics_sha256`，审计时不依赖单一 manifest 哈希。`.verification/dual-qwen/` 被 Git 忽略，因此原始 requests/metrics/log 不提交；`benchmarks/router/runs/retest-v12/` 提交了索引、每 run 的 summary/run 副本、故障/热副本 JSON、分析文件和逐文件哈希，便于审计与重放校验。
 

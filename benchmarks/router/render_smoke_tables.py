@@ -1,22 +1,32 @@
 """Print the smoke report tables from saved summaries."""
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
-OUT = BASE.parents[1] / ".verification" / "dual-qwen" / "smoke"
+DEFAULT_INPUT = BASE.parents[1] / ".verification" / "dual-qwen" / "smoke"
 
 
 def load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def concurrency_path(root: Path, scenario: str, concurrency: int) -> Path:
+    raw = root / "concurrency" / f"{scenario}-c{concurrency}" / "summary.json"
+    return raw if raw.exists() else root / "concurrency" / f"{scenario}-c{concurrency}-summary.json"
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    args = parser.parse_args()
+    out = args.input
     rows = []
     for scenario in ("agent", "rag_cold", "rag_warm"):
         for c in (1, 2, 3, 4):
-            path = OUT / "concurrency" / f"{scenario}-c{c}" / "summary.json"
+            path = concurrency_path(out, scenario, c)
             if not path.exists():
                 continue
             d = load(path)
@@ -33,8 +43,8 @@ def main() -> None:
     print("\n".join(rows))
     print()
     for scenario in ("agent", "rag_cold", "rag_warm"):
-        two = OUT / "concurrency" / f"{scenario}-c2" / "summary.json"
-        three = OUT / "concurrency" / f"{scenario}-c3" / "summary.json"
+        two = concurrency_path(out, scenario, 2)
+        three = concurrency_path(out, scenario, 3)
         if not (two.exists() and three.exists()):
             continue
         a, b = load(two), load(three)

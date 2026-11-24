@@ -1,6 +1,7 @@
 """Aggregate paired cold-RAG admission runs with the shared scenario statistics."""
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -9,7 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import scenario_stats as stats
 
 BASE = Path(__file__).resolve().parent
-OUT = BASE.parents[2] / ".verification" / "dual-qwen" / "cold-rag" / "matrix"
+ROOT = BASE.parents[2]
+DEFAULT_INPUT = ROOT / ".verification" / "dual-qwen" / "cold-rag" / "matrix"
+DEFAULT_OUTPUT = ROOT / ".verification" / "dual-qwen" / "analysis" / "cold-rag-analysis.json"
 
 
 def read_jsonl(path: Path):
@@ -17,8 +20,19 @@ def read_jsonl(path: Path):
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--run-id", default="")
+    parser.add_argument("--directory-prefix", default="",
+                        help="rewrite run directory labels for archive reconstruction")
+    args = parser.parse_args()
+    out = args.output or (ROOT / ".verification" / "dual-qwen" / args.run_id / "analysis" /
+                          "cold-rag-analysis.json" if args.run_id else DEFAULT_OUTPUT)
+    if out.suffix != ".json":
+        out = out / "cold-rag-analysis.json"
     runs = []
-    for path in sorted(OUT.glob("g*-long*")):
+    for path in sorted(args.input.glob("g*-long*")):
         summary_path = path / "summary.json"
         requests_path = path / "requests.jsonl"
         if not (summary_path.exists() and requests_path.exists()):
@@ -30,7 +44,8 @@ def main() -> None:
         )
         runs.append({
             "group": summary["group"], "limit": summary["limit"],
-            "directory": str(path), "summary": summary,
+            "directory": str(Path(args.directory_prefix) / path.name) if args.directory_prefix else str(path),
+            "summary": summary,
             "rows": window, "all_rows": rows,
             "outside": outside, "unassignable": unassignable,
             "scenario": stats.summarize_scenarios(window),
@@ -106,8 +121,10 @@ def main() -> None:
          "outside_requests": len(run["outside"])}
         for run in runs
     ]}
-    (BASE.parent / "cold-rag-analysis.json").write_text(json.dumps(result, indent=2, ensure_ascii=True), encoding="utf-8")
-    print(json.dumps({"aggregate": aggregate, "pairs": pairs}, indent=2, ensure_ascii=True))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, indent=2, ensure_ascii=True), encoding="utf-8")
+    print(json.dumps({"output": str(out), "aggregate": aggregate, "pairs": pairs},
+                     indent=2, ensure_ascii=True))
 
 
 if __name__ == "__main__":

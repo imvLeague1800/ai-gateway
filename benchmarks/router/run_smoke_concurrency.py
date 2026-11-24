@@ -1,6 +1,7 @@
 """Run the direct single-replica concurrency matrix: 3 scenarios x 1-4 lanes."""
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
@@ -9,19 +10,25 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[1]
-OUT = ROOT / ".verification" / "dual-qwen" / "smoke" / "concurrency"
+DEFAULT_OUT = ROOT / ".verification" / "dual-qwen" / "smoke" / "concurrency"
 PYTHON = str(ROOT / ".verification" / "router-v2" / "litellm-venv" / "Scripts" / "python.exe")
 SCENARIOS = ("agent", "rag_cold", "rag_warm")
 
 
 def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    index = OUT / "run-index.jsonl"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-id", default="")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    out = args.output or (DEFAULT_OUT if not args.run_id else
+                          ROOT / ".verification" / "dual-qwen" / args.run_id / "concurrency")
+    out.mkdir(parents=True, exist_ok=True)
+    index = out / "run-index.jsonl"
     index.write_text("", encoding="utf-8")
     for scenario in SCENARIOS:
         for concurrency in (1, 2, 3, 4):
-            directory = OUT / f"{scenario}-c{concurrency}"
-            log = OUT / f"{scenario}-c{concurrency}.log"
+            directory = out / f"{scenario}-c{concurrency}"
+            log = out / f"{scenario}-c{concurrency}.log"
             started = time.time()
             print(f"START {scenario} c={concurrency}", flush=True)
             with log.open("w", encoding="utf-8") as fh:

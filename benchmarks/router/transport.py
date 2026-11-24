@@ -53,6 +53,64 @@ async def router_snapshot(client: httpx.AsyncClient) -> dict[str, dict[str, floa
     )
 
 
+async def direct_engine_health(host: str) -> int:
+    """Direct engine health, bypassing the Router (host is an IP or name)."""
+    try:
+        async with httpx.AsyncClient(timeout=3, trust_env=False) as client:
+            return (await client.get(f"http://{host}:8000/health")).status_code
+    except Exception:
+        return 0
+
+
+def router_worker_health(needle: str) -> float | None:
+    """Read one Router worker-health gauge by a substring of its worker URL."""
+    try:
+        text = httpx.get(ROUTER_METRICS, timeout=3, trust_env=False).text
+    except Exception:
+        return None
+    for line in text.splitlines():
+        if line.startswith("vllm_router_worker_health") and needle in line:
+            try:
+                return float(line.rsplit(" ", 1)[1])
+            except ValueError:
+                return None
+    return None
+
+
+async def send_short_probe(client: httpx.AsyncClient, index: int,
+                           prefix: str = "benchmark-probe") -> dict:
+    """One short, unique-prefix probe with worker attribution and stream state."""
+    spec = {
+        "id": f"{prefix}-{index}",
+        "kind": "qa",
+        "messages": [{"role": "user", "content": f"{uuid.uuid4().hex[:12]} Reply only OK."}],
+        "tools": None,
+        "quality": "OK",
+        "quality_type": "code",
+        "budget_ms": 5000,
+    }
+    before = await router_snapshot(client)
+    result = await send_one(client, spec)
+    after = await router_snapshot(client)
+    old = before.get("vllm_router_processed_requests_total", {})
+    new = after.get("vllm_router_processed_requests_total", {})
+    deltas = {}
+    for labels, value in new.items():
+        delta = value - old.get(labels, 0.0)
+        if delta:
+            deltas[json.loads(labels)["worker"]] = delta
+    return {
+        "status": result["status"], "state": result["state"], "ttft_ms": result["ttft_ms"],
+        "request_id": result.get("request_id"),
+        "done": result.get("done"), "finish_reason": result.get("finish_reason"),
+        "complete": bool(result["status"] == 200 and result.get("done")
+                         and result.get("finish_reason") != "length"),
+        "worker": next(iter(deltas)) if len(deltas) == 1 else None,
+        "at": round(time.perf_counter(), 3), "deltas": deltas,
+        "started": result.get("started"), "ended": result.get("ended"),
+    }
+
+
 async def engine_snapshot(client: httpx.AsyncClient) -> dict[str, dict[str, float]]:
     out = {}
     for name, url in ENGINES.items():

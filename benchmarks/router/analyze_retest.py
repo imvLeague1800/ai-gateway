@@ -1,24 +1,47 @@
 """Pair the retest groups and evaluate the frozen acceptance thresholds."""
 from __future__ import annotations
 
+import argparse
 import json
 from collections import Counter
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
-OUT = BASE.parents[1] / ".verification" / "dual-qwen" / "retest-v12"
-INDEX = OUT / "run-index.jsonl"
+ROOT = BASE.parents[1]
+DEFAULT_INPUT = ROOT / ".verification" / "dual-qwen" / "retest-v12"
+DEFAULT_OUTPUT = ROOT / ".verification" / "dual-qwen" / "analysis" / "retest-analysis.json"
 
-FAILURE_STATES = {"rejected", "http_error", "timeout", "stream_interrupted"}
+FAILURE_STATES = {"rejected", "http_error", "timeout", "stream_interrupted", "client_exception"}
 
 
-def load():
-    rows = [json.loads(line) for line in INDEX.read_text(encoding="utf-8").splitlines() if line]
-    by = {(r["group"], r["profile"], r["policy"]): r for r in rows if r.get("summary")}
-    for row in by.values():
-        directory = Path(row["directory"])
-        run_path = directory / "run.json"
-        row["window_s"] = json.loads(run_path.read_text())["window_s"] if run_path.exists() else None
+def load(root: Path):
+    rows = [json.loads(line) for line in (root / "run-index.jsonl").read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+    digests = {}
+    digest_path = root / "analysis" / "request-digests.jsonl"
+    if digest_path.exists():
+        for line in digest_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                row = json.loads(line)
+                digests.setdefault(row["run"], []).append(row)
+    by = {}
+    for row in rows:
+        directory = Path(row["directory"]) if row.get("directory") else None
+        if row.get("summary") is None:
+            basename = Path(row.get("raw_directory", "")).name
+            summary_path = root / "summaries" / f"{basename}.summary.json"
+            if not summary_path.exists():
+                continue
+            row["summary"] = json.loads(summary_path.read_text(encoding="utf-8"))
+            directory = summary_path
+        row["directory"] = str(directory) if directory else None
+        row["digest_rows"] = digests.get(Path(row.get("raw_directory", "")).name, [])
+        run_path = (directory.with_name(directory.name.replace(".summary.json", ".run.json"))
+                    if directory and directory.name.endswith(".summary.json")
+                    else (directory / "run.json" if directory else None))
+        row["window_s"] = (json.loads(run_path.read_text())["window_s"]
+                           if run_path and run_path.exists() else None)
+        by[(row["group"], row["profile"], row["policy"])] = row
     return by
 
 
@@ -45,7 +68,16 @@ def combined_runs(by, profile, policy):
 
 
 def main():
-    by = load()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--run-id", default="")
+    args = parser.parse_args()
+    out = args.output or (ROOT / ".verification" / "dual-qwen" / args.run_id / "analysis" /
+                          "retest-analysis.json" if args.run_id else DEFAULT_OUTPUT)
+    if out.suffix != ".json":
+        out = out / "retest-analysis.json"
+    by = load(args.input)
     result = {"groups": [], "combined": {}, "acceptance": {}}
     for group in (1, 2, 3):
         for profile in ("stable", "high", "light"):
@@ -85,12 +117,19 @@ def main():
             window_s = 0.0
             hits = queries = 0
             for row in runs:
-                path = Path(row["directory"]) / "requests.jsonl"
-                if path.exists():
+                directory = Path(row["directory"]) if row.get("directory") else None
+                path = directory / "requests.jsonl" if directory else None
+                if path and path.exists():
                     for line in path.read_text(encoding="utf-8").splitlines():
                         rec = json.loads(line)
                         requests.append(rec)
                         states[rec["state"]] += 1
+                elif row.get("digest_rows"):
+                    for rec in row["digest_rows"]:
+                        requests.append(rec)
+                        states[rec["state"]] += 1
+                elif row.get("summary", {}).get("states"):
+                    states.update(row["summary"]["states"])
                 complete_qualified += row["summary"].get("complete_qualified") or 0
                 window_s += row["window_s"] or 0
                 hits += row["summary"]["cache"]["hits"]
@@ -101,14 +140,15 @@ def main():
                 return values[round(p * (len(values) - 1))] if values else None
 
             result["combined"][profile][policy] = {
-                "requests": len(requests),
+                "requests": len(requests) or sum(r["summary"].get("requests", 0) for r in runs),
                 "states": dict(states),
                 "p99": pct(ttft, 0.99),
                 "complete_qualified": complete_qualified,
                 "window_s": round(window_s, 2),
                 "complete_qualified_rps": round(complete_qualified / window_s, 4) if window_s else None,
                 "cache_ratio": round(hits / queries, 4) if queries else None,
-                "failure_rate": (sum(states.get(s, 0) for s in FAILURE_STATES) / len(requests)) if requests else None,
+                "failure_rate": (sum(states.get(s, 0) for s in FAILURE_STATES) / sum(states.values()))
+                if states else None,
                 "runs": len(runs),
             }
     # Acceptance.
@@ -137,7 +177,8 @@ def main():
             if cah["failure_rate"] is not None and p2h["failure_rate"] is not None else None,
         },
     }
-    (BASE / "retest-analysis.json").write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(result["acceptance"], indent=2))
 
 

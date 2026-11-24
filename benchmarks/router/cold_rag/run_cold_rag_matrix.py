@@ -1,6 +1,7 @@
 """Run the three paired long-cold groups against the first-version Scheduler."""
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -75,13 +76,19 @@ def stop_scheduler(process: subprocess.Popen, log) -> None:
 
 
 def main() -> None:
-    OUT.mkdir(parents=True, exist_ok=True)
-    index = OUT / "run-index.jsonl"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--run-id", default="")
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    out = args.output or (OUT if not args.run_id else
+                          ROOT / ".verification" / "dual-qwen" / args.run_id / "cold-rag")
+    out.mkdir(parents=True, exist_ok=True)
+    index = out / "run-index.jsonl"
     index.write_text("", encoding="utf-8")
     order = ((1, 2), (2, 1), (1, 2))
     for group, limits in enumerate(order, start=1):
         for limit in limits:
-            run_dir = OUT / f"g{group}-long{limit}"
+            run_dir = out / f"g{group}-long{limit}"
             run_dir.mkdir(parents=True, exist_ok=True)
             config_path = run_dir / "backends.yaml"
             config_path.write_text(
@@ -89,8 +96,8 @@ def main() -> None:
                     "__MAX_LONG_REQUESTS__", str(limit)
                 ), encoding="utf-8"
             )
-            sched_log = OUT / f"g{group}-long{limit}-scheduler.log"
-            client_log = OUT / f"g{group}-long{limit}-client.log"
+            sched_log = out / f"g{group}-long{limit}-scheduler.log"
+            client_log = out / f"g{group}-long{limit}-client.log"
             started = time.time()
             process = None
             log = None

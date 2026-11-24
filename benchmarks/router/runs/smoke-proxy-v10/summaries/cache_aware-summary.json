@@ -1,0 +1,132 @@
+{
+  "policy": "cache_aware",
+  "requests": 28,
+  "states": {
+    "success": 28
+  },
+  "protocol_ok": 28,
+  "quality_ok": 28,
+  "groups": {
+    "qa": {
+      "requests": 4,
+      "states": {
+        "success": 4
+      },
+      "protocol_ok": 4,
+      "quality_ok": 4,
+      "ttft_ms": {
+        "p50": 96.01,
+        "p95": 96.12,
+        "max": 96.12
+      },
+      "complete_ms": {
+        "p50": 144.21,
+        "p95": 161.16,
+        "max": 161.16
+      },
+      "output_tokens": 10
+    },
+    "agent": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 1557.22,
+        "p95": 1596.02,
+        "max": 1596.02
+      },
+      "complete_ms": {
+        "p50": 1805.2,
+        "p95": 1816.67,
+        "max": 1816.67
+      },
+      "output_tokens": 172
+    },
+    "rag": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 2630.58,
+        "p95": 2638.35,
+        "max": 2638.35
+      },
+      "complete_ms": {
+        "p50": 2768.41,
+        "p95": 2805.02,
+        "max": 2805.02
+      },
+      "output_tokens": 80
+    },
+    "rag_recall": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 2655.93,
+        "p95": 2675.51,
+        "max": 2675.51
+      },
+      "complete_ms": {
+        "p50": 2801.58,
+        "p95": 2832.1,
+        "max": 2832.1
+      },
+      "output_tokens": 80
+    }
+  },
+  "warm": {
+    "requests": 12,
+    "attributed": 12,
+    "same_worker": 12,
+    "cache_hits": 92224.0
+  },
+  "workers": {
+    "http://10.169.25.15:8000": 28
+  },
+  "both_workers_routed": false,
+  "health": {
+    "qwen15": 200,
+    "qwen16": 200
+  },
+  "cache": {
+    "hits": 92224.0,
+    "queries": 336876.0,
+    "ratio": 0.2738,
+    "warm_hits": 92224.0
+  },
+  "recall": {
+    "warm_requests": 4,
+    "new_value_ok": 4
+  },
+  "warmup": [
+    {
+      "id": "smoke-warmup-0",
+      "status": 200,
+      "state": "success",
+      "worker": "http://10.169.25.15:8000"
+    },
+    {
+      "id": "smoke-warmup-1",
+      "status": 200,
+      "state": "success",
+      "worker": "http://10.169.25.15:8000"
+    }
+  ],
+  "policy_ok": true,
+  "smoke_sha256": "c670daffbf68524b35037505f623a467b7642af7f0f1d3958eb369b196abd439",
+  "dataset_manifest_sha256": "379f44061882a220c188922e8ea3f189c7dce7edb7342fa5637ef7c1d8efdaa5",
+  "git": "dbd8c72024172ffb6be1fab4564ae137fbb69781",
+  "router": "http://127.0.0.1:18100",
+  "namespace": "NS-4e970306d777",
+  "elapsed_s": 55.41
+}

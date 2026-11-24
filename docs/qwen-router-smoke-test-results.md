@@ -127,7 +127,9 @@
 | `runs/smoke-v1/run-index.jsonl` | `5e3dd116ce26040a073c57a4b60aad8ed15e2e67b93cc8e5d398b8eeb01052e7` |
 | `runs/smoke-v1/evidence-sha256.txt` | `1c789d9893c28eebdfc23c520874edeb2baf35be6df85e9a3926798cb5a9348c` |
 | `runs/smoke-v1/environment.json` | `6bd6af0cfc41ae1f372a7b71fd1da120bd744468dcf1d4c0989a434038448cb4` |
-| `smoke-analysis.json` | `d42628c426e12176aa6f4989b0bac60960a3c405397b8e5fce6353a8f6172ede` |
+| `runs/smoke-v1/analysis/smoke-analysis.json` | `d42628c426e12176aa6f4989b0bac60960a3c405397b8e5fce6353a8f6172ede` |
+
+> 注：以上为该次运行的历史指纹。2026-11-24 的 v1.2.6 资产调整后，`smoke.json` 当前 SHA-256 为 `c670daffbf68524b35037505f623a467b7642af7f0f1d3958eb369b196abd439`，本次 smoke 入口验收记录见 `docs/router-benchmark-organization-results.md` 和 `runs/smoke-entry-v1/`。
 
 代码 revision：`88a9c4426f0d8a3859037ba1fe582602f13ac81a`。原始 `.verification/dual-qwen/smoke/` 树共 59 个登记文件；完整逐文件哈希见 `runs/smoke-v1/evidence-sha256.txt`，运行索引同时记录每个 summary/requests 的哈希。
 

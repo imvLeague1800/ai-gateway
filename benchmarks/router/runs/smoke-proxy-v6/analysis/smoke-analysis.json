@@ -1,0 +1,1521 @@
+{
+  "core": {
+    "cache_aware": {
+      "requests": 28,
+      "states": {
+        "success": 28
+      },
+      "protocol_ok": 28,
+      "quality_ok": 28,
+      "groups": {
+        "qa": {
+          "requests": 4,
+          "states": {
+            "success": 4
+          },
+          "protocol_ok": 4,
+          "quality_ok": 4,
+          "ttft_ms": {
+            "p50": 144.39,
+            "p95": 149.57,
+            "max": 149.57
+          },
+          "complete_ms": {
+            "p50": 198.71,
+            "p95": 199.24,
+            "max": 199.24
+          },
+          "output_tokens": 10
+        },
+        "agent": {
+          "requests": 8,
+          "states": {
+            "success": 8
+          },
+          "protocol_ok": 8,
+          "quality_ok": 8,
+          "ttft_ms": {
+            "p50": 1545.16,
+            "p95": 1584.96,
+            "max": 1584.96
+          },
+          "complete_ms": {
+            "p50": 1795.45,
+            "p95": 1821.31,
+            "max": 1821.31
+          },
+          "output_tokens": 172
+        },
+        "rag": {
+          "requests": 8,
+          "states": {
+            "success": 8
+          },
+          "protocol_ok": 8,
+          "quality_ok": 8,
+          "ttft_ms": {
+            "p50": 2615.69,
+            "p95": 2663.52,
+            "max": 2663.52
+          },
+          "complete_ms": {
+            "p50": 2770.12,
+            "p95": 2824.26,
+            "max": 2824.26
+          },
+          "output_tokens": 80
+        },
+        "rag_recall": {
+          "requests": 8,
+          "states": {
+            "success": 8
+          },
+          "protocol_ok": 8,
+          "quality_ok": 8,
+          "ttft_ms": {
+            "p50": 2662.44,
+            "p95": 2974.65,
+            "max": 2974.65
+          },
+          "complete_ms": {
+            "p50": 2820.39,
+            "p95": 3102.83,
+            "max": 3102.83
+          },
+          "output_tokens": 80
+        }
+      },
+      "warm": {
+        "requests": 12,
+        "attributed": 12,
+        "same_worker": 12,
+        "cache_hits": 92224.0
+      },
+      "workers": {
+        "http://10.169.25.15:8000": 28
+      },
+      "both_workers_routed": false,
+      "cache": {
+        "hits": 92224.0,
+        "queries": 336848.0,
+        "ratio": 0.2738,
+        "warm_hits": 92224.0
+      },
+      "recall": {
+        "warm_requests": 4,
+        "new_value_ok": 4
+      },
+      "policy_ok": true,
+      "namespace": "NS-d658e67d3277"
+    }
+  },
+  "queue": {
+    "cache_aware": {
+      "queue_before_cancel": {
+        "qwen15": {
+          "running": 4.0,
+          "waiting": 2.0
+        },
+        "qwen16": {
+          "running": 4.0,
+          "waiting": 2.0
+        }
+      },
+      "queue_after_waiting_cancel": {
+        "qwen15": {
+          "running": 4.0,
+          "waiting": 2.0
+        },
+        "qwen16": {
+          "running": 4.0,
+          "waiting": 1.0
+        }
+      },
+      "queue_after_generating_cancel": {
+        "qwen15": {
+          "running": 4.0,
+          "waiting": 1.0
+        },
+        "qwen16": {
+          "running": 4.0,
+          "waiting": 1.0
+        }
+      },
+      "cancelled_ids": [
+        "queue-0",
+        "queue-11"
+      ],
+      "completed": 10,
+      "states": {
+        "success": 10
+      },
+      "recovery": {
+        "recovered_s": 0.1,
+        "engines": {
+          "qwen15": {
+            "running": 0.0,
+            "waiting": 0.0
+          },
+          "qwen16": {
+            "running": 0.0,
+            "waiting": 0.0
+          }
+        },
+        "router_running": 0.0,
+        "recovered": true
+      },
+      "cancel_observation": {
+        "queue-11_headers_seen": true,
+        "queue-0_headers_seen": true,
+        "headers_seen_before_first_cancel": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "headers_seen_before_second_cancel": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      }
+    }
+  },
+  "concurrency": {
+    "agent": {},
+    "rag_cold": {},
+    "rag_warm": {}
+  },
+  "failure": null,
+  "failover": {
+    "mode": "benchmark-proxy-health-toggle",
+    "policy": "cache_aware",
+    "proxy_url": "http://127.0.0.1:18016",
+    "proxy_target": "http://10.169.25.16:8000",
+    "survivor_url": "http://10.169.25.15:8000",
+    "actual_engines_stopped": false,
+    "router_restarted_during_failure_or_recovery": false,
+    "attached": false,
+    "engine_health_before": {
+      "15": 200,
+      "16": 200
+    },
+    "proxy_pid": 790777,
+    "proxy_start_ready_s": 1.64,
+    "router_ready_with_proxy_s": 0.62,
+    "engine_health_with_proxy": {
+      "15": 200,
+      "16": 200
+    },
+    "router_container_id_before": "f41412f54b5e",
+    "normal": {
+      "workers": {
+        "http://127.0.0.1:18016": 20
+      },
+      "first_target_success_s": 0.17,
+      "first_target_probe": {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 79.26,
+        "request_id": "432cf7b8d46e42a48ca130be4670f124",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://127.0.0.1:18016",
+        "at": 504652.521,
+        "deltas": {
+          "http://127.0.0.1:18016": 1.0
+        },
+        "after_origin_s": 0.17
+      },
+      "rows": [
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 79.26,
+          "request_id": "432cf7b8d46e42a48ca130be4670f124",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504652.521,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 0.17
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 94.97,
+          "request_id": "4fb7b2fea8744b609f89d844e1f7d820",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504652.713,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 0.36
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 129.74,
+          "request_id": "ba8a3d3d4db44f9e8e1deeb98c1af519",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504652.915,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 0.57
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 83.32,
+          "request_id": "8d1960bd95bb422cafdf992603934eb2",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504653.088,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 0.74
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 81.19,
+          "request_id": "cafbc5a5808247408a79e7582d0bb563",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504653.256,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 0.91
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 92.6,
+          "request_id": "b081c77a909d44438b611c0bf8cd12a9",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504653.461,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 1.11
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 96.68,
+          "request_id": "3a88d09c08ac4c19aeaa0e1ece093f02",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504653.64,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 1.29
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 80.9,
+          "request_id": "d9e97caae68c4996bee81ba5363a98c6",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504653.868,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 1.52
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 93.76,
+          "request_id": "314823f1964b45eb9b87651bc1f2871b",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504654.286,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 1.94
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 103.41,
+          "request_id": "273940a63f0d49dba2ba66c88b05e022",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504654.481,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 2.13
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 97.02,
+          "request_id": "38437fbad2d94ddfb016942c3d05e546",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504654.703,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 2.35
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 91.47,
+          "request_id": "eca9660586b84f6bbace463ab8ef5631",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504654.893,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 2.54
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 85.48,
+          "request_id": "7a9ae1e6f7d74460941107cf12a73443",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504655.057,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 2.71
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 90.3,
+          "request_id": "2c171ba88b9f45b9be49e150fc05868e",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504655.233,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 2.88
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 123.8,
+          "request_id": "cda4c32ea0bc463fa3731f66ee0d4bfe",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504655.441,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 3.09
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 82.74,
+          "request_id": "ec2ef34140ec4ba99bcd81d796183895",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504655.6,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 3.25
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 82.18,
+          "request_id": "18da4dd6e54a4868b284057be3d98797",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504656.001,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 3.65
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 84.91,
+          "request_id": "aff4eb41635e4f6dac93a0db8c57244f",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504656.155,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 3.81
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 82.23,
+          "request_id": "6c8a0ee06c4a4b90b390d7f69531ff40",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504656.3,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 3.95
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 85.76,
+          "request_id": "f69eb700589141b2a913562879f2f113",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504656.47,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 4.12
+        }
+      ]
+    },
+    "fail_toggle_response": {
+      "fail_health": true
+    },
+    "detection_s": 9.53,
+    "engine_health_after_detection": {
+      "15": 200,
+      "16": 200
+    },
+    "failure": {
+      "workers": {
+        "http://10.169.25.15:8000": 20
+      },
+      "all_on_15": true,
+      "all_complete": true,
+      "rows": [
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 392.15,
+          "request_id": "0d47656703974a009f4c8e5d67d5f732",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504666.528,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.06
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 100.48,
+          "request_id": "e60b77d74159465e9a12fc50755af944",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504666.704,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.23
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 88.13,
+          "request_id": "75b39ddce813415eb0db7a00dd97ad84",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504666.895,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.42
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 95.24,
+          "request_id": "10621db5d9734ee2a58b8ef9deb73deb",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504667.079,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.61
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 95.02,
+          "request_id": "c21109e3cce4471fb5e190b5f1cd7f62",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504667.258,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.79
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 99.38,
+          "request_id": "bec0eaea4d1640c39653bc8331402936",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504667.43,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 10.96
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 117.73,
+          "request_id": "786f3f01c48149d29e1144726212cdf9",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504667.615,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 11.14
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 78.22,
+          "request_id": "9942f5ba5e694fa0ae630ef49a2d6b65",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504668.105,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 11.63
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 82.3,
+          "request_id": "cedb06e7ad9d43a2b00a604c6dd980c2",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504668.579,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 12.11
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 95.38,
+          "request_id": "1b3fada3322144159ce5a94063666ae1",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504668.753,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 12.28
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 91.44,
+          "request_id": "66b70f687fee4c87b94ddfc85df8f2d7",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504668.959,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 12.49
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 84.33,
+          "request_id": "a431a50a447e461cbfa17f57ec369898",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504669.123,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 12.65
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 396.41,
+          "request_id": "7e6a8d3e49004e878e2932a31e96e07e",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504669.983,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 13.51
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 118.76,
+          "request_id": "ce99113c0830488b96e1e37618068996",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.138,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 13.67
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 86.93,
+          "request_id": "b5d6f41b232449019b8ebb6774fa2fbf",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.309,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 13.84
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 80.83,
+          "request_id": "569b4975150c464989685dfe37cf2311",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.472,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 14.0
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 88.81,
+          "request_id": "b885eb487a604530b90ab6ed0053bbf7",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.639,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 14.17
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 95.91,
+          "request_id": "a6b5ada90d68490095307562a4fafec1",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.814,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 14.34
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 86.18,
+          "request_id": "d4c4bbb2b1844417b97397780c59dee2",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504670.999,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 14.53
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 85.82,
+          "request_id": "8bbf3f45bc524e199b407f5bdbf7f6c6",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://10.169.25.15:8000",
+          "at": 504671.168,
+          "deltas": {
+            "http://10.169.25.15:8000": 1.0
+          },
+          "after_origin_s": 14.7
+        }
+      ]
+    },
+    "recover_toggle_response": {
+      "fail_health": false
+    },
+    "router_reaccept_s": 9.72,
+    "recovery": {
+      "workers": {
+        "http://127.0.0.1:18016": 20
+      },
+      "first_target_success_s": 9.86,
+      "first_target_probe": {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 77.72,
+        "request_id": "63cad48df3b44d1780c21ce99aeefe67",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://127.0.0.1:18016",
+        "at": 504681.03,
+        "deltas": {
+          "http://127.0.0.1:18016": 1.0
+        },
+        "after_origin_s": 9.86
+      },
+      "rows": [
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 77.72,
+          "request_id": "63cad48df3b44d1780c21ce99aeefe67",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.03,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 9.86
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 82.61,
+          "request_id": "d21e51c6c2f14d60b42b88d7c65a6e6a",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.194,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.03
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 86.4,
+          "request_id": "109141e51d284727a18301cecdd76422",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.353,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.18
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 90.74,
+          "request_id": "d6eec5cf75e9465d998fc1a8c44cf226",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.525,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.36
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 100.74,
+          "request_id": "cbc5cd1b74654bd0946b6a5d4e825f79",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.707,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.54
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 84.55,
+          "request_id": "a9027c4d07694b6db8546652e78726a1",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504681.874,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.71
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 92.25,
+          "request_id": "711941f440794655872cbf32c5a891a8",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.043,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 10.87
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 94.57,
+          "request_id": "cd1884b6d5964a528209601bd6765f12",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.206,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.04
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 79.63,
+          "request_id": "5bff11f8eca2428ea58eb02fabe6929b",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.362,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.19
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 78.19,
+          "request_id": "fdf020b08e0d439c9d0240dfa168d016",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.528,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.36
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 85.63,
+          "request_id": "540b631f83cf44b6afe8f6cc89a60e34",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.684,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.52
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 88.36,
+          "request_id": "d601bbe1b50c471bb18af51a44ba3a80",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504682.852,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.68
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 80.76,
+          "request_id": "b9dcdc2692d74c6e85973620aff15a4e",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.002,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.83
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 86.11,
+          "request_id": "f5cc5dc84789489691040ca4b43e1426",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.161,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 11.99
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 86.28,
+          "request_id": "696fa68f564a4bb1a0c3cc45e6b9d772",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.323,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.15
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 78.81,
+          "request_id": "f04ba343193e46f7b04c819f2cfc4729",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.472,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.3
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 79.08,
+          "request_id": "0fc8cdf079ec426382509f6b27941f9e",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.628,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.46
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 80.79,
+          "request_id": "edd30dd74d754a86af028071e8ce60cc",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.776,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.61
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 80.62,
+          "request_id": "ec3ade75e20e47d0b029fa413e423231",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504683.936,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.77
+        },
+        {
+          "status": 200,
+          "state": "success",
+          "ttft_ms": 78.98,
+          "request_id": "80dbbe6cf2ab49e7ad81f20c7e95ddb4",
+          "done": true,
+          "finish_reason": "stop",
+          "complete": true,
+          "worker": "http://127.0.0.1:18016",
+          "at": 504684.082,
+          "deltas": {
+            "http://127.0.0.1:18016": 1.0
+          },
+          "after_origin_s": 12.91
+        }
+      ]
+    },
+    "engine_health_after_recovery": {
+      "15": 200,
+      "16": 200
+    },
+    "proxy_requests": [
+      {
+        "at": 1795505461.41,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505462.251,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505462.291,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505462.732,
+        "method": "GET",
+        "path": "/v1/models",
+        "request_id": null
+      },
+      {
+        "at": 1795505463.856,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "432cf7b8d46e42a48ca130be4670f124"
+      },
+      {
+        "at": 1795505464.033,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "4fb7b2fea8744b609f89d844e1f7d820"
+      },
+      {
+        "at": 1795505464.217,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "ba8a3d3d4db44f9e8e1deeb98c1af519"
+      },
+      {
+        "at": 1795505464.43,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "8d1960bd95bb422cafdf992603934eb2"
+      },
+      {
+        "at": 1795505464.591,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "cafbc5a5808247408a79e7582d0bb563"
+      },
+      {
+        "at": 1795505464.766,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "b081c77a909d44438b611c0bf8cd12a9"
+      },
+      {
+        "at": 1795505464.983,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "3a88d09c08ac4c19aeaa0e1ece093f02"
+      },
+      {
+        "at": 1795505465.144,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "d9e97caae68c4996bee81ba5363a98c6"
+      },
+      {
+        "at": 1795505465.38,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "314823f1964b45eb9b87651bc1f2871b"
+      },
+      {
+        "at": 1795505465.794,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "273940a63f0d49dba2ba66c88b05e022"
+      },
+      {
+        "at": 1795505466.01,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "38437fbad2d94ddfb016942c3d05e546"
+      },
+      {
+        "at": 1795505466.228,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "eca9660586b84f6bbace463ab8ef5631"
+      },
+      {
+        "at": 1795505466.407,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "7a9ae1e6f7d74460941107cf12a73443"
+      },
+      {
+        "at": 1795505466.577,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "2c171ba88b9f45b9be49e150fc05868e"
+      },
+      {
+        "at": 1795505466.761,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "cda4c32ea0bc463fa3731f66ee0d4bfe"
+      },
+      {
+        "at": 1795505466.943,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "ec2ef34140ec4ba99bcd81d796183895"
+      },
+      {
+        "at": 1795505467.113,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "18da4dd6e54a4868b284057be3d98797"
+      },
+      {
+        "at": 1795505467.257,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505467.509,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "aff4eb41635e4f6dac93a0db8c57244f"
+      },
+      {
+        "at": 1795505467.658,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "6c8a0ee06c4a4b90b390d7f69531ff40"
+      },
+      {
+        "at": 1795505467.805,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "f69eb700589141b2a913562879f2f113"
+      },
+      {
+        "at": 1795505472.257,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505477.257,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505482.256,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505487.257,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505492.257,
+        "method": "GET",
+        "path": "/health",
+        "request_id": null
+      },
+      {
+        "at": 1795505492.389,
+        "method": "POST",
+        "path": "/v1/chat/completions/render",
+        "request_id": null
+      },
+      {
+        "at": 1795505492.393,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "63cad48df3b44d1780c21ce99aeefe67"
+      },
+      {
+        "at": 1795505492.536,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "d21e51c6c2f14d60b42b88d7c65a6e6a"
+      },
+      {
+        "at": 1795505492.697,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "109141e51d284727a18301cecdd76422"
+      },
+      {
+        "at": 1795505492.874,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "d6eec5cf75e9465d998fc1a8c44cf226"
+      },
+      {
+        "at": 1795505493.045,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "cbc5cd1b74654bd0946b6a5d4e825f79"
+      },
+      {
+        "at": 1795505493.217,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "a9027c4d07694b6db8546652e78726a1"
+      },
+      {
+        "at": 1795505493.385,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "711941f440794655872cbf32c5a891a8"
+      },
+      {
+        "at": 1795505493.56,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "cd1884b6d5964a528209601bd6765f12"
+      },
+      {
+        "at": 1795505493.711,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "5bff11f8eca2428ea58eb02fabe6929b"
+      },
+      {
+        "at": 1795505493.865,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "fdf020b08e0d439c9d0240dfa168d016"
+      },
+      {
+        "at": 1795505494.029,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "540b631f83cf44b6afe8f6cc89a60e34"
+      },
+      {
+        "at": 1795505494.197,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "d601bbe1b50c471bb18af51a44ba3a80"
+      },
+      {
+        "at": 1795505494.362,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "b9dcdc2692d74c6e85973620aff15a4e"
+      },
+      {
+        "at": 1795505494.508,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "f5cc5dc84789489691040ca4b43e1426"
+      },
+      {
+        "at": 1795505494.666,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "696fa68f564a4bb1a0c3cc45e6b9d772"
+      },
+      {
+        "at": 1795505494.826,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "f04ba343193e46f7b04c819f2cfc4729"
+      },
+      {
+        "at": 1795505494.983,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "0fc8cdf079ec426382509f6b27941f9e"
+      },
+      {
+        "at": 1795505495.138,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "edd30dd74d754a86af028071e8ce60cc"
+      },
+      {
+        "at": 1795505495.28,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "ec3ade75e20e47d0b029fa413e423231"
+      },
+      {
+        "at": 1795505495.438,
+        "method": "POST",
+        "path": "/v1/chat/completions",
+        "request_id": "80dbbe6cf2ab49e7ad81f20c7e95ddb4"
+      }
+    ],
+    "recovery_request_id": "63cad48df3b44d1780c21ce99aeefe67",
+    "recovery_request_seen_by_proxy": true,
+    "router_container_id_after": "f41412f54b5e",
+    "same_router_process": true,
+    "cleanup_router_ready_s": 0.66,
+    "cleanup_direct_worker": true,
+    "cleanup_engine_health": {
+      "15": 200,
+      "16": 200
+    },
+    "proxy_stopped": true,
+    "pass": true
+  },
+  "acceptance": {}
+}
