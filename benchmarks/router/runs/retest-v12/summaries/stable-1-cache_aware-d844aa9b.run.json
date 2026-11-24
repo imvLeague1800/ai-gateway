@@ -1,0 +1,24 @@
+{
+  "run_id": "stable-1-cache_aware-d844aa9b",
+  "profile": "stable",
+  "policy": "cache_aware",
+  "group": 1,
+  "namespace": "retest-v12-g1-stable-84b9c5cd02",
+  "rate": 0.75,
+  "window_s": 151.66666666666669,
+  "router": "http://127.0.0.1:18100",
+  "engines": {
+    "qwen15": "http://10.169.25.15:8000",
+    "qwen16": "http://10.169.25.16:8000"
+  },
+  "git": "88a9c4426f0d8a3859037ba1fe582602f13ac81a",
+  "manifest_sha256": "8012a2d566140f92151118a3e06441967d1a0821ca8715481e3105db64dca60d",
+  "completion_budgets_ms": {
+    "qa": 2000,
+    "agent_cold": 5000,
+    "agent_warm": 5000,
+    "rag_cold": 10000,
+    "rag_warm": 5000
+  },
+  "unix_start": 1795415937.3275766
+}

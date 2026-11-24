@@ -1,0 +1,31 @@
+{
+  "captured": "2026-11-24",
+  "git_revision": "1e4645c21940794d604036295d0532a977f79215",
+  "manifest_sha256": "d20dce14cc5715b43ae2a334afa391d7538428de5f76d6090ca7203bc25eaa82",
+  "configs": {
+    "backends-long1.yaml": "f1828755b041787feb9c5d8d48ffd803a26911d47728aadd99724ba4b94ef177",
+    "backends-long2.yaml": "1c321def91e7ef033f86a8a97038524219e0ca7961236cbabefe49090920265a"
+  },
+  "scripts": {
+    "cold_rag_replay.py": "289d98a622840d51db4c909a61a4fbfd95b5b24c1f9fe6d51407e0b7af4dc637",
+    "run_cold_rag_matrix.py": "1501911b3ff90c9af3eb5f001f4120b815660c3c9bbf9b60704dc896f1facda8",
+    "analyze_cold_rag.py": "9375a872f47670d03108c6ed5758384ac44647b2070403269ebf55308adffa80",
+    "register_cold_rag_evidence.py": "b90971dcfb580e2a3e69234fa29d27195447b87fe8e41340683a36e94261796b"
+  },
+  "rate": 0.23,
+  "duration_s": 120,
+  "warmup_s": 15,
+  "scheduler_endpoint": "http://127.0.0.1:18080",
+  "scheduler_code": "first-version app/, commit 1e4645c21940794d604036295d0532a977f79215",
+  "model": {
+    "engine": "http://10.169.25.15:8000",
+    "name": "qwen3.6-35b-a3b-nvfp4",
+    "max_model_len": 262144,
+    "max_num_seqs": 4,
+    "max_num_batched_tokens": 8192
+  },
+  "notes": [
+    "Qwen16 was switched to Qwen and retained; Gemma is stopped for this round.",
+    "The single early RAG marker was augmented with a per-record equal-length salt because vLLM block cache could still reuse later blocks."
+  ]
+}

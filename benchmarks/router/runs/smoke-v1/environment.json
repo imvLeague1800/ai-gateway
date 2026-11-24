@@ -1,0 +1,57 @@
+{
+  "captured": "2026-11-23",
+  "smoke_sha256": "8760e3704ae9b273ce51840eadd839c0cb20d9fa043da4e336a2cae19d26933f",
+  "dataset_manifest_sha256": "489dd56308ef7393164dea257745345c2708dc5f6e4d339d093cf42bdf899f1a",
+  "git_revision": "88a9c4426f0d8a3859037ba1fe582602f13ac81a",
+  "engine": {
+    "image": "spark-vllm:ba07e4a48-arm64",
+    "config_image_id": "sha256:1d858604eba132f111f73bc9ff78fb9f9be2b27041a83eafc73885fded69b3c7",
+    "vllm": "0.26.1rc1.dev1046+gba07e4a48",
+    "max_model_len": 262144,
+    "max_num_seqs": 4,
+    "max_num_batched_tokens": 8192,
+    "prefix_caching": true,
+    "thinking": false
+  },
+  "model": {
+    "name": "Qwen3.6-35B-A3B-NVFP4",
+    "config_sha256": "58aefa1c9eff7989f431d748f2ddec39446cb1fd2a69acc46e285c6a37b0cecc",
+    "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42",
+    "template_sha256": "e84f32a23fdda27689f868aa4a1a5621f41133e51a48d7f3efcbea2839574259"
+  },
+  "router": {
+    "image": "vllm/vllm-router:v0.1.17",
+    "digest": "sha256:1128e09f5dc92b201753bc2f306488942d608ec747410f6c207354f0bf377c42",
+    "health_interval_s": 5,
+    "health_failure_threshold": 2,
+    "health_success_threshold": 2,
+    "health_timeout": "not set; vllm-router default",
+    "cache_threshold": 0.3,
+    "balance_abs_threshold": 2,
+    "balance_rel_threshold": 1.2
+  },
+  "hosts": {
+    "qwen15": "10.169.25.15:8000",
+    "qwen16": "10.169.25.16:8000",
+    "router": "10.169.25.16:8100"
+  },
+  "scripts": {
+    "smoke_replay.py": "5e7b11217e16fce12fe9e9aac97937a359b8ac36a35c814668bc8f52c2db5984",
+    "smoke_queue.py": "9641e83fca82de41302a1ef1dd47abee108404c0de76bf6469a5ac4fc6ab69df",
+    "smoke_concurrency.py": "55264c09548914bf494c6e35f8f784e371c5139f44d76c35763e0ea517b17fc2",
+    "smoke_failure.py": "0d0a2d0b91b522f4927ea78dcb71b7df126b47de90ce6a366db816fda279b043",
+    "run_smoke_concurrency.py": "8bc161ac684d0bf3fb4836839382338d633c3a262d70d913aa3c67b48bc4a66a",
+    "analyze_smoke.py": "191b69057378b7187abf2ce2f8b08ecf482ee8b571f3e5b46f081c5332a15303",
+    "render_smoke_tables.py": "b923f420f95077cbe0633c98e6425f7503305542e2901addb39771c7ce3a6ca1",
+    "register_smoke_evidence.py": "bdced8740cbaa46e3da7738f62eed35b3f3b64935c66910097301d3c70f51bf6"
+  },
+  "notes": [
+    "Qwen16 was temporary; Gemma was restored after the smoke.",
+    "Core smoke used a separate neutral 15-character namespace per policy.",
+    "Direct concurrency used one isolated httpx client per request to avoid stale keep-alive sockets."
+  ],
+  "core_namespaces": {
+    "cache_aware": "NS-3d8489bed0ca",
+    "power_of_two": "NS-a4a31eb28a79"
+  }
+}

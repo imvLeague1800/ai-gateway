@@ -92,11 +92,11 @@ def check_quality(spec: dict, content: str, tool_calls: list[dict]) -> bool:
     return False
 
 
-async def send_one(client: httpx.AsyncClient, spec: dict, *, router_api: str = ROUTER_API, on_headers=None) -> dict:
+async def send_one(client: httpx.AsyncClient, spec: dict, *, router_api: str = ROUTER_API, on_headers=None, on_response_headers=None) -> dict:
     body: dict[str, Any] = {
         "model": MODEL,
         "messages": spec["messages"],
-        "max_tokens": 1024,
+        "max_tokens": spec.get("max_tokens", 1024),
         "temperature": 0,
         "stream": True,
         "stream_options": {"include_usage": True},
@@ -104,6 +104,8 @@ async def send_one(client: httpx.AsyncClient, spec: dict, *, router_api: str = R
     }
     if spec.get("tools"):
         body["tools"] = spec["tools"]
+    if spec.get("user"):
+        body["user"] = spec["user"]
     started = time.perf_counter()
     first_at = None
     last_content_at = None
@@ -121,6 +123,8 @@ async def send_one(client: httpx.AsyncClient, spec: dict, *, router_api: str = R
             status = response.status_code
             if on_headers is not None:
                 on_headers()
+            if on_response_headers is not None:
+                on_response_headers(dict(response.headers))
             if status != 200:
                 error = (await response.aread()).decode(errors="replace")[:1000]
             else:
@@ -181,6 +185,7 @@ async def send_one(client: httpx.AsyncClient, spec: dict, *, router_api: str = R
         "started": started,
         "ended": ended,
         "first_at": first_at,
+        "last_at": last_content_at,
         "tool_calls": list(tool_calls.values()),
         "usage": usage,
         "error": error,

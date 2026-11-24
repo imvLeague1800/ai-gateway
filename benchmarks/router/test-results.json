@@ -1,0 +1,74 @@
+{
+  "dataset": {
+    "cases": 300,
+    "sessions": 195,
+    "profiles_seed": 20261123
+  },
+  "timing_and_states": {
+    "success": {
+      "state": "success",
+      "status": 200,
+      "ttft_positive": true,
+      "done": true,
+      "quality": true,
+      "finish_reason": "stop",
+      "content": "OK"
+    },
+    "429": {
+      "state": "rejected",
+      "status": 429,
+      "ttft_positive": false,
+      "done": false,
+      "quality": false,
+      "finish_reason": null,
+      "content": ""
+    },
+    "500": {
+      "state": "http_error",
+      "status": 500,
+      "ttft_positive": false,
+      "done": false,
+      "quality": false,
+      "finish_reason": null,
+      "content": ""
+    },
+    "interrupted": {
+      "state": "stream_interrupted",
+      "status": 200,
+      "ttft_positive": true,
+      "done": false,
+      "quality": false,
+      "finish_reason": null,
+      "content": "OK"
+    },
+    "truncated": {
+      "state": "truncated",
+      "status": 200,
+      "ttft_positive": true,
+      "done": true,
+      "quality": true,
+      "finish_reason": "length",
+      "content": "OK"
+    },
+    "quality": {
+      "state": "quality_failure",
+      "status": 200,
+      "ttft_positive": true,
+      "done": true,
+      "quality": false,
+      "finish_reason": "stop",
+      "content": "WRONG"
+    }
+  },
+  "cache": {
+    "hits": 120.0,
+    "queries": 200.0,
+    "ratio": 0.6,
+    "intervals": 2,
+    "expected_intervals": 2
+  },
+  "percentile": {
+    "p50": 3,
+    "p95": 4
+  }
+}

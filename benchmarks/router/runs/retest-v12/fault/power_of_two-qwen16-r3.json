@@ -1,0 +1,940 @@
+{
+  "policy": "power_of_two",
+  "host": "16",
+  "repeat": 3,
+  "before_inflight_running": {
+    "15": 2.0,
+    "16": 2.0
+  },
+  "stop_started": 420858.5175141,
+  "stop_command_s": 11.22,
+  "detection_s": 11.25,
+  "probes_after_removal": [
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 176.92,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 184.49,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 239.86,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 93.48,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 129.78,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 129.82,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 93.89,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 147.35,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 146.7,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 89.89,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 93.72,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 84.78,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 137.23,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 146.37,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 96.88,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 105.35,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 142.8,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 162.3,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 160.72,
+      "worker": null,
+      "deltas": {}
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 74.75,
+      "worker": null,
+      "deltas": {}
+    }
+  ],
+  "inflight": [
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 163.03,
+      "error": null
+    },
+    {
+      "status": 200,
+      "state": "stream_interrupted",
+      "ttft_ms": 125.37,
+      "error": "RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)"
+    },
+    {
+      "status": 200,
+      "state": "stream_interrupted",
+      "ttft_ms": 138.01,
+      "error": "RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)"
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 119.26,
+      "error": null
+    }
+  ],
+  "engine_health_s": 198.17,
+  "router_reaccept_s": 4.84,
+  "probes_after_recovery": [
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 267.68,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 118.87,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 75.6,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 73.67,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 80.12,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 69.39,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 74.48,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 129.27,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 74.61,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 84.09,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 122.66,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 73.77,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 83.14,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 87.21,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 89.72,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 96.31,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 74.96,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 72.36,
+      "worker": "http://10.169.25.15:8000",
+      "deltas": {
+        "http://10.169.25.15:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 80.88,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 80.27,
+      "worker": "http://10.169.25.16:8000",
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      }
+    }
+  ],
+  "running_after": {
+    "15": 0.0,
+    "16": 0.0
+  },
+  "monitor_samples": [
+    {
+      "at": 420858.521,
+      "router_health": 1.0,
+      "running": 2.0,
+      "direct_health": 200
+    },
+    {
+      "at": 420859.099,
+      "router_health": 1.0,
+      "running": 2.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420861.793,
+      "router_health": 1.0,
+      "running": 2.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420864.433,
+      "router_health": 1.0,
+      "running": 2.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420867.119,
+      "router_health": 1.0,
+      "running": 2.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420869.831,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420872.514,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420875.206,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420877.845,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420880.478,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420883.124,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420885.758,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420888.423,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420891.073,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420893.753,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420896.494,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420899.207,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420901.941,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420904.604,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420907.3,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420909.968,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420912.63,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420915.27,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420917.941,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420920.597,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420923.271,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420925.941,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420928.632,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420931.408,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420934.117,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420936.752,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420939.572,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420942.259,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420944.988,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420947.82,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420950.566,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420953.24,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420955.925,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420958.708,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420961.382,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420964.036,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420966.81,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420969.53,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420972.24,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420974.906,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420977.618,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420981.231,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420983.895,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420986.574,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420989.249,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420992.112,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420994.805,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 420997.454,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421000.111,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421002.767,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421005.439,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421008.078,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421010.717,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421013.356,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421016.012,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421018.632,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421021.255,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421023.899,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421026.514,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421029.119,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421031.82,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421034.454,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421037.229,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421039.869,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421042.504,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421045.161,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421048.352,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421051.099,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421053.796,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421056.415,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421059.052,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421061.697,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421064.332,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421066.968,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421069.602,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 0
+    },
+    {
+      "at": 421072.256,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421072.816,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421073.375,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421073.956,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421074.549,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421075.127,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421075.849,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421076.422,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421077.012,
+      "router_health": 0.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421077.605,
+      "router_health": 1.0,
+      "running": 1.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421078.214,
+      "router_health": 1.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421078.849,
+      "router_health": 1.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421079.422,
+      "router_health": 1.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421080.151,
+      "router_health": 1.0,
+      "running": 0.0,
+      "direct_health": 200
+    },
+    {
+      "at": 421080.732,
+      "router_health": 1.0,
+      "running": 0.0,
+      "direct_health": 200
+    }
+  ]
+}

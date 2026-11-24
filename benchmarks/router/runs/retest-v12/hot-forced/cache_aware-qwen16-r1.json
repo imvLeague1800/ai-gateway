@@ -1,0 +1,27 @@
+{
+  "policy": "cache_aware",
+  "target": "16",
+  "round": 1,
+  "running_during_load": {
+    "{\"worker\": \"http://10.169.25.16:8000\"}": 3.0,
+    "{\"worker\": \"http://10.169.25.15:8000\"}": 0.0
+  },
+  "auto": {
+    "actual_worker": "http://10.169.25.15:8000",
+    "status": 200,
+    "state": "success",
+    "ttft_ms": 2884.2,
+    "complete_ms": 2976.48
+  },
+  "forced_direct": {
+    "status": 200,
+    "state": "success",
+    "ttft_ms": 349.12,
+    "complete_ms": 500.39
+  },
+  "forced_cache": {
+    "hits": 16768.0,
+    "queries": 17728.0,
+    "ratio": 0.9458
+  }
+}

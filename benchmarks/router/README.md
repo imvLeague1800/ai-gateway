@@ -1,44 +1,112 @@
-# Dual-Qwen router benchmark
+# Router Benchmark Assets
 
-This directory contains the frozen synthetic test corpus and the replay, scoring, and fault-observation tools. The corpus expands the QA, archive retrieval, and synthetic service-tool examples from the prior dual-Qwen benchmark. The assistant and tool messages embedded in follow-up prompts are frozen synthetic history. The manifest declares the corpus provenance and counts. Authorized real Agent sessions are required for the separate historical and closed-loop acceptance tests.
+Versioned replay assets for the dual-Qwen `power_of_two` vs `cache_aware` router
+comparison. This directory is intended to be reviewed and committed; large raw
+run outputs belong in internal persistent storage and are referenced by run ID.
 
-## Validate and replay
+## Status
 
-Run from the repository root with Python and uv. The documented environment uses vLLM Router v0.1.17, vLLM workers serving the same model alias, and a Windows client. Set `ROUTER_API`, `ROUTER_METRICS`, `WORKER_A`, `WORKER_B`, and `MODEL` to use other endpoints.
+- `cases.jsonl` / `sessions.jsonl`: synthetic, frozen validation corpus (300
+  scored cases, 195 sessions).
+- `calibration_cases.jsonl` / `calibration_sessions.jsonl`: disjoint synthetic
+  calibration partition (60 cases, 36 sessions), used only to freeze completion
+  budgets and to validate the harness.
+- **Real Agent sessions: 0.** No company-authorized real sessions were supplied
+  for this round. The real-Agent acceptance is therefore marked *pending*; no
+  synthetic session is labeled as real.
 
-```powershell
-uv run --with httpx==0.28.1 python benchmarks/router/replay.py validate
-uv run --with httpx==0.28.1 python benchmarks/router/test_replay.py
-ssh -N -L 18100:127.0.0.1:8100 -L 19100:127.0.0.1:29100 dgx@10.169.25.16
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `manifest.json` | Dataset version, counts, source, seed, schema and SHA-256 for every asset. |
+| `cases.jsonl` | One scored request per line: stable id, scenario/kind, messages, tools, expected answer/tool call, scoring method, TTFT budget. |
+| `sessions.jsonl` | Session id, ordered steps, parent step and inter-step gap. Step dependencies are checked by `replay.py`. |
+| `profiles.json` | Mix (40/30/30), session counts, stable subset, rates (high 2.0 after calibration, light 1.5, stable 0.75), seed and tail. |
+| `calibration_cases.jsonl`, `calibration_sessions.jsonl` | Disjoint calibration set. |
+| `calibration-results.json`, `budgets.json` | Measured calibration completion times and frozen completion budgets. |
+| `generate.py`, `prompts.py` | Reproducible synthetic generator (seed 20261123). |
+| `transport.py` | Streaming client, metric parser, quality/state classification. |
+| `replay.py` | Fixed-arrival replay, 1-second metric sampling, scoring and raw evidence. |
+| `test_harness.py`, `test-results.json` | Mock checks for timing, cache aggregation, state classification and scoring. |
+| `make_calibration.py` | Rebuilds the calibration files and budgets. |
+| `smoke.json`, `smoke_replay.py`, `smoke_queue.py`, `smoke_failure.py`, `smoke_concurrency.py` | Frozen 16-session quick regression, queue/cancel, one-replica removal and direct 1–4 lane concurrency. |
+| `cold_rag/backends-long{1,2}.yaml`, `cold_rag/cold_rag_replay.py`, `cold_rag/run_cold_rag_matrix.py`, `cold_rag/analyze_cold_rag.py` | First-version Scheduler long-cold admission comparison; separate `.verification/dual-qwen/cold-rag/` evidence. |
+
+## Frozen budgets
+
+TTFT budgets are part of each case: QA 2 s, cold Agent/RAG 10 s, continuation
+5 s. Completion budgets are frozen in `budgets.json` from the disjoint
+calibration run:
+
+| kind | completion budget |
+| --- | ---: |
+| qa | 2,000 ms |
+| agent_cold | 5,000 ms |
+| agent_warm | 5,000 ms |
+| rag_cold | 10,000 ms |
+| rag_warm | 5,000 ms |
+
+## Commands
+
+Run from this directory with a Python environment containing `httpx`.
+
+```bash
+python replay.py validate
+python test_harness.py
+python smoke_replay.py --policy cache_aware --output ../../.verification/dual-qwen/smoke/cache_aware
+python cold_rag/run_cold_rag_matrix.py
+python cold_rag/analyze_cold_rag.py
+python make_calibration.py         # only when intentionally re-freezing budgets
+python run_retest.py               # 3 paired groups x stable/high/light
+python fault_retest.py --policy power_of_two --host 16 --repeat 1
+python fault_retest.py --policy cache_aware --host 15 --repeat 1
+python hot_forced.py --target 15 --round 1
+python analyze_retest.py
+python replay.py stable --policy power_of_two --group 1 --namespace ns-... \
+  --budgets budgets.json --output ../../.verification/dual-qwen/retest
+python replay.py high --policy cache_aware --group 1 --namespace ns-... \
+  --budgets budgets.json --output ../../.verification/dual-qwen/retest
+python replay.py light --policy power_of_two --group 1 --namespace ns-... \
+  --budgets budgets.json --output ../../.verification/dual-qwen/retest
 ```
 
-With the tunnel running in a separate shell, start an isolated Router with two healthy workers. The automated runner expects the deployment's existing remote `~/spark-vllm/reports/dual-qwen/run-router.sh`. It restarts the isolated Router between runs and alternates policy order. Use a fresh output directory for a new evidence set. For a new deployment, copy `start-router.sh` to the router host and set the remote script location in `run-pairs.ps1`. The 2026-11-23 completion budgets are in `budgets.json` and were frozen before the first paired run. For a new version, run the pair launcher with `-CalibrationOnly`, inspect its cohort completion percentiles, and freeze each P95 rounded up to the next whole second before starting paired replays. Pass a separately versioned budget file with `-BudgetFile`.
+The client uses `ROUTER_API` and `ROUTER_METRICS` environment variables
+(defaults `http://127.0.0.1:18100` and `http://127.0.0.1:19100/metrics`). The
+isolated router listens on `.16:8100`; the local SSH tunnel maps 18100/19100.
 
-```powershell
-powershell -File benchmarks/router/run-pairs.ps1 -OutputRoot .verification/dual-qwen/retest
-uv run --with httpx==0.28.1 python benchmarks/router/report.py .verification/dual-qwen/retest
-```
+## Scoring and state rules
 
-For one replay against an already configured Router:
+- TTFT: client monotonic clock to the first non-empty content or tool-call
+  delta. Completion: client monotonic clock to the end of the stream.
+- P50/P95/P99 use the same nearest-rank algorithm in `replay.percentile`.
+- Cache token ratio: sum of engine `prefix_cache_hits_total` deltas divided by
+  sum of `prefix_cache_queries_total` deltas over the window. Concurrent
+  samples are attributed only to worker and window; no per-request attribution.
+- Request state (mutually exclusive): `success`, `rejected` (429), `http_error`,
+  `timeout`, `stream_interrupted` (HTTP 200 then incomplete stream),
+  `quality_failure`, `truncated` (finish_reason=length).
+- Fixed-window qualified RPS: successful, quality-pass, and within the frozen
+  TTFT/completion budgets, admitted before the fixed window end, divided by the
+  frozen window length. Drain time is reported separately and is not part of the
+  denominator.
 
-```powershell
-uv run --with httpx==0.28.1 python benchmarks/router/replay.py high --policy power_of_two --group 1 --namespace "Blue Test 1" --budgets benchmarks/router/budgets.json --output .verification/dual-qwen/retest
-```
+## Isolation and provenance
 
-The high and light profiles use 60 two-step Agent, 45 two-step RAG, and 90 one-step QA sessions. The stable profile uses 20 Agent and 20 RAG sessions. The session order is seeded by group. A child step starts after its parent finishes and the configured gap elapses. The fixed send window is nominal requests divided by profile rate plus a predefined allowance for dependencies. The raw request file retains actual send time, planned time, prompt, tool definitions, stream events, finish reason, usage, and scoring. The metric file retains approximately one-second engine and Router observations. The report keeps late sends in the overall outcomes and excludes them from fixed-window qualified throughput.
+- Router image: `vllm/vllm-router:v0.1.17`, arm64; record the exact digest in
+  each run metadata.
+- Workers: `.15:8000` and `.16:8000`, same Qwen image/weights/tokenizer/template.
+- Both policies use `cache_threshold=0.3`, `balance_abs_threshold=2`,
+  `balance_rel_threshold=1.2`, health interval 5 s / failure 2 / success 2.
+- Every run gets a random neutral namespace; the namespace is not tied to a
+  policy. It is substituted into `BENCH_NAMESPACE` to isolate engine prefix
+  caches without clearing the engine.
+- Run metadata records dataset manifest SHA-256, Git revision, router/engine
+  endpoints, namespace, group, policy, profile and start time. Raw request rows
+  retain the original client timestamps and sampled engine/Router metrics.
 
-TTFT measures the first content or function name or argument delta on a monotonic high-resolution clock. Completion measures receipt of the stream terminator and closure of the client stream. Percentiles select the observed value at the rounded zero-based index `p*(n-1)`. Execution failure rates count 429, HTTP errors, timeouts, and stream interruption after HTTP 200. Quality failures and truncation have their own mutually exclusive states. Cache token ratios aggregate valid monotonic counter intervals from both engines. Sample resets and missing samples reduce interval coverage. Aggregate engine telemetry cannot attribute cache tokens to individual requests.
+## Real-Agent placeholder
 
-To run one fault trial, first set the Router policy and verify that both backends are healthy. This command stops and restarts the named worker container and needs authorization for the worker's operational impact.
-
-```powershell
-uv run --with httpx==0.28.1 python benchmarks/router/fault.py --policy cache_aware --worker qwen16 --repeat 1
-```
-
-The hot-replica comparison requires two additional, isolated, single-worker Router endpoints to force the probe onto the hot worker. Background requests in both arms go through the main two-worker Router. The script writes the loads observed in both arms so comparability can be judged from the evidence.
-
-```powershell
-uv run --with httpx==0.28.1 python benchmarks/router/hot.py --output .verification/dual-qwen/retest/hot.json --pinned http://127.0.0.1:18101 http://127.0.0.1:18102
-```
-
-To revise the dataset, update the generation inputs, bump the manifest version in `generate.py`, regenerate the corpus, validate it, and create a new evidence set for both policies. Preserve earlier manifests, budgets and raw evidence.
+`real/README.md` defines where authorized real session transcripts and their
+scrubbed derivatives should be placed. Until then, reports must state
+`real_agent_sessions: 0` and mark the real-Agent acceptance as pending.

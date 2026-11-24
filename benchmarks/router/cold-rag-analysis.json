@@ -1,0 +1,1022 @@
+{
+  "aggregate": {
+    "1": {
+      "runs": 3,
+      "groups": [
+        1,
+        2,
+        3
+      ],
+      "scenario": {
+        "short_agent": {
+          "requests": 42,
+          "success": 42,
+          "states": {
+            "success": 42
+          },
+          "ttft_ms": {
+            "p50": 517.83,
+            "p95": 2646.61,
+            "max": 2737.42
+          },
+          "per_lane_tps": {
+            "p50": 55.94,
+            "p10": 33.32
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 5084.1,
+            "p95": 7450.91
+          },
+          "output_tokens": {
+            "min": 173,
+            "median": 207.5,
+            "max": 358
+          }
+        },
+        "cold_rag": {
+          "requests": 42,
+          "success": 35,
+          "states": {
+            "success": 35,
+            "truncated": 7
+          },
+          "ttft_ms": {
+            "p50": 7024.72,
+            "p95": 14074.81,
+            "max": 15134.8
+          },
+          "per_lane_tps": {
+            "p50": 60.98,
+            "p10": 57.29
+          },
+          "gateway_queue_ms": {
+            "p50": 3853.3,
+            "p95": 10941.67
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 14233.51,
+            "p95": 19962.49
+          },
+          "output_tokens": {
+            "min": 318,
+            "median": 359.0,
+            "max": 512
+          }
+        }
+      },
+      "window_generation_tokens": 23396.0,
+      "window_s": 360.0,
+      "engine_window_tps": 64.989,
+      "cache": {
+        "hits": 88032.0,
+        "queries": 852298.0,
+        "ratio": 0.1033
+      },
+      "drain_s": [
+        14.63,
+        21.9,
+        12.9
+      ],
+      "engine_waiting_max": 0,
+      "actual_window_rate": 0.2333,
+      "arrival_delay_ms": {
+        "p50": 5.03,
+        "p95": 15.16
+      },
+      "failures": 0,
+      "truncated": 7
+    },
+    "2": {
+      "runs": 3,
+      "groups": [
+        1,
+        2,
+        3
+      ],
+      "scenario": {
+        "short_agent": {
+          "requests": 42,
+          "success": 42,
+          "states": {
+            "success": 42
+          },
+          "ttft_ms": {
+            "p50": 1134.11,
+            "p95": 4090.82,
+            "max": 4713.97
+          },
+          "per_lane_tps": {
+            "p50": 55.86,
+            "p10": 36.3
+          },
+          "gateway_queue_ms": {
+            "p50": 587.39,
+            "p95": 3602.02
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 4857.62,
+            "p95": 9794.24
+          },
+          "output_tokens": {
+            "min": 174,
+            "median": 203.0,
+            "max": 361
+          }
+        },
+        "cold_rag": {
+          "requests": 42,
+          "success": 34,
+          "states": {
+            "success": 34,
+            "truncated": 8
+          },
+          "ttft_ms": {
+            "p50": 3399.88,
+            "p95": 5639.14,
+            "max": 7195.17
+          },
+          "per_lane_tps": {
+            "p50": 39.84,
+            "p10": 37.47
+          },
+          "gateway_queue_ms": {
+            "p50": 332.97,
+            "p95": 2633.32
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 12521.93,
+            "p95": 16685.25
+          },
+          "output_tokens": {
+            "min": 324,
+            "median": 359.0,
+            "max": 512
+          }
+        }
+      },
+      "window_generation_tokens": 25116.0,
+      "window_s": 360.0,
+      "engine_window_tps": 69.767,
+      "cache": {
+        "hits": 88032.0,
+        "queries": 890434.0,
+        "ratio": 0.0989
+      },
+      "drain_s": [
+        9.06,
+        7.58,
+        8.25
+      ],
+      "engine_waiting_max": 0,
+      "actual_window_rate": 0.2333,
+      "arrival_delay_ms": {
+        "p50": 4.8,
+        "p95": 14.71
+      },
+      "failures": 0,
+      "truncated": 8
+    }
+  },
+  "pairs": [
+    {
+      "group": 1,
+      "short_agent": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 481.46,
+            "p95": 2678.84,
+            "max": 2737.42
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "complete_ms": {
+            "p50": 4751.69,
+            "p95": 7450.91
+          },
+          "per_lane_tps": {
+            "p50": 56.03,
+            "p10": 35.1
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 1089.48,
+            "p95": 3498.07,
+            "max": 4134.24
+          },
+          "gateway_queue_ms": {
+            "p50": 587.39,
+            "p95": 2947.88
+          },
+          "complete_ms": {
+            "p50": 5470.93,
+            "p95": 9683.65
+          },
+          "per_lane_tps": {
+            "p50": 55.56,
+            "p10": 36.3
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": -55.81,
+        "gateway_queue_p50_delta_pct": -99.99,
+        "complete_p95_delta_pct": -23.06
+      },
+      "cold_rag": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 3977.03,
+            "p95": 9989.7,
+            "max": 10430.37
+          },
+          "gateway_queue_ms": {
+            "p50": 950.71,
+            "p95": 7048.66
+          },
+          "complete_ms": {
+            "p50": 10178.61,
+            "p95": 15812.82
+          },
+          "per_lane_tps": {
+            "p50": 58.78,
+            "p10": 56.92
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 3639.39,
+            "p95": 5125.66,
+            "max": 5639.14
+          },
+          "gateway_queue_ms": {
+            "p50": 574.82,
+            "p95": 2170.95
+          },
+          "complete_ms": {
+            "p50": 12521.93,
+            "p95": 16076.12
+          },
+          "per_lane_tps": {
+            "p50": 41.51,
+            "p10": 37.78
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": 9.28,
+        "gateway_queue_p50_delta_pct": 65.39,
+        "complete_p95_delta_pct": -1.64
+      },
+      "window_tps": {
+        "limit1": 65.617,
+        "limit2": 70.258
+      }
+    },
+    {
+      "group": 2,
+      "short_agent": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 962.21,
+            "p95": 1589.42,
+            "max": 1676.86
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "complete_ms": {
+            "p50": 5084.1,
+            "p95": 7307.36
+          },
+          "per_lane_tps": {
+            "p50": 55.76,
+            "p10": 32.85
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 517.35,
+            "p95": 2293.86,
+            "max": 3070.96
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 1794.16
+          },
+          "complete_ms": {
+            "p50": 4101.45,
+            "p95": 9378.34
+          },
+          "per_lane_tps": {
+            "p50": 55.7,
+            "p10": 34.69
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": 85.99,
+        "gateway_queue_p50_delta_pct": 0.0,
+        "complete_p95_delta_pct": -22.08
+      },
+      "cold_rag": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 11341.17,
+            "p95": 14173.73,
+            "max": 15134.8
+          },
+          "gateway_queue_ms": {
+            "p50": 8263.49,
+            "p95": 11203.91
+          },
+          "complete_ms": {
+            "p50": 17291.13,
+            "p95": 21028.15
+          },
+          "per_lane_tps": {
+            "p50": 60.92,
+            "p10": 57.36
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 3109.88,
+            "p95": 3427.39,
+            "max": 4317.68
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 436.37
+          },
+          "complete_ms": {
+            "p50": 12197.3,
+            "p95": 14906.46
+          },
+          "per_lane_tps": {
+            "p50": 39.84,
+            "p10": 37.79
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": 264.68,
+        "gateway_queue_p50_delta_pct": 16526880.0,
+        "complete_p95_delta_pct": 41.07
+      },
+      "window_tps": {
+        "limit1": 65.775,
+        "limit2": 67.675
+      }
+    },
+    {
+      "group": 3,
+      "short_agent": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 1410.7,
+            "p95": 2623.23,
+            "max": 2646.61
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "complete_ms": {
+            "p50": 5468.46,
+            "p95": 7129.83
+          },
+          "per_lane_tps": {
+            "p50": 55.83,
+            "p10": 32.91
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 1822.28,
+            "p95": 4090.82,
+            "max": 4713.97
+          },
+          "gateway_queue_ms": {
+            "p50": 1244.38,
+            "p95": 3602.02
+          },
+          "complete_ms": {
+            "p50": 5907.93,
+            "p95": 9794.24
+          },
+          "per_lane_tps": {
+            "p50": 55.86,
+            "p10": 37.46
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": -22.59,
+        "gateway_queue_p50_delta_pct": -100.0,
+        "complete_p95_delta_pct": -27.2
+      },
+      "cold_rag": {
+        "limit1": {
+          "ttft_ms": {
+            "p50": 6824.87,
+            "p95": 8988.38,
+            "max": 9406.97
+          },
+          "gateway_queue_ms": {
+            "p50": 3662.54,
+            "p95": 6098.4
+          },
+          "complete_ms": {
+            "p50": 12584.69,
+            "p95": 15000.2
+          },
+          "per_lane_tps": {
+            "p50": 62.32,
+            "p10": 57.97
+          },
+          "requests": 14
+        },
+        "limit2": {
+          "ttft_ms": {
+            "p50": 4424.22,
+            "p95": 5641.46,
+            "max": 7195.17
+          },
+          "gateway_queue_ms": {
+            "p50": 1458.11,
+            "p95": 2702.2
+          },
+          "complete_ms": {
+            "p50": 13264.68,
+            "p95": 16685.25
+          },
+          "per_lane_tps": {
+            "p50": 38.71,
+            "p10": 37.06
+          },
+          "requests": 14
+        },
+        "ttft_p50_delta_pct": 54.26,
+        "gateway_queue_p50_delta_pct": 151.18,
+        "complete_p95_delta_pct": -10.1
+      },
+      "window_tps": {
+        "limit1": 63.575,
+        "limit2": 71.367
+      }
+    }
+  ],
+  "runs": [
+    {
+      "group": 1,
+      "limit": 1,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g1-long1",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 481.46,
+            "p95": 2678.84,
+            "max": 2737.42
+          },
+          "per_lane_tps": {
+            "p50": 56.03,
+            "p10": 35.1
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 4751.69,
+            "p95": 7450.91
+          },
+          "output_tokens": {
+            "min": 176,
+            "median": 225.0,
+            "max": 254
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 12,
+          "states": {
+            "success": 12,
+            "truncated": 2
+          },
+          "ttft_ms": {
+            "p50": 3977.03,
+            "p95": 9989.7,
+            "max": 10430.37
+          },
+          "per_lane_tps": {
+            "p50": 58.78,
+            "p10": 56.92
+          },
+          "gateway_queue_ms": {
+            "p50": 950.71,
+            "p95": 7048.66
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 10178.61,
+            "p95": 15812.82
+          },
+          "output_tokens": {
+            "min": 328,
+            "median": 359.0,
+            "max": 512
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 65.617,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 284802.0,
+          "ratio": 0.103
+        },
+        "failures": 0,
+        "truncated": 2,
+        "drain_s": 14.63,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    },
+    {
+      "group": 1,
+      "limit": 2,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g1-long2",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 1089.48,
+            "p95": 3498.07,
+            "max": 4134.24
+          },
+          "per_lane_tps": {
+            "p50": 55.56,
+            "p10": 36.3
+          },
+          "gateway_queue_ms": {
+            "p50": 587.39,
+            "p95": 2947.88
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 5470.93,
+            "p95": 9683.65
+          },
+          "output_tokens": {
+            "min": 174,
+            "median": 203.5,
+            "max": 361
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 11,
+          "states": {
+            "success": 11,
+            "truncated": 3
+          },
+          "ttft_ms": {
+            "p50": 3639.39,
+            "p95": 5125.66,
+            "max": 5639.14
+          },
+          "per_lane_tps": {
+            "p50": 41.51,
+            "p10": 37.78
+          },
+          "gateway_queue_ms": {
+            "p50": 574.82,
+            "p95": 2170.95
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 12521.93,
+            "p95": 16076.12
+          },
+          "output_tokens": {
+            "min": 325,
+            "median": 358.5,
+            "max": 512
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 70.258,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 285329.0,
+          "ratio": 0.1028
+        },
+        "failures": 0,
+        "truncated": 3,
+        "drain_s": 9.06,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    },
+    {
+      "group": 2,
+      "limit": 1,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g2-long1",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 962.21,
+            "p95": 1589.42,
+            "max": 1676.86
+          },
+          "per_lane_tps": {
+            "p50": 55.76,
+            "p10": 32.85
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 5084.1,
+            "p95": 7307.36
+          },
+          "output_tokens": {
+            "min": 176,
+            "median": 205.5,
+            "max": 358
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 9,
+          "states": {
+            "success": 9,
+            "truncated": 5
+          },
+          "ttft_ms": {
+            "p50": 11341.17,
+            "p95": 14173.73,
+            "max": 15134.8
+          },
+          "per_lane_tps": {
+            "p50": 60.92,
+            "p10": 57.36
+          },
+          "gateway_queue_ms": {
+            "p50": 8263.49,
+            "p95": 11203.91
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 17291.13,
+            "p95": 21028.15
+          },
+          "output_tokens": {
+            "min": 318,
+            "median": 358.0,
+            "max": 512
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 65.775,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 283221.0,
+          "ratio": 0.1036
+        },
+        "failures": 0,
+        "truncated": 5,
+        "drain_s": 21.9,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    },
+    {
+      "group": 2,
+      "limit": 2,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g2-long2",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 517.35,
+            "p95": 2293.86,
+            "max": 3070.96
+          },
+          "per_lane_tps": {
+            "p50": 55.7,
+            "p10": 34.69
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 1794.16
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 4101.45,
+            "p95": 9378.34
+          },
+          "output_tokens": {
+            "min": 179,
+            "median": 199.5,
+            "max": 314
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 12,
+          "states": {
+            "success": 12,
+            "truncated": 2
+          },
+          "ttft_ms": {
+            "p50": 3109.88,
+            "p95": 3427.39,
+            "max": 4317.68
+          },
+          "per_lane_tps": {
+            "p50": 39.84,
+            "p10": 37.79
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 436.37
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 12197.3,
+            "p95": 14906.46
+          },
+          "output_tokens": {
+            "min": 324,
+            "median": 359.0,
+            "max": 512
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 67.675,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 303343.0,
+          "ratio": 0.0967
+        },
+        "failures": 0,
+        "truncated": 2,
+        "drain_s": 7.58,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    },
+    {
+      "group": 3,
+      "limit": 1,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g3-long1",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 1410.7,
+            "p95": 2623.23,
+            "max": 2646.61
+          },
+          "per_lane_tps": {
+            "p50": 55.83,
+            "p10": 32.91
+          },
+          "gateway_queue_ms": {
+            "p50": 0.05,
+            "p95": 0.06
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 5468.46,
+            "p95": 7129.83
+          },
+          "output_tokens": {
+            "min": 173,
+            "median": 196.0,
+            "max": 240
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 6824.87,
+            "p95": 8988.38,
+            "max": 9406.97
+          },
+          "per_lane_tps": {
+            "p50": 62.32,
+            "p10": 57.97
+          },
+          "gateway_queue_ms": {
+            "p50": 3662.54,
+            "p95": 6098.4
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 12584.69,
+            "p95": 15000.2
+          },
+          "output_tokens": {
+            "min": 324,
+            "median": 359.0,
+            "max": 440
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 63.575,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 284275.0,
+          "ratio": 0.1032
+        },
+        "failures": 0,
+        "truncated": 0,
+        "drain_s": 12.9,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    },
+    {
+      "group": 3,
+      "limit": 2,
+      "directory": "D:\\workplace\\ai-gateway\\ai-gateway\\.verification\\dual-qwen\\cold-rag\\matrix\\g3-long2",
+      "scenario": {
+        "short_agent": {
+          "requests": 14,
+          "success": 14,
+          "states": {
+            "success": 14
+          },
+          "ttft_ms": {
+            "p50": 1822.28,
+            "p95": 4090.82,
+            "max": 4713.97
+          },
+          "per_lane_tps": {
+            "p50": 55.86,
+            "p10": 37.46
+          },
+          "gateway_queue_ms": {
+            "p50": 1244.38,
+            "p95": 3602.02
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 5907.93,
+            "p95": 9794.24
+          },
+          "output_tokens": {
+            "min": 174,
+            "median": 204.5,
+            "max": 302
+          }
+        },
+        "cold_rag": {
+          "requests": 14,
+          "success": 11,
+          "states": {
+            "truncated": 3,
+            "success": 11
+          },
+          "ttft_ms": {
+            "p50": 4424.22,
+            "p95": 5641.46,
+            "max": 7195.17
+          },
+          "per_lane_tps": {
+            "p50": 38.71,
+            "p10": 37.06
+          },
+          "gateway_queue_ms": {
+            "p50": 1458.11,
+            "p95": 2702.2
+          },
+          "engine_queue_ms": {
+            "status": "unavailable",
+            "reason": "vLLM exposes aggregate waiting only"
+          },
+          "complete_ms": {
+            "p50": 13264.68,
+            "p95": 16685.25
+          },
+          "output_tokens": {
+            "min": 325,
+            "median": 370.0,
+            "max": 512
+          }
+        }
+      },
+      "summary": {
+        "window_requests": 28,
+        "engine_window_tps": 71.367,
+        "engine_cache": {
+          "hits": 29344.0,
+          "queries": 301762.0,
+          "ratio": 0.0972
+        },
+        "failures": 0,
+        "truncated": 3,
+        "drain_s": 8.25,
+        "rate": 0.23,
+        "warmup_s": 15.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "stopped": "qwen16",
+  "stop_command_s": 2.4,
+  "router_detection_s": 8.02,
+  "direct_health_after": 0,
+  "probes": [
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 70.02,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 66.76,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 64.56,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 67.32,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 66.56,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 65.82,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 65.67,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 68.88,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 65.75,
+      "worker_delta": {},
+      "worker": null
+    },
+    {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 66.16,
+      "worker_delta": {},
+      "worker": null
+    }
+  ],
+  "probe_success": 10,
+  "probe_workers": {},
+  "all_200": true
+}

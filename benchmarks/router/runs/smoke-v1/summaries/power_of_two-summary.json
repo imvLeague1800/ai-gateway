@@ -1,0 +1,133 @@
+{
+  "policy": "power_of_two",
+  "requests": 28,
+  "states": {
+    "success": 28
+  },
+  "protocol_ok": 28,
+  "quality_ok": 28,
+  "groups": {
+    "qa": {
+      "requests": 4,
+      "states": {
+        "success": 4
+      },
+      "protocol_ok": 4,
+      "quality_ok": 4,
+      "ttft_ms": {
+        "p50": 141.65,
+        "p95": 143.71,
+        "max": 143.71
+      },
+      "complete_ms": {
+        "p50": 198.33,
+        "p95": 200.11,
+        "max": 200.11
+      },
+      "output_tokens": 10
+    },
+    "agent": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 1509.97,
+        "p95": 1557.91,
+        "max": 1557.91
+      },
+      "complete_ms": {
+        "p50": 1754.19,
+        "p95": 1808.19,
+        "max": 1808.19
+      },
+      "output_tokens": 172
+    },
+    "rag": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 2583.81,
+        "p95": 2637.22,
+        "max": 2637.22
+      },
+      "complete_ms": {
+        "p50": 2730.19,
+        "p95": 2787.6,
+        "max": 2787.6
+      },
+      "output_tokens": 80
+    },
+    "rag_recall": {
+      "requests": 8,
+      "states": {
+        "success": 8
+      },
+      "protocol_ok": 8,
+      "quality_ok": 8,
+      "ttft_ms": {
+        "p50": 2587.76,
+        "p95": 2591.47,
+        "max": 2591.47
+      },
+      "complete_ms": {
+        "p50": 2729.85,
+        "p95": 2744.38,
+        "max": 2744.38
+      },
+      "output_tokens": 80
+    }
+  },
+  "warm": {
+    "requests": 12,
+    "attributed": 12,
+    "same_worker": 3,
+    "cache_hits": 37728.0
+  },
+  "workers": {
+    "http://10.169.25.15:8000": 12,
+    "http://10.169.25.16:8000": 16
+  },
+  "both_workers_routed": true,
+  "health": {
+    "qwen15": 200,
+    "qwen16": 200
+  },
+  "cache": {
+    "hits": 37728.0,
+    "queries": 336820.0,
+    "ratio": 0.112,
+    "warm_hits": 37728.0
+  },
+  "recall": {
+    "warm_requests": 4,
+    "new_value_ok": 4
+  },
+  "warmup": [
+    {
+      "id": "smoke-warmup-0",
+      "status": 200,
+      "state": "success",
+      "worker": "http://10.169.25.15:8000"
+    },
+    {
+      "id": "smoke-warmup-1",
+      "status": 200,
+      "state": "success",
+      "worker": "http://10.169.25.16:8000"
+    }
+  ],
+  "policy_ok": true,
+  "smoke_sha256": "8760e3704ae9b273ce51840eadd839c0cb20d9fa043da4e336a2cae19d26933f",
+  "dataset_manifest_sha256": "489dd56308ef7393164dea257745345c2708dc5f6e4d339d093cf42bdf899f1a",
+  "git": "88a9c4426f0d8a3859037ba1fe582602f13ac81a",
+  "router": "http://127.0.0.1:18100",
+  "namespace": "NS-a4a31eb28a79",
+  "elapsed_s": 61.06
+}

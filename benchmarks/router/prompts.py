@@ -67,7 +67,7 @@ def build_agent_prefix(salt: str) -> tuple[dict, dict, dict]:
 
 def qa_specs(count: int, tag: str) -> list[dict]:
     questions = [
-        ("What is 17*23? Reply with the number only.", r"\b391\b", "qa"),
+        ("What is 2+2? Reply with the number only.", r"\b4\b", "qa"),
         ("What is the output of len({1, 2, 2, 3}) in Python? Reply with the number only.", r"\b3\b", "qa"),
         ("Which HTTP status code means Too Many Requests? Reply with the number only.", r"\b429\b", "qa"),
     ]

@@ -1,0 +1,23 @@
+# Isolated single-replica cold RAG admission test. Not a production config.
+models:
+  qwen3.6-35b-a3b-nvfp4:
+    backend_pool: qwen15-cold-rag
+    upstream_model: qwen3.6-35b-a3b-nvfp4
+    max_context_tokens: 262144
+    max_output_tokens: 1024
+    default_output_tokens: 1024
+    long_request_threshold_tokens: 8192
+
+backend_pools:
+  qwen15-cold-rag:
+    backends:
+      - id: qwen15-cold-rag
+        host_id: 10.169.25.15
+        url: http://10.169.25.15:8000
+        api_key_env: null
+        enabled: true
+        weight: 1.0
+        max_context_tokens: 262144
+        max_concurrent_requests: 2
+        max_long_requests: 1
+        health_path: /health

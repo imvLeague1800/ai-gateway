@@ -1,0 +1,286 @@
+{
+  "version": "1.0.0",
+  "created": "2026-11-23",
+  "dataset_version": "1.2.0",
+  "source_manifest_sha256": "d20dce14cc5715b43ae2a334afa391d7538428de5f76d6090ca7203bc25eaa82",
+  "cases_sha256": "5cd0bcb3c4c16dd68b03970af7e5a543ba3a1de679a97e78310b7e619356cad5",
+  "sessions_sha256": "ca3f6eb60b246ec8b27cfbfa0599af11a78ee5d4c8616bd8b709d01f21b801e8",
+  "expected_requests": 28,
+  "selection": [
+    {
+      "session_id": "qa-000",
+      "source_id": "qa-000",
+      "group": "qa",
+      "steps": [
+        {
+          "case": "qa-000",
+          "parent": null,
+          "gap_s": 0
+        }
+      ]
+    },
+    {
+      "session_id": "qa-001",
+      "source_id": "qa-001",
+      "group": "qa",
+      "steps": [
+        {
+          "case": "qa-001",
+          "parent": null,
+          "gap_s": 0
+        }
+      ]
+    },
+    {
+      "session_id": "qa-002",
+      "source_id": "qa-002",
+      "group": "qa",
+      "steps": [
+        {
+          "case": "qa-002",
+          "parent": null,
+          "gap_s": 0
+        }
+      ]
+    },
+    {
+      "session_id": "qa-003",
+      "source_id": "qa-003",
+      "group": "qa",
+      "steps": [
+        {
+          "case": "qa-003",
+          "parent": null,
+          "gap_s": 0
+        }
+      ]
+    },
+    {
+      "session_id": "agent-000",
+      "source_id": "agent-000",
+      "group": "agent",
+      "steps": [
+        {
+          "case": "agent-000-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "agent-000-warm",
+          "parent": "agent-000-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "agent-001",
+      "source_id": "agent-001",
+      "group": "agent",
+      "steps": [
+        {
+          "case": "agent-001-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "agent-001-warm",
+          "parent": "agent-001-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "agent-002",
+      "source_id": "agent-002",
+      "group": "agent",
+      "steps": [
+        {
+          "case": "agent-002-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "agent-002-warm",
+          "parent": "agent-002-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "agent-003",
+      "source_id": "agent-003",
+      "group": "agent",
+      "steps": [
+        {
+          "case": "agent-003-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "agent-003-warm",
+          "parent": "agent-003-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-000",
+      "source_id": "rag-000",
+      "group": "rag",
+      "steps": [
+        {
+          "case": "rag-000-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-000-warm",
+          "parent": "rag-000-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-001",
+      "source_id": "rag-001",
+      "group": "rag",
+      "steps": [
+        {
+          "case": "rag-001-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-001-warm",
+          "parent": "rag-001-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-002",
+      "source_id": "rag-002",
+      "group": "rag",
+      "steps": [
+        {
+          "case": "rag-002-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-002-warm",
+          "parent": "rag-002-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-003",
+      "source_id": "rag-003",
+      "group": "rag",
+      "steps": [
+        {
+          "case": "rag-003-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-003-warm",
+          "parent": "rag-003-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-004-smoke",
+      "source_id": "rag-004",
+      "group": "rag_recall",
+      "variant": "replace_recall",
+      "old_code": "RAG-004-AAAAAA",
+      "new_code": "RAG-004-SMOKE",
+      "steps": [
+        {
+          "case": "rag-004-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-004-warm",
+          "parent": "rag-004-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-005-smoke",
+      "source_id": "rag-005",
+      "group": "rag_recall",
+      "variant": "replace_recall",
+      "old_code": "RAG-005-AAAAAA",
+      "new_code": "RAG-005-SMOKE",
+      "steps": [
+        {
+          "case": "rag-005-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-005-warm",
+          "parent": "rag-005-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-006-smoke",
+      "source_id": "rag-006",
+      "group": "rag_recall",
+      "variant": "replace_recall",
+      "old_code": "RAG-006-AAAAAA",
+      "new_code": "RAG-006-SMOKE",
+      "steps": [
+        {
+          "case": "rag-006-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-006-warm",
+          "parent": "rag-006-cold",
+          "gap_s": 0.5
+        }
+      ]
+    },
+    {
+      "session_id": "rag-007-smoke",
+      "source_id": "rag-007",
+      "group": "rag_recall",
+      "variant": "replace_recall",
+      "old_code": "RAG-007-AAAAAA",
+      "new_code": "RAG-007-SMOKE",
+      "steps": [
+        {
+          "case": "rag-007-cold",
+          "parent": null,
+          "gap_s": 0
+        },
+        {
+          "case": "rag-007-warm",
+          "parent": "rag-007-cold",
+          "gap_s": 0.5
+        }
+      ]
+    }
+  ],
+  "variant_rules": [
+    {
+      "name": "replace_recall",
+      "description": "For rag-004..007, keep the cold turn unchanged; in the warm turn replace the recall-block code and the prior assistant answer with new_code, and update the quality expectation to new_code."
+    }
+  ],
+  "notes": [
+    "Smoke-only subset; do not mix these results with the frozen full validation set.",
+    "rag-004..007 derived IDs keep the original source_id and are not added to cases.jsonl.",
+    "Frozen subset remains v1.0.0; source manifest is v1.2.1 (transport/README metadata only). Archived 2026-11-23 smoke runs point to manifest 1.2.0."
+  ]
+}

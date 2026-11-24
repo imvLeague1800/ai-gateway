@@ -1,0 +1,82 @@
+{
+  "scenario": "rag_warm",
+  "concurrency": 4,
+  "samples": 24,
+  "ttft_ms": {
+    "p50": 1404.32,
+    "max": 1438.26
+  },
+  "per_lane_tps": {
+    "median": 42.126,
+    "p10": 37.326
+  },
+  "output_tokens": {
+    "min": 291,
+    "median": 469.0,
+    "max": 548
+  },
+  "burst_window_tps": 114.947,
+  "sustained": {
+    "scenario": "rag_warm",
+    "concurrency": 4,
+    "window_s": 30,
+    "window_start_epoch": 430104.0406741,
+    "window_end_epoch": 430134.0406741,
+    "warmup_s": 5.0,
+    "drain_s": 11.29,
+    "window_requests": 8,
+    "window_output_tokens": 3692,
+    "window_output_tps": 123.067,
+    "actual_concurrency_avg": 3.55,
+    "actual_concurrency_max": 4.0,
+    "waiting_max": 0.0,
+    "cache": {
+      "hits": 176064.0,
+      "queries": 197874.0,
+      "ratio": 0.8898
+    }
+  },
+  "states": {
+    "success": 24
+  },
+  "failures": 0,
+  "truncated": 0,
+  "quality_ok": 24,
+  "protocol_ok": 24,
+  "health": 200,
+  "baseline": {
+    "vllm:num_preemptions_total": 0.0,
+    "vllm:prompt_tokens_total": 12000218.0,
+    "vllm:prefix_cache_hits_total": 6822480.0,
+    "vllm:kv_cache_usage_perc": 0.0,
+    "vllm:generation_tokens_total": 422777.0,
+    "vllm:prefix_cache_queries_total": 12000218.0,
+    "vllm:num_requests_waiting": 0.0,
+    "vllm:num_requests_running": 0.0
+  },
+  "burst_samples": 12,
+  "sustained_requests": 12,
+  "burst_cache": [
+    {
+      "hits": 58688.0,
+      "queries": 65958.0,
+      "ratio": 0.8898
+    },
+    {
+      "hits": 58688.0,
+      "queries": 65958.0,
+      "ratio": 0.8898
+    },
+    {
+      "hits": 58688.0,
+      "queries": 65958.0,
+      "ratio": 0.8898
+    }
+  ],
+  "warmup_burst_cache": {
+    "hits": 58688.0,
+    "queries": 65958.0,
+    "ratio": 0.8898
+  },
+  "smoke_sha256": "8760e3704ae9b273ce51840eadd839c0cb20d9fa043da4e336a2cae19d26933f"
+}

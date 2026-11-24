@@ -1,18 +1,47 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.1",
   "schema_version": 1,
   "generator_version": 1,
   "seed": 20261123,
-  "source": "2026-11-20 synthetic dual-Qwen benchmark, expanded for retest",
-  "purpose": "internal routing regression",
+  "source": "2026-11-20 synthetic dual-Qwen benchmark, expanded and QA-corrected 2026-11-23; no real Agent sessions supplied",
+  "purpose": "internal routing regression and GLM candidate selection",
   "cases": 300,
   "sessions": 195,
   "real_agent_sessions": 0,
   "sha256": {
-    "cases.jsonl": "79ab9dec44b52963c82e2af2cf6e292dd56e24fa7654d9e43fb62ccefddd9546",
+    "cases.jsonl": "5cd0bcb3c4c16dd68b03970af7e5a543ba3a1de679a97e78310b7e619356cad5",
     "sessions.jsonl": "ca3f6eb60b246ec8b27cfbfa0599af11a78ee5d4c8616bd8b709d01f21b801e8",
-    "profiles.json": "1a654636c450fb155e6e8355b863a177757297a6a95de052e1c4d8a59828ddee",
+    "profiles.json": "69f3bd0b7dc6ee8a7771bee7b10cdfa598807460960f54f790597dc113c00df0",
     "generate.py": "4f0bbb8dcb82953ac24e8863d8178e871105f3be5dcc1cd16e3ae5f3cf5da8c0",
-    "prompts.py": "1498e6bf251d68864ed699b77beac7cf9470ccc94e70305aa0c7dcc4e3606b19"
-  }
+    "prompts.py": "607b0c11a9b119ea3333bd415c366c4fbf64e996e3027e48cf79bf163d54b0aa",
+    "calibration_cases.jsonl": "e74f87546c3ef5e6e6e738fbba630809f2506f11f836c405e66775c394e7cd52",
+    "calibration_sessions.jsonl": "f074e8d27d87095d49c02083e6b49f0850db11596309a32c4c6af1ee56c76c3d",
+    "calibration-results.json": "1e95e179416b30dec69a0419b68df2f064b7041dc98081d0332382ce6d8b3626",
+    "budgets.json": "014e457edabac36f24bdb7a11f7ef5f0133b8a09350540d7a79f19563cd3ba35",
+    "test-results.json": "51d073dcd476b362d0967fd2cf82e50daa34826c73eeb4cfb47c8eea9c99c0bd",
+    "replay.py": "f1a30b712838b5627ab1c16b4d699b4d09b31a0f103379b35d4db9a01de9d385",
+    "transport.py": "304452130909262ccfbaf6fbc556797e6a42d219e90414c2ffeb0cae942a4036",
+    "test_harness.py": "9c7993464e546c6358cc4573fa972f432edffc391c82eda707c5a5fe023030cb",
+    "make_calibration.py": "e8a4a4e530ce2bc4ee6b8963ecd12d1b83b3b887f8340b6243beb8081e942e91",
+    "README.md": "a3fe0222ea90964d69f58facdff1f692cd7a928e8537bbd206905a0d9870b788",
+    "real/README.md": "e6993536ab8e879fd04ca6f226dd752ea9abdb2355736c2a0519ecc5fcce778a",
+    "run_retest.py": "2589f7cf10ca8ed67dd239049ee49b72866b5980a5b4ad7487bca9c357264a4c",
+    "analyze_retest.py": "16449ca097912b6b39f745983b747750d0eb2a8a04664c48f1ba0271bb316420",
+    "fault_retest.py": "62fbba4a6ebce407f3d8f9a18accad5e852aa25aac98fc713457db12d32dbf2a",
+    "hot_forced.py": "3db831c1e6d0e7f389c67bd323152fdde12be750c014c872476829b2f81ac63c",
+    "run_fault_matrix.py": "98c36f87731ffe3f0220ddf29cf561558fe82d0e8e64285d64aa62353dfb47c0",
+    "analyze_fault.py": "2769edaa102168c1b73400a904759aefdabad4d43bf1568a31b21de8b3eb8f0f"
+  },
+  "usage_scope": "internal-only routing evaluation; not a model-quality or business-accuracy benchmark",
+  "calibration_cases": 60,
+  "calibration_sessions": 36,
+  "partitions": {
+    "frozen_validation": "cases.jsonl + sessions.jsonl",
+    "calibration": "calibration_cases.jsonl + calibration_sessions.jsonl"
+  },
+  "notes": [
+    "v1.2.0 replaces the unreliable 17*23 QA prompt with 2+2; v1.1 calibration remains under .verification for audit.",
+    "v1.2 formal rates frozen: high 2.0, light 1.5, stable 0.75; 3.0 was overloaded.",
+    "v1.2.1 adds optional user/max_tokens/response-header capture to transport.py and documents the smoke/cold-RAG entry points; dataset, calibration, profiles and budgets are unchanged."
+  ]
 }

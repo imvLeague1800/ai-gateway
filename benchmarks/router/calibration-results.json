@@ -1,0 +1,491 @@
+{
+  "results": [
+    {
+      "id": "cal-qa-000",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 170.95,
+      "ttft_ms": 118.86,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-001",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 123.23,
+      "ttft_ms": 69.82,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-002",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 123.9,
+      "ttft_ms": 72.28,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-003",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 157.79,
+      "ttft_ms": 111.33,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-004",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 122.07,
+      "ttft_ms": 69.54,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-005",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 125.94,
+      "ttft_ms": 76.55,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-006",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 122.43,
+      "ttft_ms": 69.42,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-007",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 127.68,
+      "ttft_ms": 73.49,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-008",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 122.65,
+      "ttft_ms": 72.15,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-009",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 123.52,
+      "ttft_ms": 74.89,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-010",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 125.25,
+      "ttft_ms": 72.08,
+      "quality": true
+    },
+    {
+      "id": "cal-qa-011",
+      "kind": "qa",
+      "state": "success",
+      "complete_ms": 139.03,
+      "ttft_ms": 84.73,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-000-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 590.85,
+      "ttft_ms": 337.57,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-000-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 502.95,
+      "ttft_ms": 258.43,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-001-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 574.9,
+      "ttft_ms": 323.47,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-001-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 484.72,
+      "ttft_ms": 248.15,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-002-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 576.55,
+      "ttft_ms": 327.36,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-002-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 483.52,
+      "ttft_ms": 253.34,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-003-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 575.74,
+      "ttft_ms": 325.96,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-003-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 511.12,
+      "ttft_ms": 255.08,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-004-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 579.98,
+      "ttft_ms": 325.88,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-004-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 462.06,
+      "ttft_ms": 232.32,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-005-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 577.44,
+      "ttft_ms": 334.35,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-005-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 450.26,
+      "ttft_ms": 257.13,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-006-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 577.37,
+      "ttft_ms": 332.19,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-006-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 452.46,
+      "ttft_ms": 251.95,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-007-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 572.91,
+      "ttft_ms": 325.04,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-007-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 455.39,
+      "ttft_ms": 252.32,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-008-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 570.55,
+      "ttft_ms": 322.68,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-008-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 1681.68,
+      "ttft_ms": 1448.65,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-009-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 571.77,
+      "ttft_ms": 324.73,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-009-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 487.19,
+      "ttft_ms": 235.1,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-010-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 576.46,
+      "ttft_ms": 316.52,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-010-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 478.19,
+      "ttft_ms": 237.12,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-011-cold",
+      "kind": "agent_cold",
+      "state": "success",
+      "complete_ms": 584.51,
+      "ttft_ms": 334.41,
+      "quality": true
+    },
+    {
+      "id": "cal-agent-011-warm",
+      "kind": "agent_warm",
+      "state": "success",
+      "complete_ms": 458.11,
+      "ttft_ms": 229.6,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-000-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 434.37,
+      "ttft_ms": 281.54,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-000-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 426.44,
+      "ttft_ms": 258.75,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-001-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 397.9,
+      "ttft_ms": 257.83,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-001-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 434.03,
+      "ttft_ms": 287.72,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-002-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 413.12,
+      "ttft_ms": 257.72,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-002-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 402.62,
+      "ttft_ms": 267.63,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-003-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 407.95,
+      "ttft_ms": 264.95,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-003-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 419.13,
+      "ttft_ms": 269.67,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-004-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 408.32,
+      "ttft_ms": 268.74,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-004-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 464.58,
+      "ttft_ms": 301.51,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-005-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 415.45,
+      "ttft_ms": 270.82,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-005-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 453.96,
+      "ttft_ms": 293.74,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-006-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 415.59,
+      "ttft_ms": 270.93,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-006-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 456.55,
+      "ttft_ms": 290.1,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-007-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 426.99,
+      "ttft_ms": 272.34,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-007-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 433.5,
+      "ttft_ms": 275.56,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-008-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 455.48,
+      "ttft_ms": 292.48,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-008-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 410.99,
+      "ttft_ms": 273.47,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-009-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 435.4,
+      "ttft_ms": 282.25,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-009-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 415.45,
+      "ttft_ms": 277.85,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-010-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 440.9,
+      "ttft_ms": 294.65,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-010-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 436.7,
+      "ttft_ms": 289.32,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-011-cold",
+      "kind": "rag_cold",
+      "state": "success",
+      "complete_ms": 454.67,
+      "ttft_ms": 272.2,
+      "quality": true
+    },
+    {
+      "id": "cal-rag-011-warm",
+      "kind": "rag_warm",
+      "state": "success",
+      "complete_ms": 480.2,
+      "ttft_ms": 302.04,
+      "quality": true
+    }
+  ],
+  "budgets": {
+    "qa": 2000,
+    "agent_cold": 5000,
+    "agent_warm": 5000,
+    "rag_cold": 10000,
+    "rag_warm": 5000
+  }
+}

@@ -120,7 +120,7 @@ async def run(args):
                      for case in probe_cases]
     rng = random.Random(SEED + args.group)
     rng.shuffle(sessions)
-    rate = profiles["rates"][args.profile]
+    rate = args.rate if getattr(args, "rate", None) else profiles["rates"][args.profile]
     namespace = args.namespace or uuid.uuid4().hex[:12]
     run_id = f"{args.profile}-{args.group}-{args.policy}-{uuid.uuid4().hex[:8]}"
     out = args.output / run_id
@@ -133,9 +133,17 @@ async def run(args):
                     completion_budgets_ms=budgets, unix_start=time.time())
     (out / "run.json").write_text(json.dumps(metadata, indent=2))
     async with httpx.AsyncClient(timeout=60, trust_env=False) as client:
-        for i, case in enumerate(list(cases.values())[:5]):
-            result = await send_one(client, {**case, "messages": [{"role": "user", "content":
-                                                                      f"Warmup {namespace} {i}. " + case["messages"][0]["content"]}]})
+        for i in range(5):
+            warm_case = {
+                "id": f"warmup-{i}",
+                "kind": "qa",
+                "messages": [{"role": "user", "content": f"Warmup {namespace} {i}. Reply only OK."}],
+                "tools": None,
+                "quality": "OK",
+                "quality_type": "code",
+                "budget_ms": 2000,
+            }
+            result = await send_one(client, warm_case)
             if result["state"] != "success":
                 raise RuntimeError(f"warmup failed: {result}")
         baseline = [await snapshot(client)]
@@ -233,6 +241,7 @@ if __name__ == "__main__":
     parser.add_argument("--namespace")
     parser.add_argument("--budgets", type=Path)
     parser.add_argument("--output", type=Path, default=Path(os.getenv("BENCH_OUTPUT", ".verification/dual-qwen/retest")))
+    parser.add_argument("--rate", type=float, help="Override the profile arrival rate")
     args = parser.parse_args()
     if args.profile == "validate":
         cases, sessions, _ = load()
