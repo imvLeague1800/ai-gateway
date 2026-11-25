@@ -1,56 +1,36 @@
 # Registered run evidence
 
-This directory holds compact, reviewable registrations of completed benchmark runs. Large raw
-streams stay under `.verification/` (Git-ignored); every registered run records the raw directory,
-file sizes, and SHA-256 hashes so the evidence can be checked without committing hundreds of MB.
-Since 2026-11-25 Git keeps only the current acceptance runs and the archives that
-`verify_archives.py` reads; older runs live in the internal archive described below.
+As of 2026-11-25 this Git tree holds **no run registrations**. All previously registered
+runs, including the current acceptance evidence and the offline-recompute inputs
+(`smoke-v1`, `retest-v12`, `cold-rag-v1`), were copied to persistent storage and removed
+from the tree. Git now keeps code, docs and the manifest/smoke fingerprints only.
 
-- `retest-v12/` — 2026-11-23 dual-Qwen retest, dataset v1.2.0: 18 formal paired runs, 12
-  fault/recovery cycles, 2 hot-replica forced-selection pairs.
-- `smoke-v1/` — 2026-11-23 quick Router regression (16 sessions/28 requests), queue/cancel,
-  one replica removal, and direct 1–4 lane concurrency matrix.
-- `smoke-daily-v7/` — 2026-11-25 daily smoke on manifest v1.3.2 (replay completeness,
-  diagnostics removed): core 28/28, queue/cancel, no fault stage, 89.55 s total, exit code 0.
-- `smoke-daily-v8/` — 2026-11-25 current daily smoke on manifest v1.3.3 (LF-normalized
-  fingerprints, smoke option gating): core 28/28, queue/cancel, no fault stage,
-  96.72 s total, exit code 0.
-- `preflight-20261124/` — 2026-11-24 read-only drill preflight evidence: A exits 2 with the
-  Router down and starts nothing; B exits 0 against the ready Router; C exits 2 while the
-  Router still marked `.16` unhealthy after an injected failed recovery; D exits 0 after manual
-  recovery. All stop/start counts are zero.
-- `stress-20261124-live/` — 2026-11-24 full stress acceptance: replay 18/18, concurrency 12/12,
-  cold-rag 6/6 rounds exit 0; 5852.74 s total, exit code 0.
-- `stress-failinject-20261124/` — 2026-11-24 replay-failure injection: `budgets.json` hidden,
-  18/18 replay rounds exit 1, index kept all failures, `replay.pass=false`, top-level exit 1;
-  `budgets.json` restored to manifest hash.
-- `fault-20261124-newpreflight/` — 2026-11-24 new read-only preflight plus one real cycle:
-  Router reused (`cache_aware`), removal 6.93 s, first complete `.16` response 6.235 s after
-  direct health, request ID `2bcca0eb8a8f437c9632a89837152cc5`, exit code 0.
-- `fault-20261124-startfail/` — 2026-11-24 injected start failure after a real stop: start
-  returned 1, recovery unconfirmed, drill exit 1; compose file and engine restored manually,
-  preflight D then passed.
+## Persistent archive
 
-### Archived outside this Git tree (2026-11-25)
+- `X:\damonlu\ai-gateway\router-runs-archive\20261125` (share `\\10.10.18.151\damonlu`):
+  the 11 earlier runs (`smoke-daily-v1` … `v6`, `smoke-entry-v1`, `smoke-proxy-v6/v10/v12`,
+  `fault-20261124-1x-r2`).
+- `X:\damonlu\ai-gateway\router-runs-archive\20261125\current-acceptance`:
+  `smoke-daily-v7`, `smoke-daily-v8`, `stress-20261124-live`,
+  `stress-failinject-20261124`, `preflight-20261124`, `fault-20261124-newpreflight`,
+  `fault-20261124-startfail`, `smoke-v1`, `retest-v12`, `cold-rag-v1`.
 
-`smoke-daily-v1/` … `v6/`, `smoke-entry-v1/`, `smoke-proxy-v6/`, `smoke-proxy-v10/`,
-`smoke-proxy-v12/` and `fault-20261124-1x-r2/` were copied to the persistent archive
-`X:\damonlu\ai-gateway\router-runs-archive\20261125` (share `\\10.10.18.151\damonlu`),
-with per-file raw-byte SHA-256, file-count and byte-size checks (11/11 runs identical).
-Local copies remain at `.verification/dual-qwen/runs-archive/`; both `INDEX.json` files
-record the archive location and verification. The directories were then removed from the
-current tree; Git history still contains them, and the results report keeps their
-historical numbers.
+Each location has an `INDEX.json` with the run ID, file count, byte size and per-file
+raw-byte SHA-256 verification against the local source. Locate historical evidence by run
+ID plus the index; the results report keeps the historical numbers.
 
-To re-check an evidence tree on this machine:
+## Working with the archive
+
+`run_smoke.py`, `run_stress.py`, `run_retest.py` and the registration scripts still write
+new evidence under `runs/<run-id>/` locally. Copy and verify a run into the persistent
+archive before removing it from Git; do not commit new evidence trees here.
+
+`verify_archives.py` and the analysis commands below expect the three input directories
+(`smoke-v1`, `retest-v12`, `cold-rag-v1`) under `runs/`. Restore them from
+`current-acceptance` into `runs/` first if offline recomputation is required:
 
 ```bash
-sha256sum -c benchmarks/router/runs/retest-v12/evidence-sha256.txt
-```
-
-Regenerate summaries without reissuing requests:
-
-```bash
+sha256sum -c runs/retest-v12/evidence-sha256.txt   # after restoring the run
 cd benchmarks/router
 python analyze_retest.py --input runs/retest-v12 --output /tmp/retest-analysis.json
 python analyze_fault.py --input runs/retest-v12/fault --output /tmp/fault-analysis.json
@@ -58,6 +38,5 @@ python analyze_smoke.py --input runs/smoke-v1 --output /tmp/smoke-analysis.json
 python cold_rag/analyze_cold_rag.py --input runs/cold-rag-v1/runs --output /tmp/cold-rag-analysis.json
 ```
 
-Analysis entry points write to the requested output path; the daily default is a run-ID directory
-under `.verification/dual-qwen/`, not this versioned archive. New registrations use
-`register_smoke_evidence.py --run-id <id>` or `cold_rag/register_cold_rag_evidence.py --run-id <id>`.
+This directory keeps only this README; analysis output goes to the requested path, and the
+daily default is a run-ID directory under `.verification/dual-qwen/`.

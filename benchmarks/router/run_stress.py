@@ -53,28 +53,6 @@ def stage_completeness(mode: str, index: Path) -> tuple[bool, str, int]:
     if bad:
         return False, f"{bad} invalid rounds", len(rows)
     return True, "", len(rows)
-EXPECTED_REPLAY_ROUNDS = 18
-
-
-def replay_completeness(index: Path) -> tuple[bool, str, int]:
-    """A replay stage is valid only when every expected round has a usable result."""
-    if not index.exists():
-        return False, "run-index.jsonl missing", 0
-    rows: list[dict] = []
-    try:
-        for line in index.read_text(encoding="utf-8").splitlines():
-            if line.strip():
-                rows.append(json.loads(line))
-    except Exception as exc:
-        return False, f"run-index.jsonl unreadable: {type(exc).__name__}: {exc}", len(rows)
-    if len(rows) != EXPECTED_REPLAY_ROUNDS:
-        return False, f"{len(rows)} rounds recorded, expected {EXPECTED_REPLAY_ROUNDS}", len(rows)
-    bad = [row for row in rows if row.get("returncode") != 0
-           or row.get("result_error") or row.get("parse_error")
-           or row.get("result_ok") is False]
-    if bad:
-        return False, f"{len(bad)} invalid rounds", len(rows)
-    return True, "", len(rows)
 
 
 def main() -> None:

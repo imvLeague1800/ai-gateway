@@ -267,20 +267,24 @@ The client uses `ROUTER_API` and `ROUTER_METRICS` environment variables
 The versioned archives are the only long-term copies of the four analysis
 files; the former root-level `smoke-analysis.json`, `retest-analysis.json`,
 `fault-analysis.json` and `cold-rag-analysis.json` were removed after SHA-256
-verification:
+verification. The archive directories are no longer in this Git tree: they live
+in the persistent archive `X:\damonlu\ai-gateway\router-runs-archive\20261125\current-acceptance`
+(`INDEX.json`, share `\\10.10.18.151\damonlu`):
 
 ```text
-runs/smoke-v1/analysis/smoke-analysis.json
-runs/retest-v12/analysis/retest-analysis.json
-runs/retest-v12/analysis/fault-analysis.json
-runs/cold-rag-v1/analysis/cold-rag-analysis.json
+<archive>/smoke-v1/analysis/smoke-analysis.json
+<archive>/retest-v12/analysis/retest-analysis.json
+<archive>/retest-v12/analysis/fault-analysis.json
+<archive>/cold-rag-v1/analysis/cold-rag-analysis.json
 ```
 
-`runs/retest-v12/analysis/request-digests.jsonl` stores compact per-request
+`retest-v12/analysis/request-digests.jsonl` stores compact per-request
 `{run, state, ttft_ms}` records so the retest analysis can be rebuilt offline
-without the Git-ignored raw request streams. The archived smoke, retest, fault
-and cold analyses can be rechecked from `runs/` with the commands in
-`runs/README.md`; no Router or engine is needed. Run the combined check with:
+without the Git-ignored raw request streams. To recheck the archived smoke,
+retest, fault and cold analyses, restore `smoke-v1`, `retest-v12` and
+`cold-rag-v1` from `current-acceptance` into `runs/` first, then run the
+commands in `runs/README.md`. No Router or engine is needed. With the three
+directories restored, run the combined check with:
 
 ```bash
 python verify_archives.py

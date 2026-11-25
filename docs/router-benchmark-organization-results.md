@@ -53,7 +53,7 @@ python run_smoke.py --policy cache_aware --run-id smoke-daily-v8
 证据：
 
 - 顶层：`.verification/dual-qwen/smoke-daily-v8/summary.json`
-- 登记：`benchmarks/router/runs/smoke-daily-v8/`
+- 登记：持久归档 `current-acceptance/smoke-daily-v8/`
 
 ### 历史 smoke 验收（v7 / v6 / v5 / v4 / v3）
 
@@ -86,7 +86,7 @@ python run_fault_drill.py --preflight-only --run-id preflight-20261124-b
 证据：
 
 - 原始：`.verification/dual-qwen/preflight-20261124-a/summary.json`、`.verification/dual-qwen/preflight-20261124-b/summary.json`
-- 登记：`benchmarks/router/runs/preflight-20261124/`
+- 登记：持久归档 `current-acceptance/preflight-20261124/`
 
 ## 2c. 新版只读预检 + 实机停启周期（fault-20261124-newpreflight，通过）
 
@@ -112,7 +112,7 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 | 同一 Router 容器 | `939384f98d24` 保持不变（复用，未重建） | 通过 |
 | 结束状态 | 两台直连 200，`.16` 经 Router 接单 | 通过 |
 
-演练返回码 0，`pass=true`、`cycles_completed=1`、`actual_engines_stopped=[".16"]`，总耗时 263.38 s。原始证据：`.verification/dual-qwen/fault-20261124-newpreflight/summary.json`、`cycle-01.json`；登记副本：`benchmarks/router/runs/fault-20261124-newpreflight/`。
+演练返回码 0，`pass=true`、`cycles_completed=1`、`actual_engines_stopped=[".16"]`，总耗时 263.38 s。原始证据：`.verification/dual-qwen/fault-20261124-newpreflight/summary.json`、`cycle-01.json`；登记副本：持久归档 `current-acceptance/fault-20261124-newpreflight/`。
 
 ### 历史：旧预检下的实机周期（fault-20261124-1x-r2，通过）
 
@@ -131,7 +131,7 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 | cold-rag | 929.02 s | 0 | 6/6 轮 rc=0（3 组 × long limit 1/2，经临时 Scheduler 请求 `.15`，每轮 120 s + 15 s warmup） |
 | **合计** | **5852.74 s** | **0** | 顶层 `pass=true`；`replay` 段 `pass=true`、`returncode=0`，日志与 `run-index.jsonl` 路径已记录 |
 
-本轮所有回放轮次均成功，因此另做了一次真实失败注入来验证失败传递（见下）。证据：`.verification/dual-qwen/stress-20261124-live/summary.json` 及三段 `run-index.jsonl`，登记副本在 `benchmarks/router/runs/stress-20261124-live/`。
+本轮所有回放轮次均成功，因此另做了一次真实失败注入来验证失败传递（见下）。证据：`.verification/dual-qwen/stress-20261124-live/summary.json` 及三段 `run-index.jsonl`，登记副本在持久归档 `current-acceptance/stress-20261124-live/`。
 
 ### 回放失败注入（stress-failinject-20261124）
 
@@ -140,7 +140,7 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 - `run_retest.py` 18/18 轮 rc=1；`run-index.jsonl` 保留每轮的组号、场景、策略、原始退出码和日志路径，失败汇总打印后退出 1。
 - `run_stress.py` 的 `replay` 段 `pass=false`、`returncode=1`，整组 `pass=false`，退出码 1，44.2 s；摘要保留 `replay` 日志与索引路径。
 
-证据：`benchmarks/router/runs/stress-failinject-20261124/`。
+证据：持久归档 `current-acceptance/stress-failinject-20261124/`。
 
 结果完整性：`run_retest.py` 要求子进程 rc=0 且日志末行能解析出 `directory` 存在、`requests` 为正整数的结果；rc=0 但结果缺失或解析失败时，记录 `result_error` 和失败原因（轮次、日志路径）并最终退出非零。`run_stress.py` 校验 `run-index.jsonl` 的 18 条轮次全部有效后才让 `replay` 段通过。`--dry-run` 只打印命令，固定 `preview=true`、`pass=false`、退出 1。该完整性逻辑已用本次 live 与 failinject 的真实索引核对；尚未做“rc=0 但结果无效”的真实注入。
 
@@ -159,11 +159,11 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 - 演练：`pass=false`、`aborted_reason` 已写、`final_health={"15":200,"16":0}`，退出码 1，总 92.23 s，未开始后续周期。
 - 人工恢复：恢复同一 compose 文件（2513 字节）、`docker compose start qwen` rc=0；`.16` 在 195 s 后直连 200，Router 约 3 s 内重新接纳；随后 `--preflight-only`（`preflight-20261124-d`）退出 0、两台 200。
 
-该测试是受控故障注入，不代表正常运行验收；实际停机窗口约 5 分钟。证据：`benchmarks/router/runs/fault-20261124-startfail/`、`runs/preflight-20261124/`（C/D）。
+该测试是受控故障注入，不代表正常运行验收；实际停机窗口约 5 分钟。证据：持久归档 `current-acceptance/fault-20261124-startfail/`、`current-acceptance/preflight-20261124/`（C/D）。
 
 ## 3. 历史代理与 mock 归档
 
-代理和 mock 故障路径已从执行面移除：`benchmark_proxy.py`、`proxy_failover.py`、`smoke_failover.py`、`test_smoke_proxy.py` 已删除，日常 smoke/stress 不再调用代理，`config/`、`scheduler/`、`app/` 没有代理依赖。以下仅是 `runs/` 中的历史结果，不是当前验收路径，也不应再被执行：
+代理和 mock 故障路径已从执行面移除：`benchmark_proxy.py`、`proxy_failover.py`、`smoke_failover.py`、`test_smoke_proxy.py` 已删除，日常 smoke/stress 不再调用代理，`config/`、`scheduler/`、`app/` 没有代理依赖。以下仅是持久归档中的历史结果，不是当前验收路径，也不应再被执行：
 
 - `smoke-proxy-v12`：代理路径历史通过记录，Router 摘除 5.60 s、重新接纳 6.75 s、首条 `.16` 完整响应 7.34 s，请求 ID `5d8abfe9d2ca401e963c80f74daee66d`，121.54 s。
 - `smoke-proxy-v10`、`smoke-proxy-v6`：更早的代理验收。
@@ -179,12 +179,12 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 
 | 根目录文件（已删除） | SHA-256 | 唯一归档 |
 | --- | --- | --- |
-| `smoke-analysis.json` | `d42628c426e12176aa6f4989b0bac60960a3c405397b8e5fce6353a8f6172ede` | `runs/smoke-v1/analysis/smoke-analysis.json` |
-| `retest-analysis.json` | `a92772d9ef0ebb79f1b24e30929a3cd94db2f730bde05d055c18aa36c411fa05` | `runs/retest-v12/analysis/retest-analysis.json` |
-| `fault-analysis.json` | `8146d890b165f352faafaab38d64ae37af888cc327460ac140a3579fb6f6726b` | `runs/retest-v12/analysis/fault-analysis.json` |
-| `cold-rag-analysis.json` | `3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3` | `runs/cold-rag-v1/analysis/cold-rag-analysis.json` |
+| `smoke-analysis.json` | `d42628c426e12176aa6f4989b0bac60960a3c405397b8e5fce6353a8f6172ede` | `current-acceptance/smoke-v1/analysis/smoke-analysis.json` |
+| `retest-analysis.json` | `a92772d9ef0ebb79f1b24e30929a3cd94db2f730bde05d055c18aa36c411fa05` | `current-acceptance/retest-v12/analysis/retest-analysis.json` |
+| `fault-analysis.json` | `8146d890b165f352faafaab38d64ae37af888cc327460ac140a3579fb6f6726b` | `current-acceptance/retest-v12/analysis/fault-analysis.json` |
+| `cold-rag-analysis.json` | `3d83fc566685e0d81b35053cf4640b2ffdf2706e7ef1586d4e09ac90bd8d2ee3` | `current-acceptance/cold-rag-v1/analysis/cold-rag-analysis.json` |
 
-分析入口使用 `--input` / `--output`，不再写根目录；登记入口要求 `--run-id`，结果写到 `runs/<run-id>/`。`runs/retest-v12/analysis/request-digests.jsonl` 保存每请求的 `{run, state, ttft_ms}`，使 retest 的合并 p99 等指标无需原始 requests 也能重建。
+分析入口使用 `--input` / `--output`，不再写根目录；登记入口要求 `--run-id`，新结果先写到本地 `runs/<run-id>/` 暂存，随后复制并校验到持久归档，不再提交到 Git。`retest-v12/analysis/request-digests.jsonl` 保存每请求的 `{run, state, ttft_ms}`，使 retest 的合并 p99 等指标无需原始 requests 也能重建；使用前需从 `current-acceptance/retest-v12/` 恢复到 `runs/retest-v12/`。
 
 离线重建检查（`benchmarks/router/verify_archives.py`）在 v1.3.0 上复跑通过（退出码 0）：
 
@@ -211,17 +211,14 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 
 - `run_fault_drill.py`（唯一实机停启入口，固定 `.16`；完整运行需要 `--maintenance-window-ack`，`--preflight-only` 只读）
 
-Git 内保留的历史归档（不再提供脚本）：
+Git 内运行证据（2026-11-25 起）：**无**。`benchmarks/router/runs/` 只保留 `README.md`，不再保存任何 run 目录。
 
-- `runs/smoke-v1/`、`runs/retest-v12/`、`runs/cold-rag-v1/`（`verify_archives.py` 的离线复算依赖）
-- `runs/smoke-daily-v7/`、`runs/smoke-daily-v8/`
+持久归档：
 
-迁出 Git 树到持久归档（2026-11-25，manifest v1.3.3）：
-
-- `smoke-daily-v1/` … `v6/`、`smoke-entry-v1/`、`smoke-proxy-v6/`、`smoke-proxy-v10/`、`smoke-proxy-v12/`、`fault-20261124-1x-r2/`
-- 持久位置：`X:\damonlu\ai-gateway\router-runs-archive\20261125`（共享 `\\10.10.18.151\damonlu`）；按 run ID 定位，`INDEX.json` 记录每个 run 的文件数、字节数和逐文件原始字节 SHA-256。
-- 校验方式：持久副本与本地迁移源逐文件比较 SHA-256、文件数量和字节数；11/11 个 run 全部一致后才保持 Git 删除。本地副本保留在 `.verification/dual-qwen/runs-archive/`，其 `INDEX.json` 同样记录持久位置和校验结果。
-- Git 历史中仍保留这些目录，历史数字不变。
+- `X:\damonlu\ai-gateway\router-runs-archive\20261125\current-acceptance`（共享 `\\10.10.18.151\damonlu`）：本轮当前验收及离线复算输入——`smoke-daily-v7`、`smoke-daily-v8`、`stress-20261124-live`、`stress-failinject-20261124`、`preflight-20261124`、`fault-20261124-newpreflight`、`fault-20261124-startfail`、`smoke-v1`、`retest-v12`、`cold-rag-v1`。
+- `X:\damonlu\ai-gateway\router-runs-archive\20261125`：更早的 11 个 run——`smoke-daily-v1` … `v6`、`smoke-entry-v1`、`smoke-proxy-v6/v10/v12`、`fault-20261124-1x-r2`。
+- 两处均有 `INDEX.json`，按 run ID 记录文件数、字节数和逐文件原始字节 SHA-256；与本地迁移源比对，10/10 和 11/11 全部一致后才从 Git 删除。本地副本保留在 `.verification/dual-qwen/runs-archive/`（旧 11 个）和 `.verification/dual-qwen/runs-archive/current-acceptance/`（当前 10 个）。
+- 离线复算需先把 `smoke-v1`、`retest-v12`、`cold-rag-v1` 从 `current-acceptance` 恢复到 `runs/`，`verify_archives.py` 才可运行；Git 不再提供这三个输入。
 
 移除：
 
@@ -235,14 +232,14 @@ Git 内保留的历史归档（不再提供脚本）：
 
 结果路径：
 
-- 当前日常 smoke：`benchmarks/router/runs/smoke-daily-v8/`；`runs/smoke-daily-v7/` 保留在 Git。
-- 只读预检：`benchmarks/router/runs/preflight-20261124/`。
-- 压测：`benchmarks/router/runs/stress-20261124-live/`。
-- 压测失败注入：`benchmarks/router/runs/stress-failinject-20261124/`。
-- 手动实机演练（现行预检）：`benchmarks/router/runs/fault-20261124-newpreflight/`；异常路径注入：`benchmarks/router/runs/fault-20261124-startfail/`。
-- 旧 run 持久归档：`X:\damonlu\ai-gateway\router-runs-archive\20261125`（`INDEX.json`、`README.md`）；本地副本：`.verification/dual-qwen/runs-archive/`。
-- 当前 manifest v1.3.4（静态收尾后，LF 归一化指纹）：`8bfc4ed852acc8d90b5b3d7f468bc9f021778cc36b2751ca3183067d05e3f14a`（32 个条目；数据集、校准、profiles 与 budgets 未变）。
-- 当前 `smoke.json`（LF 归一化指纹）：`8c2d1562fc05e2a182ee5ee5e03a58281bb77370cd54728e162f4fb167e7c9f9`（`source_manifest_sha256`、`cases_sha256`、`sessions_sha256` 均按 LF 字节）。
+- 当前日常 smoke：`current-acceptance/smoke-daily-v8/`；`current-acceptance/smoke-daily-v7/` 同处归档。
+- 只读预检：`current-acceptance/preflight-20261124/`。
+- 压测：`current-acceptance/stress-20261124-live/`。
+- 压测失败注入：`current-acceptance/stress-failinject-20261124/`。
+- 手动实机演练（现行预检）：`current-acceptance/fault-20261124-newpreflight/`；异常路径注入：`current-acceptance/fault-20261124-startfail/`。
+- 持久归档根：`X:\damonlu\ai-gateway\router-runs-archive\20261125`（`current-acceptance/INDEX.json` 和根 `INDEX.json`）；本地副本：`.verification/dual-qwen/runs-archive/`。
+- 当前 manifest v1.3.5（删除 run 证据后，LF 归一化指纹）：`a679697ff979c931737cca2de573a8495f191938f8cddf7595e23ebeba950901`（32 个条目；数据集、校准、profiles 与 budgets 未变）。
+- 当前 `smoke.json`（LF 归一化指纹）：`dc64d7191a55421ec766180574be1ac14d15201397e48e22d2ef96138e5dd8fe`（`source_manifest_sha256`、`cases_sha256`、`sessions_sha256` 均按 LF 字节）。
 
 ### 代码与数据检查（本轮复跑）
 
@@ -267,7 +264,7 @@ Git 内保留的历史归档（不再提供脚本）：
 1. 现行只读预检 + 真实停启周期的组合已执行 1 次并通过（`fault-20261124-newpreflight`：摘除 6.93 s、恢复间隔 6.235 s）；多周期仍未执行。启动命令失败、恢复未确认、演练中止等路径已通过 `fault-20261124-startfail` 注入实测；SSH 中断和 Router 重新接纳超时仍未在真实演练中制造。历史 r2 使用旧预检方法，其 19.469 s 不再代表现行入口。
 2. 压测已实跑：replay 18/18、concurrency 12/12、cold-rag 6/6 全部成功；回放失败传递已用 `stress-failinject-20261124` 真实注入验证（18/18 rc=1、`replay.pass=false`、顶层退出 1）。未覆盖的是“部分轮失败、部分成功”的混合场景，以及“子进程 rc=0 但结果缺失/不可解析”的真实注入——这两类目前只有代码路径，完整性判断已用现有 live/failinject 索引核对。
 3. 历史代理路径的实测结论只对应归档，脚本已删除；代理清理失败、SSH 停止检查失败和 attach 恢复失败不再有离线用例覆盖。
-4. `runs/smoke-daily-v7/` 与 `v8/` 的 core `both_workers_routed=false` 与 v5/v6 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
+4. `current-acceptance/smoke-daily-v7/` 与 `v8/` 的 core `both_workers_routed=false` 与 v5/v6 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
 5. real-Agent 会话仍为 0，相关验收保持 pending。
 
 ## 7. 第 6 节静态验收（2026-11-25）
@@ -280,9 +277,11 @@ Git 内保留的历史归档（不再提供脚本）：
 | 重复模式/旧目录/缺失结果造成压测误报 | 已完成（静态） | `run_stress.py`：`EXPECTED_ROUNDS`（18/12/6）、`stage_completeness()`、启动前拒绝重复 `--modes` 和已存在输出目录、所有选中阶段校验 `run-index.jsonl` 与每轮 `summary.json`；`run_retest.py`、`run_smoke_concurrency.py`、`cold_rag/run_cold_rag_matrix.py` 拒绝已有输出目录；rc=0 但结果无效时写 `result_error` 和失败原因并整体非零；`--dry-run` 固定非通过 |
 | 长冷 RAG 误用其他 Scheduler | 已完成（静态） | `cold_rag/run_cold_rag_matrix.py`：`port_in_use(18080)` 启动前拒绝占用；`wait_ready(process)` 检查本轮进程存活；端口冲突/提前退出/就绪超时写入 `error`、`scheduler_log`、`client_log` 并失败；`finally` 只停止本轮 Popen |
 | 旧证据只在本机 Git 忽略目录 | 已完成 | 11 个 run 整轮复制到持久归档 `X:\damonlu\ai-gateway\router-runs-archive\20261125`（共享 `\\10.10.18.151\damonlu`）；逐文件原始字节 SHA-256、文件数和字节数与本地迁移源比较，11/11 一致；持久和本地 `INDEX.json` 都记录位置与校验；本地副本保留 |
-| 旧引用未更新、保留项复核 | 已完成（静态） | 更新 `benchmarks/router/README.md`、`runs/README.md`、本报告和 `docs/qwen-router-smoke-test-results.md`；历史证据按 run ID + 持久归档 `INDEX.json` 定位；Git 文件清单核对 `runs/smoke-daily-v7`、`v8`、`stress-20261124-live`、`stress-failinject-20261124`、`preflight-20261124`、`fault-20261124-newpreflight`、`fault-20261124-startfail` 及 `verify_archives.py` 的三个输入目录都存在（未执行复算） |
+| 旧引用未更新、保留项复核 | 已完成（静态） | 更新 `benchmarks/router/README.md`、`runs/README.md`、本报告和 `docs/qwen-router-smoke-test-results.md`；历史证据按 run ID + 持久归档 `INDEX.json` 定位；当前验收 10 个和旧 11 个 run 的持久副本均逐文件校验；Git 树已无 run 目录，`runs/` 只保留 README；离线复算输入需先从 `current-acceptance` 恢复，本轮未执行复算 |
 
-静态清单更新：manifest 升到 v1.3.4（32 条目，`8bfc4ed8…`），`smoke.json` 为 `8c2d1562…`；只做 LF 归一化哈希核对和 `py_compile`，未启动服务。
+| Git 中运行证据清理 | 已完成 | 当前验收 10 个 run（含 `smoke-v1`、`retest-v12`、`cold-rag-v1`）和旧 11 个 run 全部复制到持久归档并逐文件校验；`git rm` 后 `benchmarks/router/runs/` 只剩 `README.md`；未运行离线复算 |
+
+静态清单更新：manifest 升到 v1.3.5（32 条目，`a679697f…`），`smoke.json` 为 `dc64d719…`；只做 LF 归一化哈希核对和 `py_compile`，未启动服务。
 
 ### 本轮明确未验证
 
