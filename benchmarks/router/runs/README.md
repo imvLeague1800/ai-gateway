@@ -35,14 +35,21 @@ file sizes, and SHA-256 hashes so the evidence can be checked without committing
 - `smoke-daily-v6/` — 2026-11-24 current daily smoke on manifest v1.3.0 (read-only drill
   preflight, proxy and double tests removed): core 28/28, queue/cancel, no fault stage,
   90.30 s total, exit code 0.
-- `preflight-20261124/` — 2026-11-24 read-only drill preflight evidence: run A exits 2
-  with the Router down and starts nothing; run B exits 0 against the ready Router. Both
-  stop/start counts are zero.
+- `preflight-20261124/` — 2026-11-24 read-only drill preflight evidence: A exits 2 with the
+  Router down and starts nothing; B exits 0 against the ready Router; C exits 2 while the
+  Router still marked `.16` unhealthy after an injected failed recovery; D exits 0 after manual
+  recovery. All stop/start counts are zero.
 - `stress-20261124-live/` — 2026-11-24 full stress acceptance: replay 18/18, concurrency 12/12,
   cold-rag 6/6 rounds exit 0; 5852.74 s total, exit code 0.
+- `stress-failinject-20261124/` — 2026-11-24 replay-failure injection: `budgets.json` hidden,
+  18/18 replay rounds exit 1, index kept all failures, `replay.pass=false`, top-level exit 1;
+  `budgets.json` restored to manifest hash.
 - `fault-20261124-newpreflight/` — 2026-11-24 new read-only preflight plus one real cycle:
   Router reused (`cache_aware`), removal 6.93 s, first complete `.16` response 6.235 s after
   direct health, request ID `2bcca0eb8a8f437c9632a89837152cc5`, exit code 0.
+- `fault-20261124-startfail/` — 2026-11-24 injected start failure after a real stop: start
+  returned 1, recovery unconfirmed, drill exit 1; compose file and engine restored manually,
+  preflight D then passed.
 
 To re-check an evidence tree on this machine:
 

@@ -1,0 +1,4 @@
+ecfe7c4906cf949930b366e58e609b2dc339e67f77cc8ac5901b955e22f583b1  .verification/dual-qwen/stress-failinject-20261124/summary.json
+24b51174948d63095cf01040592717ced71c117d50c562822fed361889b336b0  .verification/dual-qwen/stress-failinject-20261124/replay/run-index.jsonl
+062ec405817a988ddc98e51ebaf3ec7ff1985f7a85512aa8efff0ff8987f3c83  .verification/dual-qwen/stress-failinject-20261124/replay.log
+cfef29af29d288b59234fbfecb05825e32fca43edc79949a86c416210d412f5e  .verification/dual-qwen/stress-failinject-20261124/replay/g1-stable-power_of_two.log

@@ -1,2 +1,4 @@
 96951bfec32e2513af603c7924bff11adef80f90b29a80b0cdc2420f70334b40  benchmarks/router/runs/preflight-20261124/preflight-only-router-down.json
 d93e3ce84318c66bd31154d881bd2d6d390f32bfc5fdaf812b81c32f245c18ea  benchmarks/router/runs/preflight-20261124/preflight-only-router-ready.json
+f7b7e7ce50d4ccd1a209fee7f51e077b86e014b296f097cdcf2f225390bd4e2e  benchmarks/router/runs/preflight-20261124/preflight-after-failed-recovery.json
+f9a1a60c2013ee88af6a4e3239f50bcf418d2c1dce15b3c6c82ed53a340e0db0  benchmarks/router/runs/preflight-20261124/preflight-after-manual-recovery.json

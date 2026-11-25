@@ -1,0 +1,128 @@
+{
+  "run_id": "fault-20261124-startfail",
+  "mode": "manual-real-fault-drill",
+  "policy": "cache_aware",
+  "cycles_requested": 1,
+  "cycles_completed": 1,
+  "maintenance_window_ack": true,
+  "preflight_only": false,
+  "target": ".16",
+  "survivor": ".15",
+  "actual_engines_stopped": [
+    ".16"
+  ],
+  "cycles": [
+    {
+      "cycle": 1,
+      "pass": false,
+      "service_stopped": true,
+      "direct_failure_s": 2.84,
+      "detection_s": 8.54,
+      "stop_command_s": 11.27,
+      "start_to_health_s": null,
+      "health_before_start_returned": null,
+      "health_to_accept_s": null,
+      "recovery_gap_s": null,
+      "service_running": null,
+      "router_reaccept_s": null,
+      "recovery_first_target_s": null,
+      "recovery_request_id": null,
+      "recovery_confirmed": false,
+      "router_accepts_16": false,
+      "same_router_container": true,
+      "error": null,
+      "recovery_error": ".16 engine health did not recover within 60.0s"
+    }
+  ],
+  "pass": false,
+  "preflight": {
+    "ssh_login": {
+      "host": "dgx@10.169.25.16",
+      "command": "echo preflight-ok",
+      "returncode": 0,
+      "stdout": "preflight-ok",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:00000239E24B1AF0",
+      "elapsed_s": 0.43
+    },
+    "account": {
+      "host": "dgx@10.169.25.16",
+      "command": "id -un",
+      "returncode": 0,
+      "stdout": "dgx",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000001B6473F0CE0",
+      "elapsed_s": 0.42
+    },
+    "direct_health": {
+      "15": 200,
+      "16": 200
+    },
+    "model_ids": [
+      "qwen3.6-35b-a3b-nvfp4"
+    ],
+    "target_service": {
+      "container_ids": [
+        "535c2a8243d46740e2f95ddac8859b211fd3bd0520fd11abe654029f3814069f"
+      ],
+      "status": "running",
+      "working_dir": "/home/dgx/spark-vllm",
+      "service": "qwen",
+      "ok": true
+    },
+    "router": {
+      "ready": true,
+      "container_id": "b255f3ba1986",
+      "policy": "cache_aware",
+      "args": [
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8100",
+        "--prometheus-port",
+        "29100",
+        "--policy",
+        "cache_aware",
+        "--worker-urls",
+        "http://10.169.25.15:8000",
+        "http://10.169.25.16:8000",
+        "--worker-startup-check-interval",
+        "2",
+        "--health-check-interval-secs",
+        "5",
+        "--health-failure-threshold",
+        "2",
+        "--health-success-threshold",
+        "2",
+        "--cache-threshold",
+        "0.3",
+        "--balance-abs-threshold",
+        "2",
+        "--balance-rel-threshold",
+        "1.2",
+        "--log-level",
+        "debug",
+        "--log-dir",
+        "/logs"
+      ]
+    }
+  },
+  "router": {
+    "policy": "cache_aware",
+    "started_by_drill": false,
+    "reused": true,
+    "ready_s": 0.24,
+    "container_id": "b255f3ba1986",
+    "worker_urls": [
+      "http://10.169.25.15:8000",
+      "http://10.169.25.16:8000"
+    ],
+    "health_check_interval_secs": 5,
+    "health_failure_threshold": 2,
+    "health_success_threshold": 2
+  },
+  "aborted_reason": "cycle 1 did not confirm .16 recovery/acceptance; no further cycles started",
+  "final_health": {
+    "15": 200,
+    "16": 0
+  },
+  "total_s": 92.23
+}

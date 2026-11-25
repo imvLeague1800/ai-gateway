@@ -1,0 +1,836 @@
+{
+  "cycle": 1,
+  "policy": "cache_aware",
+  "router_container_id_before": "b255f3ba1986",
+  "detection_target_s": 20,
+  "reaccept_target_s": 20,
+  "clock_anchor": {
+    "perf_counter": 571702.747161,
+    "unix": 1795572521.9477193
+  },
+  "inflight": {
+    "before_running": {
+      "http://10.169.25.16:8000": 2.0,
+      "http://10.169.25.15:8000": 2.0
+    },
+    "rows": [
+      {
+        "status": 200,
+        "state": "stream_interrupted",
+        "error": "RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)",
+        "finish_reason": null,
+        "done": false,
+        "ttft_ms": 255.72,
+        "complete_ms": 11164.47
+      },
+      {
+        "status": 200,
+        "state": "truncated",
+        "error": null,
+        "finish_reason": "length",
+        "done": true,
+        "ttft_ms": 231.35,
+        "complete_ms": 17761.44
+      },
+      {
+        "status": 200,
+        "state": "stream_interrupted",
+        "error": "RemoteProtocolError: peer closed connection without sending complete message body (incomplete chunked read)",
+        "finish_reason": null,
+        "done": false,
+        "ttft_ms": 257.15,
+        "complete_ms": 11165.29
+      },
+      {
+        "status": 200,
+        "state": "truncated",
+        "error": null,
+        "finish_reason": "length",
+        "done": true,
+        "ttft_ms": 207.31,
+        "complete_ms": 17761.24
+      }
+    ]
+  },
+  "pre_stop_health": {
+    "15": 200,
+    "16": 200
+  },
+  "pre_stop": {
+    "workers": {
+      "http://10.169.25.16:8000": 20
+    },
+    "first_target_success_s": 0.71,
+    "first_target_probe": {
+      "status": 200,
+      "state": "success",
+      "ttft_ms": 166.59,
+      "request_id": "22de4a8eabd34443b376754a765ea554",
+      "done": true,
+      "finish_reason": "stop",
+      "complete": true,
+      "worker": "http://10.169.25.16:8000",
+      "at": 571703.497,
+      "deltas": {
+        "http://10.169.25.16:8000": 1.0
+      },
+      "started": 571703.2957898,
+      "ended": 571703.4884652,
+      "after_origin_s": 0.71
+    },
+    "load_steering": {
+      "load1_worker": "http://10.169.25.15:8000",
+      "load2_worker": "http://10.169.25.16:8000",
+      "cancelled_worker": "http://10.169.25.16:8000",
+      "keeper_worker": "http://10.169.25.15:8000"
+    },
+    "rows": [
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 166.59,
+        "request_id": "22de4a8eabd34443b376754a765ea554",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571703.497,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571703.2957898,
+        "ended": 571703.4884652,
+        "after_origin_s": 0.71
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 150.41,
+        "request_id": "15782ae94cd1449aa858b6d4647563b4",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571703.724,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571703.5401035,
+        "ended": 571703.7159922,
+        "after_origin_s": 0.94
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 146.2,
+        "request_id": "4d63abb92ebc4bbd92de45097bdf847a",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571703.931,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571703.7535059,
+        "ended": 571703.9261175,
+        "after_origin_s": 1.15
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 138.25,
+        "request_id": "0a1ea30e0e8740cab0982391f313e66a",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571704.125,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571703.9550603,
+        "ended": 571704.1177675,
+        "after_origin_s": 1.34
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 143.87,
+        "request_id": "dbca3f6aeea04976af12cee4662181fc",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571704.326,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571704.1430662,
+        "ended": 571704.3178367,
+        "after_origin_s": 1.54
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 101.04,
+        "request_id": "01c63755e07e44cc95dedc507db453b7",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571704.509,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571704.3618479,
+        "ended": 571704.5037182,
+        "after_origin_s": 1.73
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 152.11,
+        "request_id": "1c50621f375245f7ae8727c53482856c",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571704.692,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571704.5337746,
+        "ended": 571704.6863426,
+        "after_origin_s": 1.91
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 157.54,
+        "request_id": "18d293f69fed49ae831c3507bdccee01",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571704.895,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571704.7317232,
+        "ended": 571704.8896853,
+        "after_origin_s": 2.11
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 155.88,
+        "request_id": "7d995b1cc3124ee58d527f5d98c169c0",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571705.106,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571704.9168298,
+        "ended": 571705.1002083,
+        "after_origin_s": 2.32
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 134.08,
+        "request_id": "00cbeefdf4014e7980c31435b6041477",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571705.314,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571705.132353,
+        "ended": 571705.3071637,
+        "after_origin_s": 2.53
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 140.61,
+        "request_id": "ed4d16efe5f54b63b02db1bf80530b94",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571705.534,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571705.3471342,
+        "ended": 571705.5282418,
+        "after_origin_s": 2.75
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 144.89,
+        "request_id": "7a6a49afd5d64b7d9b63887778086c87",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571705.757,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571705.5632267,
+        "ended": 571705.7469406,
+        "after_origin_s": 2.97
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 101.24,
+        "request_id": "6924dc09dde849fa94a3e9ee8bfccea8",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571705.922,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571705.7833326,
+        "ended": 571705.9163099,
+        "after_origin_s": 3.14
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 156.23,
+        "request_id": "4a367117070242db9c094570f0e9625e",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571706.157,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571705.9517494,
+        "ended": 571706.1490496,
+        "after_origin_s": 3.37
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 145.34,
+        "request_id": "b56d6dbeae5549d68f7d75f811d23a2e",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571706.367,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571706.1846844,
+        "ended": 571706.3565418,
+        "after_origin_s": 3.58
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 149.58,
+        "request_id": "feae5c3c38c441e5bd4b89437767dea7",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571706.571,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571706.3865473,
+        "ended": 571706.5621848,
+        "after_origin_s": 3.79
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 87.93,
+        "request_id": "cfb5cfb18b6c4fbb90570c1d6d881f1c",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571706.673,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571706.5754367,
+        "ended": 571706.6638071,
+        "after_origin_s": 3.89
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 144.1,
+        "request_id": "d8821140c3684607b2c0efc4071beb04",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571706.887,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571706.6923673,
+        "ended": 571706.8795913,
+        "after_origin_s": 4.1
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 146.48,
+        "request_id": "0846abbeeeda459d8bf1a76965559ce8",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571707.105,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571706.9207023,
+        "ended": 571707.0957988,
+        "after_origin_s": 4.32
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 150.28,
+        "request_id": "3627bbdf8a144abca036ddf1f2f1ddcf",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.16:8000",
+        "at": 571707.307,
+        "deltas": {
+          "http://10.169.25.16:8000": 1.0
+        },
+        "started": 571707.1243522,
+        "ended": 571707.2998121,
+        "after_origin_s": 4.52
+      }
+    ]
+  },
+  "pre_stop_target_complete": true,
+  "stop_started_utc": "2026-11-25T02:08:47.516+00:00",
+  "stop": {
+    "host": "dgx@10.169.25.16",
+    "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen stop qwen",
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "Container spark-vllm-qwen36  Stopping\n Container spark-vllm-qwen36  Stopped\nclose - IO is still pending on closed socket. read:1, write:0, io:000001CE14CAAE00",
+    "elapsed_s": 11.27
+  },
+  "service_after_stop": {
+    "ps": {
+      "host": "dgx@10.169.25.16",
+      "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen ps -q qwen",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000002C49390B640",
+      "elapsed_s": 0.5
+    },
+    "inspect": {
+      "host": "dgx@10.169.25.16",
+      "command": "docker inspect --format '{{.State.Status}}' spark-vllm-qwen36",
+      "returncode": 0,
+      "stdout": "exited",
+      "stderr": "close - IO is still pending on closed socket. read:1, write:0, io:000002EDF16F18D0",
+      "elapsed_s": 0.44
+    },
+    "status": "exited",
+    "running": false,
+    "query_ok": false
+  },
+  "service_stopped": true,
+  "direct_failure_s": 2.84,
+  "detection_s": 8.54,
+  "stop_command_s": 11.27,
+  "removal": {
+    "workers": {
+      "http://10.169.25.15:8000": 20
+    },
+    "all_on_15": true,
+    "all_complete": true,
+    "rows": [
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 207.98,
+        "request_id": "ecd6195141834593acba0239f64fe553",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571720.753,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571720.5378318,
+        "ended": 571720.7468356,
+        "after_origin_s": 12.44
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 111.41,
+        "request_id": "8a26c99d6b3a4adba3afcbb45daff4ba",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571720.979,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571720.7904728,
+        "ended": 571720.9678856,
+        "after_origin_s": 12.66
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 180.18,
+        "request_id": "fb2497685cb14a69b3c7333e875f0d7e",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571721.261,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571721.0196877,
+        "ended": 571721.2510961,
+        "after_origin_s": 12.94
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 162.98,
+        "request_id": "51765b02aee043c2b4fa17a5a1fa7b6f",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571721.457,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571721.2858142,
+        "ended": 571721.4498186,
+        "after_origin_s": 13.14
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 114.46,
+        "request_id": "0d556a96fde44f7b9d16bf3dcd0e49d7",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571721.675,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571721.4863711,
+        "ended": 571721.6687481,
+        "after_origin_s": 13.36
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 188.8,
+        "request_id": "a5f7c5e50e464f94a8b46b47a8b6555f",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571721.94,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571721.7094174,
+        "ended": 571721.932411,
+        "after_origin_s": 13.62
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 180.68,
+        "request_id": "5f1ee94525fe47a4aec7c659a3798519",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571722.213,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571721.974188,
+        "ended": 571722.1991926,
+        "after_origin_s": 13.9
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 115.48,
+        "request_id": "3d1d1b4a31004432a74128dfe59b109c",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571722.404,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571722.2340712,
+        "ended": 571722.3968834,
+        "after_origin_s": 14.09
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 157.31,
+        "request_id": "af66e82641b1430d85bd2184e0ae0a0a",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571722.611,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571722.4403605,
+        "ended": 571722.5983305,
+        "after_origin_s": 14.29
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 174.89,
+        "request_id": "6cdac085748e4a5fa3b68d598e4c1ba7",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571722.819,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571722.6345839,
+        "ended": 571722.810511,
+        "after_origin_s": 14.5
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 179.13,
+        "request_id": "1dd2d0a13cda464cafc5838111484f20",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571723.041,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571722.8521745,
+        "ended": 571723.0323622,
+        "after_origin_s": 14.72
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 109.9,
+        "request_id": "79390ced4bdf40b2a9b9d45ce203836e",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571723.241,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571723.0672896,
+        "ended": 571723.2253212,
+        "after_origin_s": 14.92
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 150.1,
+        "request_id": "dff9d8fe3f354c5884ae537096e4e291",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571723.469,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571723.2643364,
+        "ended": 571723.4588947,
+        "after_origin_s": 15.15
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 200.65,
+        "request_id": "1c8c179a63a74785a5713068b0293250",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571723.742,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571723.4956462,
+        "ended": 571723.7293374,
+        "after_origin_s": 15.43
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 169.13,
+        "request_id": "e747cfaef40f4b00beb4e4db57a182c3",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571723.937,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571723.7601477,
+        "ended": 571723.929882,
+        "after_origin_s": 15.62
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 163.29,
+        "request_id": "7b5c5c1f51bf46e09704ed9d63a7d6b8",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571724.173,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571723.9597148,
+        "ended": 571724.166441,
+        "after_origin_s": 15.86
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 178.7,
+        "request_id": "756c91b7237f411e9f9404dbc2c1f91c",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571724.411,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571724.1775964,
+        "ended": 571724.3996245,
+        "after_origin_s": 16.09
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 202.78,
+        "request_id": "d26ed8e64b7347239b3dee0f5f6a7ade",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571724.685,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571724.4301133,
+        "ended": 571724.678738,
+        "after_origin_s": 16.37
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 187.26,
+        "request_id": "b0e7318ae40144bc95328d73f9276699",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571724.908,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571724.7133496,
+        "ended": 571724.9015554,
+        "after_origin_s": 16.59
+      },
+      {
+        "status": 200,
+        "state": "success",
+        "ttft_ms": 177.93,
+        "request_id": "a6084fc01aaa44a4920e69a79e086ea4",
+        "done": true,
+        "finish_reason": "stop",
+        "complete": true,
+        "worker": "http://10.169.25.15:8000",
+        "at": 571725.175,
+        "deltas": {
+          "http://10.169.25.15:8000": 1.0
+        },
+        "started": 571724.9448287,
+        "ended": 571725.1657314,
+        "after_origin_s": 16.86
+      }
+    ]
+  },
+  "start_cmd_perf_counter": 571725.5248025,
+  "start_cmd_utc": "2026-11-25T02:09:04.725+00:00",
+  "start": {
+    "host": "dgx@10.169.25.16",
+    "command": "cd /home/dgx/spark-vllm && docker compose --profile qwen start qwen",
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "no configuration file provided: not found\nclose - IO is still pending on closed socket. read:1, write:0, io:0000021A0A3C78E0",
+    "elapsed_s": 0.47
+  },
+  "start_ok": false,
+  "start_returned_s": 0.468,
+  "recovery_error": ".16 engine health did not recover within 60.0s",
+  "final_health": {
+    "15": 200,
+    "16": 0
+  },
+  "recovery_confirmed": false,
+  "router_accepts_16": false,
+  "router_container_id_after": "b255f3ba1986",
+  "same_router_container": true,
+  "pass": false
+}

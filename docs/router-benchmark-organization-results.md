@@ -129,7 +129,33 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 | cold-rag | 929.02 s | 0 | 6/6 轮 rc=0（3 组 × long limit 1/2，经临时 Scheduler 请求 `.15`，每轮 120 s + 15 s warmup） |
 | **合计** | **5852.74 s** | **0** | 顶层 `pass=true`；`replay` 段 `pass=true`、`returncode=0`，日志与 `run-index.jsonl` 路径已记录 |
 
-本轮所有回放轮次均成功，没有真实制造回放失败，因此“失败轮写入索引并让 `run_retest.py`/`run_stress.py` 返回非零”的执行路径只经过代码审查；原先覆盖它的替身用例已按计划删除。证据：`.verification/dual-qwen/stress-20261124-live/summary.json` 及三段 `run-index.jsonl`，登记副本在 `benchmarks/router/runs/stress-20261124-live/`。
+本轮所有回放轮次均成功，因此另做了一次真实失败注入来验证失败传递（见下）。证据：`.verification/dual-qwen/stress-20261124-live/summary.json` 及三段 `run-index.jsonl`，登记副本在 `benchmarks/router/runs/stress-20261124-live/`。
+
+### 回放失败注入（stress-failinject-20261124）
+
+临时把 `budgets.json` 移走，使每个 `replay.py` 子进程在加载阶段非零退出（`finally` 中恢复；恢复后哈希 `014e457e…` 与 manifest 一致）。命令 `python run_stress.py --modes replay --run-id stress-failinject-20261124`：
+
+- `run_retest.py` 18/18 轮 rc=1；`run-index.jsonl` 保留每轮的组号、场景、策略、原始退出码和日志路径，失败汇总打印后退出 1。
+- `run_stress.py` 的 `replay` 段 `pass=false`、`returncode=1`，整组 `pass=false`，退出码 1，44.2 s；摘要保留 `replay` 日志与索引路径。
+
+证据：`benchmarks/router/runs/stress-failinject-20261124/`。
+
+## 2e. 异常路径实测：注入启动失败（fault-20261124-startfail）
+
+为验证“发出停止命令后启动失败时仍尝试恢复、记录原始错误、恢复未确认即终止”的路径：停止状态确认后，由远端 watcher 移走 `/home/dgx/spark-vllm/compose.yaml`，使恢复阶段的 `docker compose start` 无法执行；演练退出后立即恢复文件并手动启动引擎。
+
+```bash
+python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-20261124-startfail --health-timeout 60
+```
+
+- 预检通过并复用就绪 Router（`cache_aware`，容器 `b255f3ba1986`）。
+- 停止：rc=0（11.27 s），状态确认 `exited`。
+- 启动：rc=1，stderr `no configuration file provided: not found`，`start_ok=false`。
+- 恢复：60 s 内无直连健康，`recovery_error` 记录超时，`first_direct_health=null`，`recovery_confirmed=false`，`router_accepts_16=false`。
+- 演练：`pass=false`、`aborted_reason` 已写、`final_health={"15":200,"16":0}`，退出码 1，总 92.23 s，未开始后续周期。
+- 人工恢复：恢复同一 compose 文件（2513 字节）、`docker compose start qwen` rc=0；`.16` 在 195 s 后直连 200，Router 约 3 s 内重新接纳；随后 `--preflight-only`（`preflight-20261124-d`）退出 0、两台 200。
+
+该测试是受控故障注入，不代表正常运行验收；实际停机窗口约 5 分钟。证据：`benchmarks/router/runs/fault-20261124-startfail/`、`runs/preflight-20261124/`（C/D）。
 
 ## 3. 历史代理与 mock 归档
 
@@ -199,7 +225,8 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 - 当前日常 smoke：`benchmarks/router/runs/smoke-daily-v6/`。
 - 只读预检：`benchmarks/router/runs/preflight-20261124/`。
 - 压测：`benchmarks/router/runs/stress-20261124-live/`。
-- 手动实机演练（现行预检）：`benchmarks/router/runs/fault-20261124-newpreflight/`；历史旧预检记录：`benchmarks/router/runs/fault-20261124-1x-r2/`。
+- 压测失败注入：`benchmarks/router/runs/stress-failinject-20261124/`。
+- 手动实机演练（现行预检）：`benchmarks/router/runs/fault-20261124-newpreflight/`；异常路径注入：`benchmarks/router/runs/fault-20261124-startfail/`；历史旧预检记录：`benchmarks/router/runs/fault-20261124-1x-r2/`。
 - 当前 manifest v1.3.1：`677ec27d8bca5edd0e41a8a797474d01e2138cb0f0e1765a89cd50560ccf51de`（32 个条目；删除 7 个代理/替身文件以及 `test_harness.py`/`test-results.json`，重算 `README.md` 与 `run_fault_drill.py` 哈希；数据集、校准、profiles 与 budgets 未变）。
 - 当前 `smoke.json`：`912bd6ff84eddbc6992ff3479c9d5673a046280a40ff4e04865f4ba6e60e1786`（只更新 `source_manifest_sha256` 指向 v1.3.1；历史 smoke 证据保留当时记录的旧哈希）。
 
@@ -215,8 +242,8 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 
 ## 6. 未验证事项汇总
 
-1. 现行只读预检 + 真实停启周期的组合已执行 1 次并通过（`fault-20261124-newpreflight`：摘除 6.93 s、恢复间隔 6.235 s）；多周期仍未执行，SSH 中断、启动失败、恢复未确认等异常路径仍未在真实演练中制造。历史 r2 使用旧预检方法，其 19.469 s 不再代表现行入口。
-2. 压测已实跑：replay 18/18、concurrency 12/12、cold-rag 6/6 全部成功；因为全部成功，回放失败传递（失败轮写入索引、`run_retest.py`/`run_stress.py` 返回非零）没有真实失败注入，且替身用例已删除，目前只有代码路径。
+1. 现行只读预检 + 真实停启周期的组合已执行 1 次并通过（`fault-20261124-newpreflight`：摘除 6.93 s、恢复间隔 6.235 s）；多周期仍未执行。启动命令失败、恢复未确认、演练中止等路径已通过 `fault-20261124-startfail` 注入实测；SSH 中断和 Router 重新接纳超时仍未在真实演练中制造。历史 r2 使用旧预检方法，其 19.469 s 不再代表现行入口。
+2. 压测已实跑：replay 18/18、concurrency 12/12、cold-rag 6/6 全部成功；回放失败传递已用 `stress-failinject-20261124` 真实注入验证（18/18 rc=1、`replay.pass=false`、顶层退出 1）。未覆盖的是“部分轮失败、部分成功”的混合场景，因此“后续成功不覆盖已记录失败”仍只有代码路径。
 3. 历史代理路径的实测结论只对应归档，脚本已删除；代理清理失败、SSH 停止检查失败和 attach 恢复失败不再有离线用例覆盖。
 4. `runs/smoke-daily-v6/` 的 core `both_workers_routed=false` 与 v5 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
 5. real-Agent 会话仍为 0，相关验收保持 pending。
