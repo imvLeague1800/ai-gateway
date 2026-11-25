@@ -15,3 +15,13 @@ redis-data/
 .token_seed.lock
 /buildx/
 .uv-cache/
+
+# Local plans and configuration backups
+/docs/*-plan.md
+/config/*.yaml.bak
+
+# Local benchmark data and run evidence
+/benchmarks/router/real/*
+!/benchmarks/router/real/README.md
+/benchmarks/router/runs/*
+!/benchmarks/router/runs/README.md

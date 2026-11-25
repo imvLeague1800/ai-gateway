@@ -21,4 +21,4 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id <新ID>
 
 - 复用现有 SSH、停启、探针和恢复逻辑，删去 dry-run、Docker socket/组及 sudo 推断、`--authorization-record` 和相应测试。移除旧 mock 故障实现、用例及执行入口。
 - 验收以维护窗口内的真实停启记录为准。保存每周期的停启结果、Router 摘除耗时、改派 `.15` 的完整响应，以及 `.16` 首次直连健康到经 Router 完成首条响应的实际用时。该间隔 **≤20 秒**才通过。保存两台引擎的最终健康状态，结果归档到 benchmark。未收到停机指令时，实机验收记为待执行。
-- 日常 smoke 和压测继续与实机演练分开。保留历史结果。 [Benchmark 整理计划](router-benchmark-organization-plan.md)
+- 日常 smoke 和压测继续与实机演练分开。保留历史结果。 [Benchmark 使用说明](../benchmarks/router/README.md)

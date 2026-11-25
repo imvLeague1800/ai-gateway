@@ -1,6 +1,6 @@
 # Router benchmark 整理结果
 
-执行日期：2026-11-24。计划：[router-benchmark-organization-plan.md](router-benchmark-organization-plan.md)；手动演练规范：[router-fault-drill-authorization.md](router-fault-drill-authorization.md)。
+执行日期为 2026-11-24。现行入口见 [benchmark 使用说明](../benchmarks/router/README.md)，手动演练见 [实机演练说明](router-fault-drill-authorization.md)。
 
 ## 1. 入口收敛
 
