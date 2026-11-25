@@ -14,6 +14,9 @@ run outputs belong in internal persistent storage and are referenced by run ID.
 - **Real Agent sessions: 0.** No company-authorized real sessions were supplied
   for this round. The real-Agent acceptance is therefore marked *pending*; no
   synthetic session is labeled as real.
+- Manifest and smoke fingerprints are LF-normalized, so checkouts with CRLF or LF
+  line endings validate the same; historical evidence lists keep their raw-byte
+  hashes.
 
 ## Entry points
 
@@ -44,8 +47,10 @@ python run_smoke.py --policy cache_aware --no-restart  # caller already started 
 The run writes `<run-id>/summary.json`, per-stage logs, the candidate replay,
 queue evidence, and `analysis/smoke-analysis.json` under
 `.verification/dual-qwen/`. `--baseline` restarts the Router for the other policy
-and restores the candidate in a `finally` block. Per-stage and total wall-clock
-time are recorded.
+and restores the candidate in a `finally` block; its child exit code and summary
+`policy_ok` are part of the top-level `pass`. `--no-restart` requires an already
+ready Router whose policy matches `--policy`; an unconfirmed or mismatched policy
+is rejected before any stage. Per-stage and total wall-clock time are recorded.
 
 Aggregate or register an already completed run:
 
@@ -194,6 +199,7 @@ scripts that produced it were removed with the old fault path.
 | `calibration-results.json`, `budgets.json` | Measured calibration completion times and frozen completion budgets. |
 | `generate.py`, `prompts.py` | Reproducible synthetic generator (seed 20261123). |
 | `transport.py` | Streaming client, metric parser, quality/state classification. |
+| `filehash.py` | LF-normalized SHA-256 for manifest and smoke fingerprint checks. |
 | `replay.py` | Fixed-arrival replay, 1-second metric sampling, scoring and raw evidence. |
 | `make_calibration.py` | Rebuilds the calibration files and budgets. |
 | `smoke.json`, `run_smoke.py` | Frozen 16-session/28-request daily smoke (no fault) against the actual Router and engines. |

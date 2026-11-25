@@ -2,7 +2,6 @@
 import argparse
 import asyncio
 from collections import Counter
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -14,6 +13,7 @@ import uuid
 import httpx
 
 from generate import BASE, MARKER, SEED
+from filehash import canonical_sha256
 from prompts import qa_specs
 from transport import ENGINES, ROUTER_API, engine_snapshot, router_snapshot, send_one
 
@@ -29,7 +29,7 @@ def read_rows(path):
 def load():
     manifest = json.loads((BASE / "manifest.json").read_bytes())
     for name, expected in manifest["sha256"].items():
-        if hashlib.sha256((BASE / name).read_bytes()).hexdigest() != expected:
+        if canonical_sha256(BASE / name) != expected:
             raise ValueError(f"dataset file hash mismatch: {name}")
     cases = {case["id"]: case for case in read_rows(BASE / "cases.jsonl")}
     sessions = read_rows(BASE / "sessions.jsonl")
@@ -129,7 +129,7 @@ async def run(args):
     metadata = dict(run_id=run_id, profile=args.profile, policy=args.policy, group=args.group,
                     namespace=namespace, rate=rate, window_s=window, router=ROUTER_API, engines=ENGINES,
                     git=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-                    manifest_sha256=hashlib.sha256((BASE / "manifest.json").read_bytes()).hexdigest(),
+                    manifest_sha256=canonical_sha256(BASE / "manifest.json"),
                     completion_budgets_ms=budgets, unix_start=time.time())
     (out / "run.json").write_text(json.dumps(metadata, indent=2))
     async with httpx.AsyncClient(timeout=60, trust_env=False) as client:

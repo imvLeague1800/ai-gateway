@@ -1,0 +1,93 @@
+{
+  "policy": "cache_aware",
+  "requests": 12,
+  "queue_before_cancel": {
+    "qwen15": {
+      "running": 4.0,
+      "waiting": 2.0
+    },
+    "qwen16": {
+      "running": 4.0,
+      "waiting": 2.0
+    }
+  },
+  "queue_after_waiting_cancel": {
+    "qwen15": {
+      "running": 4.0,
+      "waiting": 1.0
+    },
+    "qwen16": {
+      "running": 4.0,
+      "waiting": 2.0
+    }
+  },
+  "queue_after_generating_cancel": {
+    "qwen15": {
+      "running": 4.0,
+      "waiting": 0.0
+    },
+    "qwen16": {
+      "running": 4.0,
+      "waiting": 2.0
+    }
+  },
+  "router_running_before": {
+    "{\"worker\": \"http://10.169.25.16:8000\"}": 6.0,
+    "{\"worker\": \"http://10.169.25.15:8000\"}": 6.0
+  },
+  "cancelled_ids": [
+    "queue-0",
+    "queue-11"
+  ],
+  "cancel_observation": {
+    "queue-11_headers_seen": true,
+    "queue-0_headers_seen": true,
+    "headers_seen_before_first_cancel": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "headers_seen_before_second_cancel": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ]
+  },
+  "completed": 10,
+  "states": {
+    "success": 10
+  },
+  "recovery": {
+    "recovered_s": 0.29,
+    "engines": {
+      "qwen15": {
+        "running": 0.0,
+        "waiting": 0.0
+      },
+      "qwen16": {
+        "running": 0.0,
+        "waiting": 0.0
+      }
+    },
+    "router_running": 0.0,
+    "recovered": true
+  }
+}

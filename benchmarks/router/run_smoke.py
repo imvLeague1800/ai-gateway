@@ -15,6 +15,26 @@ ROOT = BASE.parents[1]
 PYTHON = ROOT / ".verification" / "router-v2" / "litellm-venv" / "Scripts" / "python.exe"
 POLICIES = ("power_of_two", "cache_aware")
 ENGINES = {"15": "http://10.169.25.15:8000/health", "16": "http://10.169.25.16:8000/health"}
+ROUTER_CONTAINER = "vllm-router-test"
+
+
+def router_policy() -> str | None:
+    result = subprocess.run(
+        ["ssh", "-o", "BatchMode=yes", "dgx@10.169.25.16",
+         f"docker inspect --format '{{{{json .Args}}}}' {ROUTER_CONTAINER}"],
+        check=False, capture_output=True, text=True, timeout=20,
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        arguments = json.loads(result.stdout)
+    except Exception:
+        return None
+    if isinstance(arguments, list) and "--policy" in arguments:
+        index = arguments.index("--policy")
+        if index + 1 < len(arguments):
+            return arguments[index + 1]
+    return None
 
 
 def restart_router(policy: str) -> None:
@@ -48,6 +68,19 @@ def main() -> None:
     parser.add_argument("--run-id", default="")
     parser.add_argument("--no-restart", action="store_true")
     args = parser.parse_args()
+    if args.baseline and args.no_restart:
+        print(json.dumps({"pass": False,
+                          "error": "--baseline requires Router restart; not allowed with "
+                                   "--no-restart"}, indent=2))
+        raise SystemExit(2)
+    if args.no_restart:
+        policy = router_policy()
+        if policy != args.policy:
+            print(json.dumps({"pass": False,
+                              "error": "--no-restart could not confirm the Router policy",
+                              "expected_policy": args.policy,
+                              "router_policy": policy}, indent=2))
+            raise SystemExit(2)
     run_id = args.run_id or "smoke-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     out = ROOT / ".verification" / "dual-qwen" / run_id
     if out.exists():
@@ -77,10 +110,9 @@ def main() -> None:
         queue_summary = read_stage_summary(out / f"queue-{args.policy}" / "queue-summary.json")
 
         baseline_summary = None
+        baseline_step = None
         if args.baseline:
             baseline = next(p for p in POLICIES if p != args.policy)
-            if args.no_restart:
-                raise RuntimeError("--baseline requires Router restart")
             started = time.perf_counter()
             restart_router(baseline)
             stages.append({"name": "baseline_router_ready", "elapsed_s": round(time.perf_counter() - started, 2)})
@@ -132,7 +164,11 @@ def main() -> None:
                      and queue_summary.get("recovery", {}).get("recovered")
                      and not queue_summary.get("recovery", {}).get("router_running", 1)
                      and analysis.get("returncode") == 0
-                     and all(v == 200 for v in final_health.values())),
+                     and all(v == 200 for v in final_health.values())
+                     and (not args.baseline
+                          or (baseline_step is not None
+                              and baseline_step.get("returncode") == 0
+                              and bool((baseline_summary or {}).get("policy_ok"))))),
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))

@@ -15,6 +15,7 @@ import httpx
 
 import transport
 import scenario_stats as stats
+from filehash import canonical_sha256
 
 BASE = Path(__file__).resolve().parent
 ROUTER_API = "http://127.0.0.1:18100"
@@ -53,12 +54,12 @@ def build_variant(case: dict, old: str, new: str) -> dict:
 
 def load_specs() -> tuple[dict, list[dict]]:
     smoke = json.loads((BASE / "smoke.json").read_text(encoding="utf-8"))
-    manifest_hash = hashlib.sha256((BASE / "manifest.json").read_bytes()).hexdigest()
+    manifest_hash = canonical_sha256(BASE / "manifest.json")
     if smoke["source_manifest_sha256"] != manifest_hash:
         raise SystemExit(f"smoke source manifest hash mismatch: {smoke['source_manifest_sha256']} != {manifest_hash}")
-    if smoke["cases_sha256"] != hashlib.sha256((BASE / "cases.jsonl").read_bytes()).hexdigest():
+    if smoke["cases_sha256"] != canonical_sha256(BASE / "cases.jsonl"):
         raise SystemExit("smoke cases hash mismatch")
-    if smoke["sessions_sha256"] != hashlib.sha256((BASE / "sessions.jsonl").read_bytes()).hexdigest():
+    if smoke["sessions_sha256"] != canonical_sha256(BASE / "sessions.jsonl"):
         raise SystemExit("smoke sessions hash mismatch")
     cases = {row["id"]: row for row in read_jsonl(BASE / "cases.jsonl")}
     sessions = {row["id"]: row for row in read_jsonl(BASE / "sessions.jsonl")}
@@ -237,7 +238,7 @@ async def main() -> None:
                 print(json.dumps({k: row.get(k) for k in ("session", "case_id", "state", "ttft_ms",
                                                           "complete_ms", "worker", "quality")}, ensure_ascii=True), flush=True)
         summary = summarize(args.policy, rows, health, warmup)
-        summary["smoke_sha256"] = hashlib.sha256((BASE / "smoke.json").read_bytes()).hexdigest()
+        summary["smoke_sha256"] = canonical_sha256(BASE / "smoke.json")
         summary["dataset_manifest_sha256"] = smoke["source_manifest_sha256"]
         summary["git"] = __import__("subprocess").check_output(["git", "rev-parse", "HEAD"], text=True).strip()
         summary["router"] = ROUTER_API

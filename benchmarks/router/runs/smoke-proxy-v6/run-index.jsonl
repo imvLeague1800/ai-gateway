@@ -1,5 +1,0 @@
-{"kind": "core", "policy": "cache_aware", "file": "summary.json", "sha256": "7b8a443e3c1fe22f0bed00efc5a6072e8b60733f36fdfce3d2183b89d30e05f2", "bytes": 2794}
-{"kind": "core", "policy": "cache_aware", "file": "requests.jsonl", "sha256": "df0146b58b198fef2f6933ae0e94819359df93bf8742fd20853e7301f3406205", "bytes": 33320}
-{"kind": "queue", "policy": "cache_aware", "file": "queue-summary.json", "sha256": "4f9876fa1508efe24c1173bf032a74057baefa03fdf6b85758b08f28250890b0", "bytes": 1649}
-{"kind": "aux", "file": "failover-summary.json", "sha256": "186cf80345e7766a6fb3ceefd99c1469f83ef094dbda9a774a44471637b97c4b", "bytes": 35798}
-{"kind": "aux", "file": "run-summary.json", "sha256": "cacf2d4b16ae5b311a704111090e97071f29c5c1ff80c0513b1fc1b94ef8a648", "bytes": 40488}
