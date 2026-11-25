@@ -18,6 +18,41 @@ BASE = Path(__file__).resolve().parent
 ROOT = BASE.parents[1]
 PYTHON = ROOT / ".verification" / "router-v2" / "litellm-venv" / "Scripts" / "python.exe"
 MODES = ("replay", "concurrency", "cold-rag")
+EXPECTED_ROUNDS = {"replay": 18, "concurrency": 12, "cold-rag": 6}
+
+
+def stage_completeness(mode: str, index: Path) -> tuple[bool, str, int]:
+    """A stage is valid only when every expected round has a usable result file."""
+    expected = EXPECTED_ROUNDS[mode]
+    if not index.exists():
+        return False, "run-index.jsonl missing", 0
+    rows: list[dict] = []
+    try:
+        for line in index.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                rows.append(json.loads(line))
+    except Exception as exc:
+        return False, f"run-index.jsonl unreadable: {type(exc).__name__}: {exc}", len(rows)
+    if len(rows) != expected:
+        return False, f"{len(rows)} rounds recorded, expected {expected}", len(rows)
+    bad = 0
+    for row in rows:
+        if (row.get("returncode") != 0 or row.get("result_error")
+                or row.get("parse_error") or row.get("result_ok") is False):
+            bad += 1
+            continue
+        directory = row.get("directory")
+        summary_path = Path(directory) / "summary.json" if directory else None
+        if summary_path is None or not summary_path.is_file():
+            bad += 1
+            continue
+        try:
+            json.loads(summary_path.read_text(encoding="utf-8"))
+        except Exception:
+            bad += 1
+    if bad:
+        return False, f"{bad} invalid rounds", len(rows)
+    return True, "", len(rows)
 EXPECTED_REPLAY_ROUNDS = 18
 
 
@@ -49,9 +84,16 @@ def main() -> None:
     parser.add_argument("--output", type=Path)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
+    if len(set(args.modes)) != len(args.modes):
+        parser.error("--modes must not contain duplicates")
     run_id = args.run_id or "stress-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     out = args.output or (ROOT / ".verification" / "dual-qwen" / run_id)
-    out.mkdir(parents=True, exist_ok=True)
+    if out.exists():
+        print(json.dumps({"run_id": run_id, "pass": False, "preview": args.dry_run,
+                          "error": "output directory already exists; choose a new --run-id "
+                                   "or --output"}, indent=2), flush=True)
+        raise SystemExit(2)
+    out.mkdir(parents=True)
     stages = []
     total_started = time.perf_counter()
     for mode in args.modes:
@@ -81,17 +123,17 @@ def main() -> None:
         print(json.dumps(stage, ensure_ascii=True), flush=True)
         if process.returncode != 0:
             break
-        if mode == "replay":
-            valid, reason, rounds = replay_completeness(mode_out / "run-index.jsonl")
-            stage["replay_rounds"] = rounds
-            stage["replay_valid"] = valid
-            if not valid:
-                stage["replay_error"] = reason
-                break
+        valid, reason, rounds = stage_completeness(mode, mode_out / "run-index.jsonl")
+        stage["rounds"] = rounds
+        stage["result_ok"] = valid
+        if not valid:
+            stage["result_error"] = reason
+            break
     replay_stage = next((stage for stage in stages if stage.get("mode") == "replay"), None)
+    stage_ok = all(stage.get("returncode", 0) == 0 and stage.get("result_ok", True)
+                   for stage in stages)
     replay_ok = replay_stage is None or (
-        replay_stage.get("returncode", 0) == 0
-        and replay_stage.get("replay_valid", True))
+        replay_stage.get("returncode", 0) == 0 and replay_stage.get("result_ok", True))
     preview = args.dry_run
     summary = {
         "run_id": run_id, "modes": args.modes, "stages": stages,
@@ -100,14 +142,12 @@ def main() -> None:
             "returncode": replay_stage.get("returncode") if replay_stage else None,
             "log": replay_stage.get("log") if replay_stage else None,
             "run_index": str(out / "replay" / "run-index.jsonl"),
-            "rounds": replay_stage.get("replay_rounds") if replay_stage else None,
-            "reason": replay_stage.get("replay_error") if replay_stage else None,
+            "rounds": replay_stage.get("rounds") if replay_stage else None,
+            "reason": replay_stage.get("result_error") if replay_stage else None,
         },
         "total_s": round(time.perf_counter() - total_started, 2),
         "preview": preview,
-        "pass": (not preview
-                 and all(stage.get("returncode", 0) == 0 for stage in stages)
-                 and replay_ok),
+        "pass": not preview and stage_ok and replay_ok,
         "dry_run": args.dry_run,
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")

@@ -65,7 +65,7 @@ python run_smoke.py --policy cache_aware --run-id smoke-daily-v8
 | `smoke-daily-v4` | v1.2.9 中间版本 | 92.07 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
 | `smoke-daily-v3` | v1.2.8 | 87.18 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
 
-`smoke-daily-v1`（91.31 s）和 `smoke-daily-v2`（88.08 s）已迁出 Git 树，见第 5 节的内部归档。
+`smoke-daily-v1`（91.31 s）和 `smoke-daily-v2`（88.08 s）已迁出 Git 树，持久归档在 `X:\damonlu\ai-gateway\router-runs-archive\20261125`（按 run ID 定位，见第 5 节）。
 
 ## 2b. 手动演练只读预检验收（preflight-20261124）
 
@@ -116,7 +116,7 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 
 ### 历史：旧预检下的实机周期（fault-20261124-1x-r2，通过）
 
-该轮使用已被现行规范删除的旧预检（Compose dry-run + 对运行中容器的一次真实 `docker start`），只作历史记录：停止命令 11.12 s、直连失败 2.85 s、Router 摘除 8.93 s、启动→首次直连 197.49 s、首条完整 `.16` 响应 19.469 s、请求 ID `50a06a4b32d74562a81afb64873e756a`、同一容器 `eacbab0d9872`、结束两台 200、退出码 0。该目录已迁出 Git，归档在 `.verification/dual-qwen/runs-archive/fault-20261124-1x-r2/`。更早的首次尝试 `fault-20261124-1x` 在发出停止命令前因上下文键名错误中止，未动服务，仅保留在 `.verification`，不作为验收证据。
+该轮使用已被现行规范删除的旧预检（Compose dry-run + 对运行中容器的一次真实 `docker start`），只作历史记录：停止命令 11.12 s、直连失败 2.85 s、Router 摘除 8.93 s、启动→首次直连 197.49 s、首条完整 `.16` 响应 19.469 s、请求 ID `50a06a4b32d74562a81afb64873e756a`、同一容器 `eacbab0d9872`、结束两台 200、退出码 0。该目录已迁出 Git，持久归档在 `X:\damonlu\ai-gateway\router-runs-archive\20261125\fault-20261124-1x-r2\`。更早的首次尝试 `fault-20261124-1x` 在发出停止命令前因上下文键名错误中止，未动服务，仅保留在 `.verification`，不作为验收证据。
 
 ## 2d. 压测实测（stress-20261124-live，通过）
 
@@ -165,9 +165,11 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 
 代理和 mock 故障路径已从执行面移除：`benchmark_proxy.py`、`proxy_failover.py`、`smoke_failover.py`、`test_smoke_proxy.py` 已删除，日常 smoke/stress 不再调用代理，`config/`、`scheduler/`、`app/` 没有代理依赖。以下仅是 `runs/` 中的历史结果，不是当前验收路径，也不应再被执行：
 
-- `runs/smoke-proxy-v12/`：代理路径历史通过记录，Router 摘除 5.60 s、重新接纳 6.75 s、首条 `.16` 完整响应 7.34 s，请求 ID `5d8abfe9d2ca401e963c80f74daee66d`，121.54 s。
-- `runs/smoke-proxy-v10/`、`runs/smoke-proxy-v6/`：更早的代理验收。
-- `runs/smoke-entry-v1/`：旧 mock 故障阶段记录，87.80 s。
+- `smoke-proxy-v12`：代理路径历史通过记录，Router 摘除 5.60 s、重新接纳 6.75 s、首条 `.16` 完整响应 7.34 s，请求 ID `5d8abfe9d2ca401e963c80f74daee66d`，121.54 s。
+- `smoke-proxy-v10`、`smoke-proxy-v6`：更早的代理验收。
+- `smoke-entry-v1`：旧 mock 故障阶段记录，87.80 s。
+
+以上目录已迁出 Git；按 run ID 在持久归档 `X:\damonlu\ai-gateway\router-runs-archive\20261125`（`INDEX.json`）中定位。
 
 这些目录保留原始摘要、请求记录、分析重建和 SHA-256 清单，便于审计历史结论；脚本与用例不再随仓库提供。
 
@@ -214,10 +216,12 @@ Git 内保留的历史归档（不再提供脚本）：
 - `runs/smoke-v1/`、`runs/retest-v12/`、`runs/cold-rag-v1/`（`verify_archives.py` 的离线复算依赖）
 - `runs/smoke-daily-v7/`、`runs/smoke-daily-v8/`
 
-迁出 Git 树到内部归档（2026-11-25，manifest v1.3.3）：
+迁出 Git 树到持久归档（2026-11-25，manifest v1.3.3）：
 
 - `smoke-daily-v1/` … `v6/`、`smoke-entry-v1/`、`smoke-proxy-v6/`、`smoke-proxy-v10/`、`smoke-proxy-v12/`、`fault-20261124-1x-r2/`
-- 位置：`.verification/dual-qwen/runs-archive/<run-id>/`；`INDEX.json` 记录迁移前后 SHA-256 校验、文件数和字节数；Git 历史中仍保留这些目录，历史数字不变。
+- 持久位置：`X:\damonlu\ai-gateway\router-runs-archive\20261125`（共享 `\\10.10.18.151\damonlu`）；按 run ID 定位，`INDEX.json` 记录每个 run 的文件数、字节数和逐文件原始字节 SHA-256。
+- 校验方式：持久副本与本地迁移源逐文件比较 SHA-256、文件数量和字节数；11/11 个 run 全部一致后才保持 Git 删除。本地副本保留在 `.verification/dual-qwen/runs-archive/`，其 `INDEX.json` 同样记录持久位置和校验结果。
+- Git 历史中仍保留这些目录，历史数字不变。
 
 移除：
 
@@ -236,11 +240,13 @@ Git 内保留的历史归档（不再提供脚本）：
 - 压测：`benchmarks/router/runs/stress-20261124-live/`。
 - 压测失败注入：`benchmarks/router/runs/stress-failinject-20261124/`。
 - 手动实机演练（现行预检）：`benchmarks/router/runs/fault-20261124-newpreflight/`；异常路径注入：`benchmarks/router/runs/fault-20261124-startfail/`。
-- 旧 run 归档：`.verification/dual-qwen/runs-archive/`（`INDEX.json`、`README.md`）。
-- 当前 manifest v1.3.3（LF 归一化指纹）：`c13b57bb794eb87605853f8e309b712c8693afe13054b5d0253b32022114ec5e`（32 个条目，含新增 `filehash.py`；数据集、校准、profiles 与 budgets 未变）。
-- 当前 `smoke.json`（LF 归一化指纹）：`5bf6a3ec2465a711c513449c71746a7e44ef4531055cdb8a3225655b8f03b93d`（`source_manifest_sha256`、`cases_sha256`、`sessions_sha256` 均按 LF 字节）。
+- 旧 run 持久归档：`X:\damonlu\ai-gateway\router-runs-archive\20261125`（`INDEX.json`、`README.md`）；本地副本：`.verification/dual-qwen/runs-archive/`。
+- 当前 manifest v1.3.4（静态收尾后，LF 归一化指纹）：`8bfc4ed852acc8d90b5b3d7f468bc9f021778cc36b2751ca3183067d05e3f14a`（32 个条目；数据集、校准、profiles 与 budgets 未变）。
+- 当前 `smoke.json`（LF 归一化指纹）：`8c2d1562fc05e2a182ee5ee5e03a58281bb77370cd54728e162f4fb167e7c9f9`（`source_manifest_sha256`、`cases_sha256`、`sessions_sha256` 均按 LF 字节）。
 
 ### 代码与数据检查（本轮复跑）
+
+下表是 2026-11-25 之前已完成的实测/离线检查。第 6 节静态验收本轮没有复跑这些命令，也未连接 Spark。
 
 | 检查 | 结果 |
 | --- | --- |
@@ -252,7 +258,7 @@ Git 内保留的历史归档（不再提供脚本）：
 | smoke `--no-restart` 策略不符 | 拒绝，退出 2 |
 | smoke `--baseline` 实跑 | 173.74 s，`baseline_core` 通过，Router 恢复 `cache_aware`，退出 0 |
 | 干净检出（文本 CRLF / 数据 LF） | `replay.py validate` 与 smoke 哈希链通过，manifest 32 条无 mismatch |
-| 旧 run 迁移校验 | 11 个 run、源/目标 SHA-256 全部一致 |
+| 旧 run 持久归档校验 | 11 个 run、逐文件原始字节 SHA-256、文件数和字节数全部一致 |
 | 回放完整性（live 索引 18/18；failinject 索引 18 条无效） | 分别判通过 / 失败 |
 | `run_stress.py --dry-run` 预览 | `preview=true`、`pass=false`、退出 1 |
 
@@ -263,3 +269,25 @@ Git 内保留的历史归档（不再提供脚本）：
 3. 历史代理路径的实测结论只对应归档，脚本已删除；代理清理失败、SSH 停止检查失败和 attach 恢复失败不再有离线用例覆盖。
 4. `runs/smoke-daily-v7/` 与 `v8/` 的 core `both_workers_routed=false` 与 v5/v6 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
 5. real-Agent 会话仍为 0，相关验收保持 pending。
+
+## 7. 第 6 节静态验收（2026-11-25）
+
+执行范围：只做静态代码审查、Git 树/文件清单和哈希核对。本轮没有运行单测、smoke、压测、实机停启或离线复算，也没有连接 Spark；第 2–5 节的实跑证据均产生于本轮之前，不能当作本轮新代码的运行验证。
+
+| 剩余问题 | 状态 | 代码位置 / 证据 |
+| --- | --- | --- |
+| `.16` 停机验证拖延恢复 | 已完成（静态） | `run_fault_drill.py`：`--evidence-timeout`（默认 60 s）、`probe_rows(..., deadline=...)`、`collect_inflight(..., deadline=...)`、`record["evidence_complete"]` 和 `cycle_ok` 纳入；超时保留已采集 rows、标记周期不完整并立即进入 `recover_cycle`；停止后异常路径仍在 `finally` 尝试恢复；时限与 20 s 接单指标分开记录 |
+| 重复模式/旧目录/缺失结果造成压测误报 | 已完成（静态） | `run_stress.py`：`EXPECTED_ROUNDS`（18/12/6）、`stage_completeness()`、启动前拒绝重复 `--modes` 和已存在输出目录、所有选中阶段校验 `run-index.jsonl` 与每轮 `summary.json`；`run_retest.py`、`run_smoke_concurrency.py`、`cold_rag/run_cold_rag_matrix.py` 拒绝已有输出目录；rc=0 但结果无效时写 `result_error` 和失败原因并整体非零；`--dry-run` 固定非通过 |
+| 长冷 RAG 误用其他 Scheduler | 已完成（静态） | `cold_rag/run_cold_rag_matrix.py`：`port_in_use(18080)` 启动前拒绝占用；`wait_ready(process)` 检查本轮进程存活；端口冲突/提前退出/就绪超时写入 `error`、`scheduler_log`、`client_log` 并失败；`finally` 只停止本轮 Popen |
+| 旧证据只在本机 Git 忽略目录 | 已完成 | 11 个 run 整轮复制到持久归档 `X:\damonlu\ai-gateway\router-runs-archive\20261125`（共享 `\\10.10.18.151\damonlu`）；逐文件原始字节 SHA-256、文件数和字节数与本地迁移源比较，11/11 一致；持久和本地 `INDEX.json` 都记录位置与校验；本地副本保留 |
+| 旧引用未更新、保留项复核 | 已完成（静态） | 更新 `benchmarks/router/README.md`、`runs/README.md`、本报告和 `docs/qwen-router-smoke-test-results.md`；历史证据按 run ID + 持久归档 `INDEX.json` 定位；Git 文件清单核对 `runs/smoke-daily-v7`、`v8`、`stress-20261124-live`、`stress-failinject-20261124`、`preflight-20261124`、`fault-20261124-newpreflight`、`fault-20261124-startfail` 及 `verify_archives.py` 的三个输入目录都存在（未执行复算） |
+
+静态清单更新：manifest 升到 v1.3.4（32 条目，`8bfc4ed8…`），`smoke.json` 为 `8c2d1562…`；只做 LF 归一化哈希核对和 `py_compile`，未启动服务。
+
+### 本轮明确未验证
+
+- 上述新代码路径没有在本轮实际运行：重复/旧目录拒绝、并发与长冷 RAG 的轮次/摘要校验、cold-RAG 端口占用/进程早退、演练证据总时限。它们只经过静态审查和语法检查。
+- 已有实测数据来自旧代码版本：`smoke-daily-v8`（v1.3.3）、`stress-20261124-live`、两次注入和实机演练；不能据此宣称本轮改动已通过实跑。
+- 持久归档只在本机验证可访问，未做恢复演练。
+- 多周期演练、SSH 中断、Router 重新接纳超时仍未实测。
+- `verify_archives.py` 本轮未复跑；此前通过记录仍保留。

@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import socket
 import subprocess
 import sys
 import time
@@ -21,9 +22,19 @@ URL = "http://127.0.0.1:18080"
 KEY = "cold-rag-test-key"
 
 
-def wait_ready(timeout: float = 60) -> None:
+def port_in_use(port: int = 18080) -> bool:
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.5):
+            return True
+    except OSError:
+        return False
+
+
+def wait_ready(process: subprocess.Popen, timeout: float = 60) -> None:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
+        if process.poll() is not None:
+            raise RuntimeError(f"scheduler exited before ready (returncode {process.returncode})")
         try:
             if httpx.get(URL + "/health/ready", timeout=2, trust_env=False).status_code == 200:
                 return
@@ -34,6 +45,9 @@ def wait_ready(timeout: float = 60) -> None:
 
 
 def start_scheduler(limit: int, log_path: Path, config_path: Path):
+    if port_in_use():
+        log_path.write_text("scheduler port 18080 already in use\n", encoding="utf-8")
+        raise RuntimeError("scheduler port 18080 already in use")
     env = os.environ.copy()
     env.update({
         "BACKENDS_CONFIG": str(config_path),
@@ -53,7 +67,7 @@ def start_scheduler(limit: int, log_path: Path, config_path: Path):
         cwd=SCHEDULER_DIR, env=env, stdout=log, stderr=subprocess.STDOUT, text=True,
     )
     try:
-        wait_ready()
+        wait_ready(process)
     except Exception:
         process.terminate()
         try:
@@ -82,7 +96,10 @@ def main() -> None:
     args = parser.parse_args()
     out = args.output or (OUT if not args.run_id else
                           ROOT / ".verification" / "dual-qwen" / args.run_id / "cold-rag")
-    out.mkdir(parents=True, exist_ok=True)
+    if out.exists():
+        print(f"output directory already exists: {out}", flush=True)
+        raise SystemExit(2)
+    out.mkdir(parents=True)
     index = out / "run-index.jsonl"
     index.write_text("", encoding="utf-8")
     order = ((1, 2), (2, 1), (1, 2))
@@ -101,6 +118,13 @@ def main() -> None:
             started = time.time()
             process = None
             log = None
+            record = {
+                "group": group, "limit": limit, "rate": 0.23, "duration_s": 120,
+                "warmup_s": 15, "returncode": 1, "elapsed_s": 0.0,
+                "directory": str(run_dir), "scheduler_log": str(sched_log),
+                "client_log": str(client_log), "config": str(config_path),
+                "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
+            }
             try:
                 process, log = start_scheduler(limit, sched_log, config_path)
                 with client_log.open("w", encoding="utf-8") as client:
@@ -113,28 +137,24 @@ def main() -> None:
                         cwd=BASE, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
                         stdout=client, stderr=subprocess.STDOUT, text=True,
                     )
-                record = {
-                    "group": group, "limit": limit, "rate": 0.23, "duration_s": 120,
-                    "warmup_s": 15, "returncode": result.returncode,
-                    "elapsed_s": round(time.time() - started, 2),
-                    "directory": str(run_dir), "scheduler_log": str(sched_log),
-                    "client_log": str(client_log), "config": str(config_path),
-                    "config_sha256": hashlib.sha256(config_path.read_bytes()).hexdigest(),
-                }
+                record["returncode"] = result.returncode
                 summary_path = run_dir / "summary.json"
                 if summary_path.exists():
                     summary = json.loads(summary_path.read_text(encoding="utf-8"))
                     record["summary"] = {k: summary.get(k) for k in
                                          ("window_requests", "by_scenario", "engine_window_tps",
                                           "engine_cache", "failures", "truncated", "drain_s")}
+            except Exception as exc:
+                record["error"] = f"{type(exc).__name__}: {exc}"
+            finally:
+                record["elapsed_s"] = round(time.time() - started, 2)
+                if process is not None:
+                    stop_scheduler(process, log)
                 with index.open("a", encoding="utf-8") as handle:
                     handle.write(json.dumps(record, ensure_ascii=True) + "\n")
                 print(json.dumps(record, ensure_ascii=True), flush=True)
-                if result.returncode != 0:
-                    sys.exit(result.returncode)
-            finally:
-                if process is not None:
-                    stop_scheduler(process, log)
+            if record["returncode"] != 0:
+                sys.exit(record["returncode"])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 {
-  "version": "1.3.3",
+  "version": "1.3.4",
   "schema_version": 1,
   "generator_version": 1,
   "seed": 20261123,
@@ -21,25 +21,25 @@
     "replay.py": "60605dd534bdc09e7d57ac915dc0cc3043c45416081fa6f2a94b3ee853da7c43",
     "transport.py": "9273855331550cf27741bfc23724f316b43782ade1e41b6c83a138c94eb95e38",
     "make_calibration.py": "e8a4a4e530ce2bc4ee6b8963ecd12d1b83b3b887f8340b6243beb8081e942e91",
-    "README.md": "370a0ad1d20bc612dac1ca32e5d06dbf80c5cbba9f70d2e752416b0d5173adac",
+    "README.md": "7ac67524b8de3cf2ffb358504543ac10671bf519c2da5870c4d5982eabf7432f",
     "real/README.md": "e6993536ab8e879fd04ca6f226dd752ea9abdb2355736c2a0519ecc5fcce778a",
-    "run_retest.py": "aa2d1815b385537dcbe81bf19fc993f935e74f1e010624c1e3bdc936ca1a126a",
+    "run_retest.py": "f1b9e3ad7003f7227c6ef8488e7555d1bc7869fae0f060bd0b8c08d8ed0b9b2c",
     "analyze_retest.py": "8c48e9868050831c285998a6917bc77747b91c09572162ee25f4fafd19964f60",
     "analyze_fault.py": "fab87784f671baf560743945e01e67683df1bc7f3c35a5dba9ba320a6ee09d03",
     "scenario_stats.py": "1d1bc231f846dc35171adc8990c9cb554d38bbd01c86c4b07f90ead9fb9a1e2c",
     "run_smoke.py": "ac7669a96dd4da93d24f500bf43fc886b602ff26f6590b36a3f29df64e649de5",
-    "run_stress.py": "79455f0f67a9c4bcfae5b44e11d2efaa08c674defd5951c2408223de4f92422f",
+    "run_stress.py": "adaaa206a2a14df6ff2e01e4bf36ce0a34b178536512c4aead945e37409ec66f",
     "analyze_smoke.py": "3e3635d7c8a423ea506b7206394ca5eb214b2e8e9fde7890c0d2f909647bf44d",
     "register_smoke_evidence.py": "21a5f29ac897ddd133f645a0a6c224488de5a1daa007793fdb1e55ea680f8489",
     "render_smoke_tables.py": "a646a74226b0152e8f8e2ec2e7ad22c17dd687be855fac500ecc055591828a19",
-    "run_smoke_concurrency.py": "308db1c81772c52ffbf4677d7382337385513b510991ea410fce67ed5ee6512d",
+    "run_smoke_concurrency.py": "f05b0cdd0f16f7f2385164c5a58e92310382eea4ea87cabedc3fa7fc4c4ae80f",
     "cold_rag/analyze_cold_rag.py": "2531808c2086d3c434b51410d7820acab43e9a69486f8e8875e13d3623b2d219",
-    "cold_rag/run_cold_rag_matrix.py": "c24d3301d81483458c81177f84b47614f83241e0f10fb49a11de7132e8257202",
+    "cold_rag/run_cold_rag_matrix.py": "047d66add204caa3374208ad2cef2c96ec58e535b5df7bb749f462aa0cd2163a",
     "cold_rag/register_cold_rag_evidence.py": "c3d190cd0c1ad52e779b6731a4d10964e86b6cdfe03bc5d530de65b2d557d8fc",
     "cold_rag/render_cold_rag_tables.py": "9275aace2c2256d051d6a87e47d30f4542845a64c715b3a3ae068cfbb0fc39cb",
     "verify_archives.py": "9af8374e58080cca0f25c085feb5ca24fe45619c7c42e7d69d71c52ab4b035cf",
     "start-router.sh": "28fbeb67d404d4dfee99246a29f71184a8dccdf2deb76c6ad33b57a0cbca7685",
-    "run_fault_drill.py": "25967b5ad2ab28cf59e7b14f618c98cea43a212e7d97e6e99db88803ce8db497",
+    "run_fault_drill.py": "a158dc331aa9e8ff963e25aa832d99dacc8cf4958018657a936a3a981fdaeb7d",
     "filehash.py": "a7b72d5cf02cc20529a3457275ab41e40b97a34fd651d14833ddbddeb09674cc"
   },
   "usage_scope": "internal-only routing evaluation; not a model-quality or business-accuracy benchmark",
@@ -64,6 +64,7 @@
     "v1.3.0 replaces drill authorization inference with a read-only preflight plus --preflight-only, removes the benchmark proxy and all no-service double tests, and keeps historical proxy/fault archives as evidence; dataset, calibration, profiles and budgets are unchanged.",
     "v1.3.1 removes the remaining test_harness.py mock checks and the generated test-results.json, and refreshes the README, manifest and smoke source hash chain; dataset, calibration, profiles and budgets are unchanged.",
     "v1.3.2 requires every replay round to exit 0 with a readable, positive-request result before it counts, makes preview runs non-passing, and removes the unused hot_forced.py and cold_rag/config_probe.py diagnostics; dataset, calibration, profiles and budgets are unchanged.",
-    "v1.3.3 normalizes manifest and smoke fingerprints to LF bytes so CRLF/LF checkouts validate the same, and gates smoke --baseline/--no-restart in the top-level result; dataset, calibration, profiles and budgets are unchanged."
+    "v1.3.3 normalizes manifest and smoke fingerprints to LF bytes so CRLF/LF checkouts validate the same, and gates smoke --baseline/--no-restart in the top-level result; dataset, calibration, profiles and budgets are unchanged.",
+    "v1.3.4 is the plan section 6 static close-out: reject duplicate modes and existing outputs, validate every selected stress round and summary, harden cold-RAG Scheduler start/cleanup, bound post-removal evidence before recovery, and refresh archive references; no live run was executed for these paths."
   ]
 }

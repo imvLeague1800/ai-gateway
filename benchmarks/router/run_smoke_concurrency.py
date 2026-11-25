@@ -22,7 +22,10 @@ def main() -> None:
     args = parser.parse_args()
     out = args.output or (DEFAULT_OUT if not args.run_id else
                           ROOT / ".verification" / "dual-qwen" / args.run_id / "concurrency")
-    out.mkdir(parents=True, exist_ok=True)
+    if out.exists():
+        print(f"output directory already exists: {out}", flush=True)
+        raise SystemExit(2)
+    out.mkdir(parents=True)
     index = out / "run-index.jsonl"
     index.write_text("", encoding="utf-8")
     for scenario in SCENARIOS:

@@ -258,10 +258,18 @@ async def cancel_task(task: asyncio.Task) -> None:
         pass
 
 
-async def probe_rows(client: httpx.AsyncClient, start: int, count: int, origin: float) -> list[dict]:
+async def probe_rows(client: httpx.AsyncClient, start: int, count: int, origin: float,
+                     deadline: float | None = None) -> list[dict]:
     rows = []
     for index in range(start, start + count):
-        row = await transport.send_short_probe(client, index)
+        remaining = None if deadline is None else deadline - time.perf_counter()
+        if remaining is not None and remaining <= 0:
+            break
+        try:
+            row = await asyncio.wait_for(transport.send_short_probe(client, index),
+                                         timeout=remaining)
+        except asyncio.TimeoutError:
+            break
         row["after_origin_s"] = round(row["at"] - origin, 2)
         rows.append(row)
     return rows
@@ -406,17 +414,25 @@ async def preflight(args) -> dict:
     }
 
 
-async def collect_inflight(tasks: list[asyncio.Task], timeout: float = 90) -> list[dict]:
+async def collect_inflight(tasks: list[asyncio.Task], timeout: float = 90,
+                           deadline: float | None = None) -> list[dict]:
     rows = []
     for task in tasks:
+        remaining = timeout if deadline is None else deadline - time.perf_counter()
+        if remaining <= 0:
+            await cancel_task(task)
+            rows.append({"status": None, "state": "evidence_timeout",
+                         "error": "evidence collection limit reached"})
+            continue
         try:
-            row = await asyncio.wait_for(task, timeout=timeout)
+            row = await asyncio.wait_for(task, timeout=min(timeout, remaining))
             rows.append({k: row.get(k) for k in
                          ("status", "state", "error", "finish_reason", "done",
                           "ttft_ms", "complete_ms")})
         except asyncio.TimeoutError:
             await cancel_task(task)
-            rows.append({"status": None, "state": "timeout", "error": "inflight timeout"})
+            rows.append({"status": None, "state": "evidence_timeout",
+                         "error": "evidence collection limit reached"})
         except asyncio.CancelledError:
             rows.append({"status": None, "state": "cancelled", "error": "inflight cancelled"})
         except Exception as exc:
@@ -550,6 +566,7 @@ def cycle_ok(record: dict, args) -> bool:
         and record.get("recovery_confirmed")
         and record.get("router_accepts_16")
         and record.get("same_router_container")
+        and record.get("evidence_complete")
     )
 
 
@@ -561,10 +578,12 @@ async def run_cycle(client: httpx.AsyncClient, args, index: int,
         "router_container_id_before": context["container_id"],
         "detection_target_s": args.detection_timeout,
         "reaccept_target_s": args.reaccept_timeout,
+        "evidence_timeout_s": args.evidence_timeout,
         "clock_anchor": {"perf_counter": time.perf_counter(), "unix": time.time()},
         "inflight": {"before_running": {}, "rows": []},
     }
     inflight_tasks: list[asyncio.Task] = []
+    evidence_deadline: float | None = None
     stop_issued = False
     try:
         record["pre_stop_health"] = await health_now()
@@ -593,6 +612,9 @@ async def run_cycle(client: httpx.AsyncClient, args, index: int,
 
         stop_issued = True
         stop_started = time.perf_counter()
+        evidence_deadline = stop_started + args.evidence_timeout
+        record["evidence_deadline"] = {"stop_started_perf_counter": stop_started,
+                                       "limit_s": args.evidence_timeout}
         record["stop_started_utc"] = utc_text(time.time())
         failure_task = asyncio.create_task(wait_direct_state(TARGET_HOST, False, 30))
         detection_task = asyncio.create_task(
@@ -616,20 +638,36 @@ async def run_cycle(client: httpx.AsyncClient, args, index: int,
             record.setdefault("error",
                               f"Router did not remove .16 within {args.detection_timeout}s")
 
-        removed = await probe_rows(client, 300 + index * 100, args.probe_count, stop_started)
+        removed = await probe_rows(client, 300 + index * 100, args.probe_count,
+                                   stop_started, deadline=evidence_deadline)
+        removal_complete = len(removed) == args.probe_count
         record["removal"] = {
             "workers": worker_counts(removed),
+            "attempted": len(removed),
+            "timed_out": not removal_complete,
             "all_on_15": all(on_worker(row, SURVIVOR_URL) for row in removed),
             "all_complete": all(row.get("complete") for row in removed),
             "rows": removed,
         }
-        if not (record["removal"]["all_on_15"] and record["removal"]["all_complete"]):
+        if not removal_complete:
+            record.setdefault("error", "removal probes hit the evidence time limit")
+        elif not (record["removal"]["all_on_15"] and record["removal"]["all_complete"]):
             record.setdefault("error", "removal probes were not all complete on .15")
     except Exception as exc:
         record["error"] = f"{type(exc).__name__}: {exc}"
     finally:
         if inflight_tasks:
-            record["inflight"]["rows"] = await collect_inflight(inflight_tasks)
+            record["inflight"]["rows"] = await collect_inflight(
+                inflight_tasks, deadline=evidence_deadline)
+        removal = record.get("removal") or {}
+        inflight_rows = record["inflight"]["rows"]
+        record["evidence_complete"] = bool(
+            removal.get("attempted") == args.probe_count
+            and removal.get("all_on_15") and removal.get("all_complete")
+            and len(inflight_rows) == 4
+            and not any(row.get("state") == "evidence_timeout" for row in inflight_rows))
+        if not record["evidence_complete"]:
+            record.setdefault("error", "post-removal evidence incomplete within the time limit")
         if stop_issued:
             await recover_cycle(client, record, args)
         else:
@@ -644,7 +682,8 @@ async def run_cycle(client: httpx.AsyncClient, args, index: int,
 
 def compact_cycle(record: dict) -> dict:
     keys = ("cycle", "pass", "service_stopped", "direct_failure_s", "detection_s",
-            "stop_command_s", "start_to_health_s", "health_before_start_returned",
+            "stop_command_s", "evidence_timeout_s", "evidence_complete",
+            "start_to_health_s", "health_before_start_returned",
             "health_to_accept_s", "recovery_gap_s", "service_running",
             "router_reaccept_s", "recovery_first_target_s", "recovery_request_id",
             "recovery_confirmed", "router_accepts_16", "same_router_container",
@@ -782,6 +821,9 @@ def main() -> None:
     parser.add_argument("--reaccept-timeout", type=float, default=20,
                         help="target seconds from the first direct /health 200 to the end "
                              "of the first complete .16 response through the Router")
+    parser.add_argument("--evidence-timeout", type=float, default=60,
+                        help="combined seconds for post-removal probes and in-flight evidence; "
+                             "on timeout the cycle is marked incomplete and recovery starts")
     parser.add_argument("--health-timeout", type=float, default=900,
                         help="engine weight-load timeout after start")
     parser.add_argument("--no-restart", action="store_true",

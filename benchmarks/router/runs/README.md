@@ -34,10 +34,13 @@ Since 2026-11-25 Git keeps only the current acceptance runs and the archives tha
 ### Archived outside this Git tree (2026-11-25)
 
 `smoke-daily-v1/` … `v6/`, `smoke-entry-v1/`, `smoke-proxy-v6/`, `smoke-proxy-v10/`,
-`smoke-proxy-v12/` and `fault-20261124-1x-r2/` were copied to the internal archive
-`.verification/dual-qwen/runs-archive/` with verified source/destination SHA-256
-(`INDEX.json`, `README.md`) and then removed from the current tree. Git history still
-contains them, and the results report keeps their historical numbers.
+`smoke-proxy-v12/` and `fault-20261124-1x-r2/` were copied to the persistent archive
+`X:\damonlu\ai-gateway\router-runs-archive\20261125` (share `\\10.10.18.151\damonlu`),
+with per-file raw-byte SHA-256, file-count and byte-size checks (11/11 runs identical).
+Local copies remain at `.verification/dual-qwen/runs-archive/`; both `INDEX.json` files
+record the archive location and verification. The directories were then removed from the
+current tree; Git history still contains them, and the results report keeps their
+historical numbers.
 
 To re-check an evidence tree on this machine:
 

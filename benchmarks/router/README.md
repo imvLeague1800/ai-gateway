@@ -87,9 +87,17 @@ failure.
 A round counts as passed only when its child exits 0 and its log tail parses to a
 result with an existing `directory` and a positive `requests` count. A zero-exit
 round with a missing or unreadable result records `result_error` plus a failure
-reason in `run-index.jsonl` and fails the stage. `run_stress.py` requires all 18
-round records to be valid. `--dry-run` only prints the commands and always
-reports `preview=true`, `pass=false` and exit code 1.
+reason in `run-index.jsonl` and fails the stage. The entry rejects duplicate
+`--modes` and an existing output directory; each scenario entry also rejects an
+existing output directory. Every selected stage must have all its expected rounds
+with readable results: 18 replay rounds, 12 concurrency rounds (each with
+`summary.json`), 6 cold-RAG rounds (each with `summary.json`). Missing files or
+invalid results keep the failed round, reason and log path, and the stage and
+group fail. Cold RAG refuses to start when local port `18080` is already in use,
+and treats an early Scheduler exit or readiness timeout as a failure while
+keeping the Scheduler/client logs; only the process it started is stopped.
+`--dry-run` only prints the commands and always reports `preview=true`,
+`pass=false` and exit code 1.
 
 Equivalent individual entries, with explicit run IDs/output directories:
 
@@ -159,7 +167,10 @@ Router container through every stop/recover cycle. Per cycle it records:
 - four in-flight long requests and their completed/interrupted states;
 - the stop command result, direct `.16` health failure, and Router removal time
   from the stop command (20 s target);
-- all post-removal probes complete on `.15`;
+- all post-removal probes complete on `.15`; the post-removal probes and in-flight
+  evidence share `--evidence-timeout` (default 60 s from the stop command). On
+  timeout the collected evidence is kept, the cycle is marked incomplete, and
+  recovery starts immediately instead of waiting per request;
 - the start command, the first observed `.16:8000/health` HTTP 200 timestamp
   (saved inside the health poll, even when the start command has not returned
   yet), Router re-accept time, and the first complete `.16` response through the
@@ -184,8 +195,12 @@ Results go to `.verification/dual-qwen/<run-id>/summary.json` and
 is passed; a reused Router is left running. Daily smoke/stress are never blocked
 by this entry.
 
-Historical mock and proxy evidence remains under `runs/` as archived results; the
-scripts that produced it were removed with the old fault path.
+Historical mock and proxy evidence was moved out of this Git tree on 2026-11-25;
+locate it by run ID in the persistent archive
+`X:\damonlu\ai-gateway\router-runs-archive\20261125` (`INDEX.json`, share
+`\\10.10.18.151\damonlu`) or its local copy `.verification/dual-qwen/runs-archive/`.
+The scripts that produced it were removed with the old fault path. Current acceptance
+runs and the offline-recompute inputs remain under `runs/`.
 
 ## Files
 

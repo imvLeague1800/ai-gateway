@@ -75,7 +75,12 @@ def main() -> None:
     args = parser.parse_args()
     out = args.output or (OUT if not args.run_id else
                           ROOT / ".verification" / "dual-qwen" / args.run_id / "replay")
-    out.mkdir(parents=True, exist_ok=True)
+    if out.exists():
+        print(json.dumps({"pass": False,
+                          "error": "output directory already exists; choose a new --run-id "
+                                   "or --output"}, ensure_ascii=True), flush=True)
+        raise SystemExit(2)
+    out.mkdir(parents=True)
     index_path = out / "run-index.jsonl"
     index_path.write_text("", encoding="utf-8")
     failures: list[dict] = []
