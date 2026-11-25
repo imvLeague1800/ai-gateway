@@ -32,33 +32,34 @@ python run_fault_drill.py --cycles 3 --maintenance-window-ack --run-id <id>
 
 压测回放失败不会被吞掉：`run_retest.py` 把失败轮的组号、场景、策略、原始退出码和日志路径写入 `run-index.jsonl` 并最终返回非零；`run_stress.py` 将 `replay` 段和整组标记为失败并返回非零，摘要保留 `replay` 退出码、日志和索引路径。本轮压测全部成功，该失败路径未被实际触发，详见 2d 节。
 
-## 2. 日常 smoke 验收（smoke-daily-v6，当前）
+## 2. 日常 smoke 验收（smoke-daily-v7，当前）
 
-运行命令（从 benchmark 目录，manifest v1.3.0 `9590ba02…`）：
+运行命令（从 benchmark 目录，manifest v1.3.2 `67d06787…`）：
 
 ```bash
-python run_smoke.py --policy cache_aware --run-id smoke-daily-v6
+python run_smoke.py --policy cache_aware --run-id smoke-daily-v7
 ```
 
 | 阶段 | 耗时 | 结果 |
 | --- | ---: | --- |
-| router_ready | 0.94 s | 隔离 Router 就绪，两台引擎直连 health 200 |
-| core | 55.35 s | 28/28 success、协议 28、质量 28；`policy_ok=true`；召回 4/4；缓存命中 92,224 / 336,848 tokens（0.2738） |
-| queue | 33.75 s | 12 个长请求、取消 2 个（`queue-0`、`queue-11`）、完成 10 个（全部 success）；在途计数 0.05 s 恢复 |
-| analysis | 0.25 s | 生成 `smoke-analysis.json` |
-| **合计** | **90.30 s** | 低于 10 分钟目标；顶层 `pass=true`，退出码 0 |
+| router_ready | 0.93 s | 隔离 Router 就绪，两台引擎直连 health 200 |
+| core | 57.19 s | 28/28 success、协议 28、质量 28；`policy_ok=true`；召回 4/4；缓存命中 92,224 / 336,848 tokens（0.2738） |
+| queue | 31.13 s | 12 个长请求、取消 2 个（`queue-0`、`queue-11`）、完成 10 个（全部 success）；在途计数 0.10 s 恢复 |
+| analysis | 0.29 s | 生成 `smoke-analysis.json` |
+| **合计** | **89.55 s** | 低于 10 分钟目标；顶层 `pass=true`，退出码 0 |
 
-本次运行没有 `failover` 键，没有代理健康切换，也没有停止 Qwen；两台引擎直连在结束时均为 200，Router 在途计数归零。`core.both_workers_routed=false` 与上一轮 v5 相同，不影响 `policy_ok` 和顶层通过。
+本次运行没有 `failover` 键，没有代理健康切换，也没有停止 Qwen；两台引擎直连在结束时均为 200，Router 在途计数归零。`core.both_workers_routed=false` 与 v5/v6 相同，不影响 `policy_ok` 和顶层通过。
 
 证据：
 
-- 顶层：`.verification/dual-qwen/smoke-daily-v6/summary.json`
-- 登记：`benchmarks/router/runs/smoke-daily-v6/`
+- 顶层：`.verification/dual-qwen/smoke-daily-v7/summary.json`
+- 登记：`benchmarks/router/runs/smoke-daily-v7/`
 
-### 历史 smoke 验收（v5 / v4 / v3）
+### 历史 smoke 验收（v6 / v5 / v4 / v3）
 
 | run ID | manifest | 合计 | 结果 |
 | --- | --- | ---: | --- |
+| `smoke-daily-v6` | v1.3.0 `9590ba02…` | 90.30 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
 | `smoke-daily-v5` | v1.2.9 `d1cffb2a…` | 88.42 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
 | `smoke-daily-v4` | v1.2.9 中间版本 | 92.07 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
 | `smoke-daily-v3` | v1.2.8 | 87.18 s | core 28/28，queue 2 取消/10 完成，退出码 0 |
@@ -140,6 +141,8 @@ python run_stress.py --modes replay concurrency cold-rag --run-id stress-2026112
 
 证据：`benchmarks/router/runs/stress-failinject-20261124/`。
 
+结果完整性：`run_retest.py` 要求子进程 rc=0 且日志末行能解析出 `directory` 存在、`requests` 为正整数的结果；rc=0 但结果缺失或解析失败时，记录 `result_error` 和失败原因（轮次、日志路径）并最终退出非零。`run_stress.py` 校验 `run-index.jsonl` 的 18 条轮次全部有效后才让 `replay` 段通过。`--dry-run` 只打印命令，固定 `preview=true`、`pass=false`、退出 1。该完整性逻辑已用本次 live 与 failinject 的真实索引核对；尚未做“rc=0 但结果无效”的真实注入。
+
 ## 2e. 异常路径实测：注入启动失败（fault-20261124-startfail）
 
 为验证“发出停止命令后启动失败时仍尝试恢复、记录原始错误、恢复未确认即终止”的路径：停止状态确认后，由远端 watcher 移走 `/home/dgx/spark-vllm/compose.yaml`，使恢复阶段的 `docker compose start` 无法执行；演练退出后立即恢复文件并手动启动引擎。
@@ -209,26 +212,27 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 
 - `runs/smoke-proxy-v6/`、`runs/smoke-proxy-v10/`、`runs/smoke-proxy-v12/`、`runs/smoke-entry-v1/`
 - `runs/fault-20261124-1x-r2/`（旧预检方法的实机周期）
-- `runs/smoke-daily-v1/` … `v5/`、`runs/smoke-v1/`、`runs/retest-v12/`、`runs/cold-rag-v1/`
+- `runs/smoke-daily-v1/` … `v6/`、`runs/smoke-v1/`、`runs/retest-v12/`、`runs/cold-rag-v1/`
 
 移除：
 
 - `benchmark_proxy.py`、`proxy_failover.py`、`smoke_failover.py`、`test_smoke_proxy.py`（代理/mock 故障实现与入口）。
 - `test_run_smoke.py`、`test_fault_drill.py`、`test_run_stress.py`（不连接服务的替身用例）。
 - `test_harness.py`、`test-results.json`（harness mock 检查及其生成结果）。
+- `hot_forced.py`、`cold_rag/config_probe.py`（未被当前入口调用的旧诊断脚本；历史结果归档保留）。
 - 根目录四份重复分析 JSON（仅副本，归档保留）。
 - `fault_retest.py`、`run_fault_matrix.py`、`smoke_failure.py`（旧实机停启脚本）。
 - 日常 smoke 和 stress 的实机停启与代理故障调用。
 
 结果路径：
 
-- 当前日常 smoke：`benchmarks/router/runs/smoke-daily-v6/`。
+- 当前日常 smoke：`benchmarks/router/runs/smoke-daily-v7/`；历史 `runs/smoke-daily-v1/` … `v6/` 保留。
 - 只读预检：`benchmarks/router/runs/preflight-20261124/`。
 - 压测：`benchmarks/router/runs/stress-20261124-live/`。
 - 压测失败注入：`benchmarks/router/runs/stress-failinject-20261124/`。
 - 手动实机演练（现行预检）：`benchmarks/router/runs/fault-20261124-newpreflight/`；异常路径注入：`benchmarks/router/runs/fault-20261124-startfail/`；历史旧预检记录：`benchmarks/router/runs/fault-20261124-1x-r2/`。
-- 当前 manifest v1.3.1：`677ec27d8bca5edd0e41a8a797474d01e2138cb0f0e1765a89cd50560ccf51de`（32 个条目；删除 7 个代理/替身文件以及 `test_harness.py`/`test-results.json`，重算 `README.md` 与 `run_fault_drill.py` 哈希；数据集、校准、profiles 与 budgets 未变）。
-- 当前 `smoke.json`：`912bd6ff84eddbc6992ff3479c9d5673a046280a40ff4e04865f4ba6e60e1786`（只更新 `source_manifest_sha256` 指向 v1.3.1；历史 smoke 证据保留当时记录的旧哈希）。
+- 当前 manifest v1.3.2：`67d067871e806ccf0d91f68665435fc8683778c5e751581ef3377e62dbb378f0`（31 个条目；在 v1.3.1 基础上去掉 `hot_forced.py`，重算 `README.md`、`run_retest.py`、`run_stress.py` 哈希；数据集、校准、profiles 与 budgets 未变）。
+- 当前 `smoke.json`：`5aa852dad993f562c1f01b563aac6dd6c50b5b6c45a2fcf79206b8c2304e673e`（只更新 `source_manifest_sha256` 指向 v1.3.2；历史 smoke 证据保留当时记录的旧哈希）。
 
 ### 代码与数据检查（本轮复跑）
 
@@ -237,13 +241,15 @@ python run_fault_drill.py --cycles 1 --maintenance-window-ack --run-id fault-202
 | `py_compile` run_fault_drill / run_smoke / run_stress / run_retest | 退出码 0 |
 | `replay.py validate` | 300 cases / 195 sessions，退出码 0 |
 | `verify_archives.py` | `pass=true`，退出码 0 |
-| manifest 32 条目哈希核对 | 无缺失、无不一致 |
+| manifest 31 条目哈希核对 | 无缺失、无不一致 |
 | `smoke.json` → manifest 哈希 | 一致 |
+| 回放完整性（live 索引 18/18；failinject 索引 18 条无效） | 分别判通过 / 失败 |
+| `run_stress.py --dry-run` 预览 | `preview=true`、`pass=false`、退出 1 |
 
 ## 6. 未验证事项汇总
 
 1. 现行只读预检 + 真实停启周期的组合已执行 1 次并通过（`fault-20261124-newpreflight`：摘除 6.93 s、恢复间隔 6.235 s）；多周期仍未执行。启动命令失败、恢复未确认、演练中止等路径已通过 `fault-20261124-startfail` 注入实测；SSH 中断和 Router 重新接纳超时仍未在真实演练中制造。历史 r2 使用旧预检方法，其 19.469 s 不再代表现行入口。
-2. 压测已实跑：replay 18/18、concurrency 12/12、cold-rag 6/6 全部成功；回放失败传递已用 `stress-failinject-20261124` 真实注入验证（18/18 rc=1、`replay.pass=false`、顶层退出 1）。未覆盖的是“部分轮失败、部分成功”的混合场景，因此“后续成功不覆盖已记录失败”仍只有代码路径。
+2. 压测已实跑：replay 18/18、concurrency 12/12、cold-rag 6/6 全部成功；回放失败传递已用 `stress-failinject-20261124` 真实注入验证（18/18 rc=1、`replay.pass=false`、顶层退出 1）。未覆盖的是“部分轮失败、部分成功”的混合场景，以及“子进程 rc=0 但结果缺失/不可解析”的真实注入——这两类目前只有代码路径，完整性判断已用现有 live/failinject 索引核对。
 3. 历史代理路径的实测结论只对应归档，脚本已删除；代理清理失败、SSH 停止检查失败和 attach 恢复失败不再有离线用例覆盖。
-4. `runs/smoke-daily-v6/` 的 core `both_workers_routed=false` 与 v5 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
+4. `runs/smoke-daily-v6/` 与 `v7/` 的 core `both_workers_routed=false` 与 v5 相同，未额外调查；日常 smoke 的通过条件不要求该字段。
 5. real-Agent 会话仍为 0，相关验收保持 pending。

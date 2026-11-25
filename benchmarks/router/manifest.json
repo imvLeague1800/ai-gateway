@@ -1,5 +1,5 @@
 {
-  "version": "1.3.1",
+  "version": "1.3.2",
   "schema_version": 1,
   "generator_version": 1,
   "seed": 20261123,
@@ -21,15 +21,14 @@
     "replay.py": "f1a30b712838b5627ab1c16b4d699b4d09b31a0f103379b35d4db9a01de9d385",
     "transport.py": "b3328fd0b59aed023a182e6326e9627b1498fb4aab3d138ee6ea91810b3e8019",
     "make_calibration.py": "e8a4a4e530ce2bc4ee6b8963ecd12d1b83b3b887f8340b6243beb8081e942e91",
-    "README.md": "ceceb50058662f4416c96bd556acc086ec519a1cc0cf3b28059dc8ab60221d37",
+    "README.md": "787f9d56d1a8342d626e84745a14030f6338ed7605820f4479745cfc18e6e2ce",
     "real/README.md": "e6993536ab8e879fd04ca6f226dd752ea9abdb2355736c2a0519ecc5fcce778a",
-    "run_retest.py": "a557fabd94fe316fb2132181bed76c8daeb2d0619eb830fb6ae3a609f49e6e02",
+    "run_retest.py": "aa2d1815b385537dcbe81bf19fc993f935e74f1e010624c1e3bdc936ca1a126a",
     "analyze_retest.py": "8c48e9868050831c285998a6917bc77747b91c09572162ee25f4fafd19964f60",
-    "hot_forced.py": "3db831c1e6d0e7f389c67bd323152fdde12be750c014c872476829b2f81ac63c",
     "analyze_fault.py": "fab87784f671baf560743945e01e67683df1bc7f3c35a5dba9ba320a6ee09d03",
     "scenario_stats.py": "e448adc64f0add72b6a022134a964282ca5009fdfc3e54612de60e5c555542af",
     "run_smoke.py": "12bc7a8c422a94442cb2cbbb700dd3b5b61e85d1063726d0148537813dc733a4",
-    "run_stress.py": "237d20825483d641a7b7b6c1f613c5dccac4a9a6fde67986afae9bb9b5539bf4",
+    "run_stress.py": "79455f0f67a9c4bcfae5b44e11d2efaa08c674defd5951c2408223de4f92422f",
     "analyze_smoke.py": "3e3635d7c8a423ea506b7206394ca5eb214b2e8e9fde7890c0d2f909647bf44d",
     "register_smoke_evidence.py": "21a5f29ac897ddd133f645a0a6c224488de5a1daa007793fdb1e55ea680f8489",
     "render_smoke_tables.py": "a646a74226b0152e8f8e2ec2e7ad22c17dd687be855fac500ecc055591828a19",
@@ -62,6 +61,7 @@
     "v1.2.8 removes proxy fault from daily smoke, keeps daily stress fault-free, and adds the explicit manual .16 Qwen stop/restore drill with single/multi-cycle recovery evidence; proxy and prior real-stop archives remain historical.",
     "v1.2.9 adds the plan follow-up: manual drill authorization from the effective Docker policy or an admin record (preflight never issues real stop/start), strict preflight refusal on unknown authorization or unreadable service state, replay-failure propagation from run_retest.py to run_stress.py with run-index and summary evidence, and the 20.00 s recovery window; dataset, calibration, profiles and budgets are unchanged.",
     "v1.3.0 replaces drill authorization inference with a read-only preflight plus --preflight-only, removes the benchmark proxy and all no-service double tests, and keeps historical proxy/fault archives as evidence; dataset, calibration, profiles and budgets are unchanged.",
-    "v1.3.1 removes the remaining test_harness.py mock checks and the generated test-results.json, and refreshes the README, manifest and smoke source hash chain; dataset, calibration, profiles and budgets are unchanged."
+    "v1.3.1 removes the remaining test_harness.py mock checks and the generated test-results.json, and refreshes the README, manifest and smoke source hash chain; dataset, calibration, profiles and budgets are unchanged.",
+    "v1.3.2 requires every replay round to exit 0 with a readable, positive-request result before it counts, makes preview runs non-passing, and removes the unused hot_forced.py and cold_rag/config_probe.py diagnostics; dataset, calibration, profiles and budgets are unchanged."
   ]
 }

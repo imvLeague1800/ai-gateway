@@ -19,6 +19,33 @@ ROUTER_API = "http://127.0.0.1:18100"
 ROUTER_METRICS = "http://127.0.0.1:19100/metrics"
 GROUPS = (1, 2, 3)
 PROFILES = ("stable", "high", "light")
+EXPECTED_ROUNDS = len(GROUPS) * len(PROFILES) * 2
+
+
+def read_result(log_path: Path) -> tuple[dict | None, str]:
+    """Return (payload, reason); reason is empty only for a usable result."""
+    try:
+        text = log_path.read_text(encoding="utf-8", errors="replace")
+    except Exception as exc:
+        return None, f"log unreadable: {type(exc).__name__}: {exc}"
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    if not lines:
+        return None, "log is empty"
+    try:
+        payload = json.loads(lines[-1])
+    except Exception as exc:
+        return None, f"last log line is not JSON: {type(exc).__name__}: {exc}"
+    if not isinstance(payload, dict):
+        return None, "result is not a JSON object"
+    directory = payload.get("directory")
+    if not directory:
+        return None, "result has no directory"
+    if not Path(directory).is_dir():
+        return None, f"result directory does not exist: {directory}"
+    requests = payload.get("requests")
+    if not isinstance(requests, int) or requests <= 0:
+        return None, f"result has no positive request count: {requests!r}"
+    return payload, ""
 
 
 def restart(policy: str) -> None:
@@ -68,16 +95,23 @@ def main() -> None:
                 record = {"profile": profile, "group": group, "policy": policy, "namespace": namespace,
                           "returncode": process.returncode, "log": str(log_path), "started": started,
                           "elapsed_s": round(time.time() - started, 2)}
+                base_failure = {key: record[key] for key in
+                                ("group", "profile", "policy", "returncode", "log")}
                 if process.returncode != 0:
-                    failures.append({key: record[key] for key in
-                                     ("group", "profile", "policy", "returncode", "log")})
-                if process.returncode == 0:
-                    try:
-                        payload = json.loads(log_path.read_text(encoding="utf-8").splitlines()[-1])
+                    record["result_ok"] = False
+                    failures.append({**base_failure,
+                                     "reason": f"child returned {process.returncode}"})
+                else:
+                    payload, result_error = read_result(log_path)
+                    if result_error:
+                        record["result_ok"] = False
+                        record["result_error"] = result_error
+                        failures.append({**base_failure,
+                                         "reason": f"invalid result: {result_error}"})
+                    else:
                         directory = Path(payload.pop("directory"))
-                        record.update(directory=str(directory), summary=payload)
-                    except Exception as exc:
-                        record["parse_error"] = f"{type(exc).__name__}: {exc}"
+                        record.update(directory=str(directory), summary=payload,
+                                      result_ok=True)
                 with index_path.open("a", encoding="utf-8") as fh:
                     fh.write(json.dumps(record, ensure_ascii=True) + "\n")
                 print(json.dumps({k: record.get(k) for k in ("profile", "group", "policy", "returncode", "elapsed_s")}, ensure_ascii=True), flush=True)

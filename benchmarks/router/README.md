@@ -79,6 +79,13 @@ keeps the stage exit code and log path plus the replay `run-index.jsonl` path in
 its summary, and exits non-zero. Later successful rounds never erase an earlier
 failure.
 
+A round counts as passed only when its child exits 0 and its log tail parses to a
+result with an existing `directory` and a positive `requests` count. A zero-exit
+round with a missing or unreadable result records `result_error` plus a failure
+reason in `run-index.jsonl` and fails the stage. `run_stress.py` requires all 18
+round records to be valid. `--dry-run` only prints the commands and always
+reports `preview=true`, `pass=false` and exit code 1.
+
 Equivalent individual entries, with explicit run IDs/output directories:
 
 ```bash
@@ -195,7 +202,7 @@ scripts that produced it were removed with the old fault path.
 | `run_stress.py`, `run_retest.py` | Stress entry (replay/concurrency/cold-rag) and full 3-group paired replay. A replay failure stops the stress entry. |
 | `analyze_smoke.py`, `analyze_retest.py`, `analyze_fault.py`, `render_smoke_tables.py`, `verify_archives.py` | Analysis entry points (`--input`/`--output`, optional `--run-id`) and offline archive reconstruction check. |
 | `register_smoke_evidence.py`, `cold_rag/register_cold_rag_evidence.py` | Register selected evidence under `runs/<run-id>/`. |
-| `cold_rag/backends-template.yaml`, `cold_rag/cold_rag_replay.py`, `cold_rag/run_cold_rag_matrix.py`, `cold_rag/analyze_cold_rag.py`, `cold_rag/config_probe.py`, `scenario_stats.py` | First-version Scheduler long-cold admission comparison, generated per-run configs, shared window/statistics, and isolated config probes. |
+| `cold_rag/backends-template.yaml`, `cold_rag/cold_rag_replay.py`, `cold_rag/run_cold_rag_matrix.py`, `cold_rag/analyze_cold_rag.py`, `scenario_stats.py` | First-version Scheduler long-cold admission comparison, generated per-run configs and shared window/statistics. |
 
 ## Frozen budgets
 

@@ -32,9 +32,10 @@ file sizes, and SHA-256 hashes so the evidence can be checked without committing
   queue/cancel, no fault stage, 92.07 s total, exit code 0.
 - `smoke-daily-v5/` — 2026-11-24 daily smoke on manifest v1.2.9: core 28/28,
   queue/cancel, no fault stage, 88.42 s total, exit code 0.
-- `smoke-daily-v6/` — 2026-11-24 current daily smoke on manifest v1.3.0 (read-only drill
-  preflight, proxy and double tests removed): core 28/28, queue/cancel, no fault stage,
-  90.30 s total, exit code 0.
+- `smoke-daily-v6/` — 2026-11-24 daily smoke on manifest v1.3.0: core 28/28,
+  queue/cancel, no fault stage, 90.30 s total, exit code 0.
+- `smoke-daily-v7/` — 2026-11-25 current daily smoke on manifest v1.3.2 (replay completeness,
+  diagnostics removed): core 28/28, queue/cancel, no fault stage, 89.55 s total, exit code 0.
 - `preflight-20261124/` — 2026-11-24 read-only drill preflight evidence: A exits 2 with the
   Router down and starts nothing; B exits 0 against the ready Router; C exits 2 while the
   Router still marked `.16` unhealthy after an injected failed recovery; D exits 0 after manual
